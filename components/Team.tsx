@@ -1,15 +1,17 @@
 import React from 'react';
 import { TEAM_MEMBERS } from '../constants';
 import { Linkedin } from 'lucide-react';
+import { useScrollAnimation } from '../hooks/useScrollAnimation';
 
 const Team: React.FC = () => {
+  const titleAnimation = useScrollAnimation('fade-in-up', { once: true });
   return (
-    <section id="team" className="py-24 bg-gray-50">
+    <section id="team" className="py-16 sm:py-20 md:py-24 bg-gray-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
-        <div className="text-center max-w-3xl mx-auto mb-16">
+        <div ref={titleAnimation.ref} className={`text-center max-w-3xl mx-auto mb-12 sm:mb-16 ${titleAnimation.className}`}>
           <span className="text-windek-blue font-bold tracking-widest uppercase text-xs mb-3 block">Leadership</span>
-          <h2 className="text-4xl md:text-5xl font-bold text-windek-dark mb-6 tracking-tight">
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-windek-dark mb-4 sm:mb-6 tracking-tight">
             Driven by <span className="text-gray-400 font-serif italic">Experience</span>
           </h2>
           <p className="text-lg text-slate-600 font-light">
@@ -18,8 +20,10 @@ const Team: React.FC = () => {
         </div>
 
         <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
-          {TEAM_MEMBERS.map((member, index) => (
-            <div key={index} className="group relative bg-white rounded-sm overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-500 hover:-translate-y-2">
+          {TEAM_MEMBERS.map((member, index) => {
+            const memberAnimation = useScrollAnimation('fade-in-up', { once: true, margin: '0px 0px -50px 0px' });
+            return (
+            <div key={index} ref={memberAnimation.ref} className={`group relative bg-white rounded-sm overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-500 hover:-translate-y-2 ${memberAnimation.className}`}>
               <div className="aspect-[4/5] overflow-hidden relative">
                 <img 
                   src={member.image} 
@@ -46,7 +50,8 @@ const Team: React.FC = () => {
                 </div>
               </div>
             </div>
-          ))}
+            )
+          })}
         </div>
 
       </div>

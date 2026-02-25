@@ -57,28 +57,28 @@ const Hero: React.FC = () => {
         <div className="absolute inset-0 bg-gradient-to-t from-windek-dark via-transparent to-transparent" />
       </div>
 
-      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-20">
+      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-16 sm:pt-20">
         <div className="max-w-3xl">
           <div className="animate-fade-in-up">
-            <div className="inline-flex items-center gap-2 px-3 py-1 mb-6 border border-windek-blue/30 rounded-full bg-windek-blue/10 backdrop-blur-md">
+            <div className="inline-flex items-center gap-2 px-3 py-1 mb-4 sm:mb-6 border border-windek-blue/30 rounded-full bg-windek-blue/10 backdrop-blur-md">
               <span className="w-1.5 h-1.5 rounded-full bg-windek-blue animate-pulse"></span>
               <span className="text-windek-blue text-xs font-bold tracking-widest uppercase font-sans">Premium Indigenous Energy</span>
             </div>
             
-            <h1 className="text-5xl md:text-7xl font-bold text-white tracking-tight leading-[1.1] mb-8 font-sans">
+            <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-white tracking-tight leading-[1.1] mb-6 sm:mb-8 font-sans">
               Fueling Growth.<br />
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-windek-blue to-white">Powering Nigeria.</span>
             </h1>
             
-            <p className="text-lg md:text-xl text-gray-400 mb-10 font-light leading-relaxed max-w-2xl border-l-2 border-windek-blue/50 pl-6">
+            <p className="text-base sm:text-lg md:text-xl text-gray-400 mb-8 sm:mb-10 font-light leading-relaxed max-w-2xl border-l-2 border-windek-blue/50 pl-4 sm:pl-6">
               {TAGLINE}
             </p>
             
-            <div className="flex flex-col sm:flex-row gap-5">
+            <div className="flex flex-col sm:flex-row gap-3 sm:gap-5">
               <a 
                 href="#projects" 
                 onClick={(e) => handleScrollTo(e, 'projects')}
-                className="group inline-flex items-center justify-center px-8 py-4 bg-windek-blue text-white text-sm font-bold tracking-wide rounded hover:bg-sky-500 transition-all shadow-lg shadow-sky-900/50"
+                className="group inline-flex items-center justify-center px-6 sm:px-8 py-3 sm:py-4 bg-windek-blue text-white text-xs sm:text-sm font-bold tracking-wide rounded hover:bg-sky-500 transition-all shadow-lg shadow-sky-900/50"
               >
                 Explore Projects
                 <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
@@ -86,7 +86,7 @@ const Hero: React.FC = () => {
               <a 
                 href="#contact" 
                 onClick={(e) => handleScrollTo(e, 'contact')}
-                className="group inline-flex items-center justify-center px-8 py-4 border border-white/20 bg-white/5 backdrop-blur-sm text-white text-sm font-bold tracking-wide rounded hover:bg-white hover:text-windek-dark transition-all"
+                className="group inline-flex items-center justify-center px-6 sm:px-8 py-3 sm:py-4 border border-white/20 bg-white/5 backdrop-blur-sm text-white text-xs sm:text-sm font-bold tracking-wide rounded hover:bg-white hover:text-windek-dark transition-all"
               >
                 Contact Us
               </a>

@@ -1,13 +1,16 @@
 import React from 'react';
 import { MapPin } from 'lucide-react';
+import { useScrollAnimation } from '../hooks/useScrollAnimation';
 
 const Projects: React.FC = () => {
+  const imageAnimation = useScrollAnimation('fade-in-left', { once: true });
+  const contentAnimation = useScrollAnimation('fade-in-right', { once: true });
   return (
     <section id="projects" className="bg-gray-50">
-      <div className="grid lg:grid-cols-2 min-h-[800px]">
+      <div className="grid lg:grid-cols-2 min-h-[600px] sm:min-h-[700px] lg:min-h-[800px]">
         
         {/* Visual Side */}
-        <div className="relative h-96 lg:h-auto bg-gray-900 group overflow-hidden">
+        <div ref={imageAnimation.ref} className={`relative h-64 sm:h-80 md:h-96 lg:h-auto bg-gray-900 group overflow-hidden ${imageAnimation.className}`}>
           <img 
             src="https://i0.wp.com/www.mctimothyassociates.com/wp-content/uploads/2023/12/Oil-and-Gas-Storage-terminal-large.jpg" 
             alt="Refinery Infrastructure at Sunset" 
@@ -15,26 +18,26 @@ const Projects: React.FC = () => {
           />
           <div className="absolute inset-0 bg-windek-dark/60 group-hover:bg-windek-dark/40 transition-colors duration-500"></div>
           
-          <div className="absolute bottom-0 left-0 p-8 lg:p-16">
-             <span className="inline-block px-4 py-2 bg-windek-red text-white text-xs font-bold uppercase tracking-wider mb-4">Flagship Development</span>
-             <h3 className="text-3xl md:text-5xl font-bold text-white mb-2">LPG Terminal Facility</h3>
+          <div className="absolute bottom-0 left-0 p-4 sm:p-8 lg:p-16">
+             <span className="inline-block px-3 sm:px-4 py-1 sm:py-2 bg-windek-red text-white text-xs font-bold uppercase tracking-wider mb-2 sm:mb-4">Flagship Development</span>
+             <h3 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-2">LPG Terminal Facility</h3>
              <div className="flex items-center text-white/80">
-                <MapPin className="h-4 w-4 mr-2" />
-                <span className="text-sm uppercase tracking-wide">Atabrikang, Akwa Ibom</span>
+                <MapPin className="h-4 w-4 mr-2 flex-shrink-0" />
+                <span className="text-xs sm:text-sm uppercase tracking-wide">Atabrikang, Akwa Ibom</span>
              </div>
           </div>
         </div>
 
         {/* Content Side */}
-        <div className="flex flex-col justify-center p-8 lg:p-24 bg-white">
-          <span className="text-windek-blue font-bold tracking-widest uppercase text-xs mb-4">Featured Project</span>
-          <h2 className="text-4xl font-bold text-windek-dark mb-8 tracking-tight">20,000 MT Storage & Distribution Hub</h2>
+        <div ref={contentAnimation.ref} className={`flex flex-col justify-center p-6 sm:p-8 lg:p-24 bg-white ${contentAnimation.className}`}>
+          <span className="text-windek-blue font-bold tracking-widest uppercase text-xs mb-3 sm:mb-4">Featured Project</span>
+          <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-windek-dark mb-6 sm:mb-8 tracking-tight">20,000 MT Storage & Distribution Hub</h2>
           
-          <p className="text-lg text-slate-600 font-light leading-relaxed mb-10">
+          <p className="text-sm sm:text-base lg:text-lg text-slate-600 font-light leading-relaxed mb-8 sm:mb-10">
             A landmark infrastructure project designed to revolutionize LPG availability in Southern Nigeria. This facility represents our commitment to solving energy infrastructure deficits through strategic capital deployment and engineering excellence.
           </p>
 
-          <div className="grid grid-cols-2 gap-x-8 gap-y-12">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 sm:gap-x-8 sm:gap-y-12">
             <div>
                <p className="text-4xl font-bold text-windek-dark mb-1">$100M</p>
                <p className="text-xs font-bold text-gray-400 uppercase tracking-widest">Project Valuation</p>

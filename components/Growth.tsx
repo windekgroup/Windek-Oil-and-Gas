@@ -1,24 +1,29 @@
 import React from 'react';
 import { GROWTH_GOALS } from '../constants';
 import { ShieldCheck, TrendingUp, Zap } from 'lucide-react';
+import { useScrollAnimation } from '../hooks/useScrollAnimation';
 
 const Growth: React.FC = () => {
+  const titleAnimation = useScrollAnimation('fade-in-up', { once: true });
+  const esgAnimation = useScrollAnimation('fade-in-up', { once: true });
   return (
-    <section id="esg" className="py-24 bg-white">
+    <section id="esg" className="py-16 sm:py-20 md:py-24 bg-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Header */}
-        <div className="max-w-3xl mx-auto text-center mb-20">
-           <h2 className="text-3xl md:text-4xl font-bold text-windek-dark mb-6 tracking-tight">Future Roadmap</h2>
-           <p className="text-slate-600 text-lg font-light">
+        <div ref={titleAnimation.ref} className={`max-w-3xl mx-auto text-center mb-16 sm:mb-20 ${titleAnimation.className}`}>
+           <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-windek-dark mb-4 sm:mb-6 tracking-tight">Future Roadmap</h2>
+           <p className="text-sm sm:text-base text-slate-600 font-light">
              We are building a legacy of sustainability. Our growth strategy balances aggressive expansion with strict environmental stewardship and social responsibility.
            </p>
         </div>
 
         {/* Timeline Cards */}
         <div className="grid md:grid-cols-3 gap-8 mb-24">
-          {GROWTH_GOALS.map((goal, index) => (
-            <div key={index} className="relative group">
+          {GROWTH_GOALS.map((goal, index) => {
+            const goalAnimation = useScrollAnimation('fade-in-up', { once: true, margin: '0px 0px -50px 0px' });
+            return (
+            <div key={index} ref={goalAnimation.ref} className={`relative group ${goalAnimation.className}`}>
               <div className="bg-gray-50 p-8 h-full border border-gray-100 transition-colors group-hover:bg-windek-dark group-hover:border-windek-dark">
                 <div className="flex items-center justify-between mb-8">
                    <span className="text-5xl font-serif text-gray-200 group-hover:text-white/10 font-bold transition-colors">0{index + 1}</span>
@@ -32,11 +37,12 @@ const Growth: React.FC = () => {
                 </p>
               </div>
             </div>
-          ))}
+            )
+          })}
         </div>
 
         {/* ESG Banner */}
-        <div className="relative rounded-2xl overflow-hidden bg-windek-dark text-white">
+        <div ref={esgAnimation.ref} className={`relative rounded-2xl overflow-hidden bg-windek-dark text-white ${esgAnimation.className}`}>
            <div className="absolute inset-0">
              <img 
                src="https://images.unsplash.com/photo-1621905251189-08b45d6a269e?q=80&w=1600&auto=format&fit=crop" 

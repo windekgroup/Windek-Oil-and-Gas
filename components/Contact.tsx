@@ -1,146 +1,106 @@
 import React, { useState, useEffect } from 'react';
 import { CONTACT_INFO } from '../constants';
-import { CheckCircle, Loader2 } from 'lucide-react';
+import { CheckCircle, X } from 'lucide-react';
+import { useScrollAnimation } from '../hooks/useScrollAnimation';
 
 const Contact: React.FC = () => {
-  const [status, setStatus] = useState<'idle' | 'submitting' | 'success' | 'error'>('idle');
-  const [mountTime, setMountTime] = useState<number>(0);
+  const [status, setStatus] = useState<'idle' | 'success'>('idle');
+  const [showModal, setShowModal] = useState(false);
+  const titleAnimation = useScrollAnimation('fade-in-up', { once: true });
+  const formAnimation = useScrollAnimation('fade-in-right', { once: true });
 
   useEffect(() => {
-    // Record when the component mounts for the speed check
-    setMountTime(Date.now());
-  }, []);
-
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    setStatus('submitting');
-    
-    const formData = new FormData(e.currentTarget);
-    
-    // Construct payload matching the backend expectations
-    const payload = {
-        name: `${formData.get('firstName')} ${formData.get('lastName')}`,
-        email: formData.get('email'),
-        message: formData.get('message'),
-        website: formData.get('website'), // Honeypot field
-        form_time: mountTime
-    };
-    
-    try {
-      const response = await fetch("/api/send", {
-        method: "POST",
-        body: JSON.stringify(payload),
-        headers: {
-            'Content-Type': 'application/json',
-            'Accept': 'application/json'
-        }
-      });
-
-      const result = await response.json();
-
-      if (response.ok && result.ok) {
-        setStatus('success');
-      } else {
-        console.error("Submission failed:", result);
-        setStatus('error');
-      }
-    } catch (error) {
-      console.error("Network error:", error);
-      setStatus('error');
+    let timer: NodeJS.Timeout;
+    if (showModal) {
+      // Auto-close modal after 5 seconds
+      timer = setTimeout(() => {
+        setShowModal(false);
+        setStatus('idle');
+      }, 5000);
     }
+    return () => clearTimeout(timer);
+  }, [showModal]);
+
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    // FormSubmit.co will handle the form submission
+    // Show success popup after a brief delay
+    setTimeout(() => {
+      setShowModal(true);
+    }, 500);
+  };
+
+  const closeModal = () => {
+    setShowModal(false);
+    setStatus('idle');
   };
 
   return (
-    <footer id="contact" className="bg-windek-dark text-white pt-24 pb-12 border-t border-white/5">
+    <footer id="contact" className="bg-windek-dark text-white pt-16 sm:pt-20 md:pt-24 pb-8 sm:pb-12 border-t border-white/5">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
-        <div className="grid lg:grid-cols-2 gap-16 mb-20">
-          <div>
-            <h2 className="text-4xl font-bold mb-8">Let's build the future <br/> <span className="text-windek-blue">together.</span></h2>
+        <div className="grid lg:grid-cols-2 gap-8 sm:gap-12 lg:gap-16 mb-12 sm:mb-20">
+          <div ref={titleAnimation.ref} className={titleAnimation.className}>
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-6 sm:mb-8">Let's build the future <br/> <span className="text-windek-blue">together.</span></h2>
             
-            <div className="space-y-8 mt-12">
+            <div className="space-y-6 sm:space-y-8 mt-8 sm:mt-12">
               <div>
                 <p className="text-xs font-bold text-gray-500 uppercase tracking-widest mb-2">Visit Us</p>
-                <p className="text-xl text-white font-light">{CONTACT_INFO.address}</p>
+                <p className="text-base sm:text-lg text-white font-light">{CONTACT_INFO.address}</p>
               </div>
               
-              <div className="flex gap-12">
+              <div className="flex flex-col sm:flex-row gap-6 sm:gap-12">
                 <div>
                    <p className="text-xs font-bold text-gray-500 uppercase tracking-widest mb-2">Email</p>
-                   <a href={`mailto:${CONTACT_INFO.email}`} className="text-lg text-white hover:text-windek-blue transition-colors">{CONTACT_INFO.email}</a>
+                   <a href={`mailto:${CONTACT_INFO.email}`} className="text-sm sm:text-base text-white hover:text-windek-blue transition-colors break-all">{CONTACT_INFO.email}</a>
                 </div>
                 <div>
                    <p className="text-xs font-bold text-gray-500 uppercase tracking-widest mb-2">Call</p>
-                   <a href={`tel:${CONTACT_INFO.phone}`} className="text-lg text-white hover:text-windek-blue transition-colors">{CONTACT_INFO.phone}</a>
+                   <a href={`tel:${CONTACT_INFO.phone}`} className="text-sm sm:text-base text-white hover:text-windek-blue transition-colors">{CONTACT_INFO.phone}</a>
                 </div>
               </div>
             </div>
           </div>
 
-          <div className="bg-white rounded-sm p-8 lg:p-12 relative overflow-hidden min-h-[600px] flex flex-col justify-center">
-             
-             {/* Success View */}
-             <div className={`absolute inset-0 z-10 bg-white flex flex-col items-center justify-center p-8 text-center transition-all duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] ${status === 'success' ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8 pointer-events-none'}`}>
-                <div className="w-20 h-20 bg-green-50 rounded-full flex items-center justify-center mb-6 animate-[bounce_1s_ease-in-out_1]">
-                    <CheckCircle className="h-10 w-10 text-green-500" strokeWidth={2} />
-                </div>
-                <h3 className="text-3xl font-bold text-windek-dark mb-4">Message Received</h3>
-                <p className="text-slate-500 mb-8 leading-relaxed max-w-sm mx-auto">
-                    Thank you for contacting Windek Oil and Gas. Your inquiry has been successfully transmitted to our team. We will respond shortly.
-                </p>
-                <button 
-                    onClick={() => setStatus('idle')}
-                    className="inline-flex items-center text-xs font-bold text-windek-blue uppercase tracking-widest hover:text-windek-dark transition-colors"
-                >
-                    Send Another Message
-                </button>
-             </div>
+          <div ref={formAnimation.ref} className={`bg-white rounded-sm p-6 sm:p-8 lg:p-12 relative overflow-hidden min-h-[550px] sm:min-h-[600px] flex flex-col justify-center ${formAnimation.className}`}>
 
             {/* Form View */}
-            <div className={`transition-all duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] ${status === 'success' ? 'opacity-0 -translate-y-8 pointer-events-none' : 'opacity-100 translate-y-0'}`}>
-                <h3 className="text-windek-dark text-2xl font-bold mb-6">Send a Message</h3>
+            <div>
+                <h3 className="text-windek-dark text-xl sm:text-2xl font-bold mb-4 sm:mb-6">Send a Message</h3>
                 
-                <form onSubmit={handleSubmit} className="space-y-6">
-                    {/* Hidden Honeypot Field (Anti-Spam) - matched to backend 'website' expectation */}
-                    <input type="text" name="website" tabIndex={-1} autoComplete="off" className="hidden" style={{ display: 'none' }} />
+                <form 
+                  action="https://formsubmit.co/enquiries@windekoilandgasltd.com" 
+                  method="POST"
+                  onSubmit={handleSubmit}
+                  className="space-y-4 sm:space-y-6"
+                >
+                    {/* FormSubmit.co hidden fields */}
+                    <input type="hidden" name="_captcha" value="false" />
+                    <input type="hidden" name="_autoresponse" value="Thank you for contacting Windek Oil and Gas. We have received your inquiry and will respond shortly." />
                     
-                    <div className="grid grid-cols-2 gap-6">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
                         <div className="space-y-2">
                             <label htmlFor="firstName" className="text-xs font-bold text-gray-500 uppercase tracking-wide">First Name</label>
-                            <input required name="firstName" type="text" disabled={status === 'submitting'} className="w-full bg-gray-50 border-b-2 border-gray-200 p-3 text-windek-dark focus:border-windek-blue focus:outline-none transition-colors disabled:opacity-50" />
+                            <input required name="First Name" type="text" className="w-full bg-gray-50 border-b-2 border-gray-200 p-2 sm:p-3 text-windek-dark text-sm focus:border-windek-blue focus:outline-none transition-colors" />
                         </div>
                         <div className="space-y-2">
                             <label htmlFor="lastName" className="text-xs font-bold text-gray-500 uppercase tracking-wide">Last Name</label>
-                            <input required name="lastName" type="text" disabled={status === 'submitting'} className="w-full bg-gray-50 border-b-2 border-gray-200 p-3 text-windek-dark focus:border-windek-blue focus:outline-none transition-colors disabled:opacity-50" />
+                            <input required name="Last Name" type="text" className="w-full bg-gray-50 border-b-2 border-gray-200 p-2 sm:p-3 text-windek-dark text-sm focus:border-windek-blue focus:outline-none transition-colors" />
                         </div>
                     </div>
                     <div className="space-y-2">
                         <label htmlFor="email" className="text-xs font-bold text-gray-500 uppercase tracking-wide">Email Address</label>
-                        <input required name="email" type="email" disabled={status === 'submitting'} className="w-full bg-gray-50 border-b-2 border-gray-200 p-3 text-windek-dark focus:border-windek-blue focus:outline-none transition-colors disabled:opacity-50" />
+                        <input required name="email" type="email" className="w-full bg-gray-50 border-b-2 border-gray-200 p-2 sm:p-3 text-windek-dark text-sm focus:border-windek-blue focus:outline-none transition-colors" />
                     </div>
                     <div className="space-y-2">
                         <label htmlFor="message" className="text-xs font-bold text-gray-500 uppercase tracking-wide">Inquiry</label>
-                        <textarea required name="message" rows={3} disabled={status === 'submitting'} className="w-full bg-gray-50 border-b-2 border-gray-200 p-3 text-windek-dark focus:border-windek-blue focus:outline-none transition-colors disabled:opacity-50"></textarea>
+                        <textarea required name="message" rows={3} className="w-full bg-gray-50 border-b-2 border-gray-200 p-2 sm:p-3 text-windek-dark text-sm focus:border-windek-blue focus:outline-none transition-colors"></textarea>
                     </div>
-                    
-                    {status === 'error' && (
-                        <div className="p-3 bg-red-50 text-red-600 text-sm rounded">
-                            Something went wrong. Please try again or email us directly at {CONTACT_INFO.email}.
-                        </div>
-                    )}
 
                     <button 
-                        type="submit" 
-                        disabled={status === 'submitting'}
-                        className="w-full bg-windek-dark text-white font-bold uppercase tracking-widest py-4 hover:bg-windek-blue transition-colors duration-300 disabled:opacity-70 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                        type="submit"
+                        className="w-full bg-windek-dark text-white font-bold uppercase tracking-widest py-3 sm:py-4 text-sm sm:text-base hover:bg-windek-blue transition-colors duration-300 flex items-center justify-center gap-2"
                     >
-                        {status === 'submitting' ? (
-                            <>
-                                <Loader2 className="animate-spin h-5 w-5" /> Sending...
-                            </>
-                        ) : (
-                            "Submit Message"
-                        )}
+                        Submit Message
                     </button>
                 </form>
             </div>
@@ -151,6 +111,43 @@ const Contact: React.FC = () => {
           <p>&copy; {new Date().getFullYear()} Windek Oil and Gas Limited. RC 1493721.</p>
         </div>
       </div>
+
+      {/* Success Modal Pop-up */}
+      {showModal && (
+        <>
+          {/* Backdrop */}
+          <div 
+            className="fixed inset-0 bg-black/50 backdrop-blur-sm z-40 animate-fade-in"
+            onClick={closeModal}
+          ></div>
+          
+          {/* Modal */}
+          <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-50 w-full max-w-sm mx-4 animate-fade-in-up">
+            <div className="bg-white rounded-lg shadow-2xl overflow-hidden">
+              <div className="p-8 text-center">
+                <div className="mx-auto mb-6 w-16 h-16 bg-green-50 rounded-full flex items-center justify-center">
+                  <CheckCircle className="h-8 w-8 text-green-500" strokeWidth={2} />
+                </div>
+                
+                <h3 className="text-2xl font-bold text-windek-dark mb-3">Success!</h3>
+                
+                <p className="text-gray-600 mb-6 leading-relaxed">
+                  Thank you for contacting Windek Oil and Gas. Your inquiry has been successfully received. We will respond shortly.
+                </p>
+                
+                <div className="flex justify-center gap-3">
+                  <button 
+                    onClick={closeModal}
+                    className="px-6 py-2 bg-windek-blue text-white font-bold uppercase tracking-wide rounded hover:bg-sky-500 transition-colors text-sm"
+                  >
+                    Close
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </>
+      )}
     </footer>
   );
 };

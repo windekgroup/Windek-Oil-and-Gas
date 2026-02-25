@@ -37,15 +37,15 @@ const Header: React.FC = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-10">
           {/* Logo Section */}
-          <div className="flex-shrink-0 flex items-center gap-3 group cursor-pointer" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
+          <div className="flex-shrink-0 flex items-center gap-2 sm:gap-3 group cursor-pointer" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
             <div className="relative p-2 bg-gradient-to-br from-windek-blue to-sky-700 rounded-lg shadow-lg shadow-sky-900/20 group-hover:shadow-sky-500/30 transition-shadow">
-              <Droplet className="h-6 w-6 text-white" fill="currentColor" />
+              <Droplet className="h-5 w-5 sm:h-6 sm:w-6 text-white" fill="currentColor" />
             </div>
             <div className="flex flex-col">
-              <span className="font-bold text-2xl tracking-tighter text-white leading-none">
+              <span className="font-bold text-xl sm:text-2xl tracking-tighter text-white leading-none">
                 WINDEK
               </span>
-              <span className="text-[9px] tracking-[0.2em] font-medium text-gray-400 uppercase leading-none mt-1 group-hover:text-windek-blue transition-colors">
+              <span className="text-[7px] sm:text-[9px] tracking-[0.15em] sm:tracking-[0.2em] font-medium text-gray-400 uppercase leading-none mt-1 group-hover:text-windek-blue transition-colors">
                 Oil and Gas Limited
               </span>
             </div>
