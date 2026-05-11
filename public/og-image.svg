@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" role="img" aria-labelledby="title desc">
+  <title id="title">Windek Oil and Gas Limited</title>
+  <desc id="desc">Social preview image for Windek Oil and Gas Limited</desc>
+  <defs>
+    <linearGradient id="sky" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#0B1120"/>
+      <stop offset="62%" stop-color="#10233A"/>
+      <stop offset="100%" stop-color="#00AEEF"/>
+    </linearGradient>
+    <linearGradient id="accent" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#00AEEF"/>
+      <stop offset="100%" stop-color="#ED1C24"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="630" fill="url(#sky)"/>
+  <path d="M0 470 C180 410 290 500 460 440 C640 375 780 470 950 395 C1060 345 1140 350 1200 365 L1200 630 L0 630 Z" fill="#050814" opacity="0.72"/>
+  <g opacity="0.36" stroke="#FFFFFF" stroke-width="4" fill="none">
+    <path d="M806 170 L806 456"/>
+    <path d="M890 132 L890 456"/>
+    <path d="M760 456 L938 456"/>
+    <path d="M788 230 L918 230"/>
+    <path d="M788 300 L918 300"/>
+    <path d="M806 170 L890 132 L974 170"/>
+    <path d="M890 132 L806 456"/>
+    <path d="M806 170 L890 456"/>
+  </g>
+  <rect x="70" y="76" width="72" height="72" rx="16" fill="#00AEEF"/>
+  <path d="M106 94 C106 94 91 112 91 128 C91 142 98 153 106 153 C114 153 121 142 121 128 C121 112 106 94 106 94 Z" fill="#FFFFFF"/>
+  <text x="168" y="115" font-family="Inter, Arial, sans-serif" font-size="38" font-weight="800" fill="#FFFFFF">WINDEK</text>
+  <text x="170" y="145" font-family="Inter, Arial, sans-serif" font-size="16" font-weight="700" letter-spacing="5" fill="#A7DFF5">OIL AND GAS LIMITED</text>
+  <rect x="74" y="214" width="160" height="5" fill="url(#accent)"/>
+  <text x="70" y="298" font-family="Inter, Arial, sans-serif" font-size="64" font-weight="800" fill="#FFFFFF">Fueling Growth.</text>
+  <text x="70" y="372" font-family="Inter, Arial, sans-serif" font-size="64" font-weight="800" fill="#8EE5FF">Powering Nigeria.</text>
+  <text x="74" y="438" font-family="Inter, Arial, sans-serif" font-size="27" font-weight="400" fill="#D5DEE9">Upstream operations, LPG infrastructure, engineering and logistics.</text>
+  <text x="74" y="518" font-family="Inter, Arial, sans-serif" font-size="22" font-weight="700" fill="#FFFFFF">Port Harcourt, Rivers State, Nigeria</text>
+</svg>
