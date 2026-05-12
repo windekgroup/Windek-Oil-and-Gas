@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useMemo, useState, useEffect } from 'react';
 import { ArrowRight, ChevronDown } from 'lucide-react';
 import { TAGLINE, SERVICES } from '../constants';
 
@@ -6,9 +6,13 @@ const Hero: React.FC = () => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   
   // Use images from the services section for the slideshow
-  const backgroundImages = SERVICES.map(service => service.image);
+  const backgroundImages = useMemo(() => SERVICES.map(service => service.image), []);
 
   useEffect(() => {
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      return;
+    }
+
     const interval = setInterval(() => {
       setCurrentImageIndex((prev) => (prev + 1) % backgroundImages.length);
     }, 5000); // Switch every 5 seconds
@@ -44,7 +48,12 @@ const Hero: React.FC = () => {
           >
             <img 
               src={img} 
-              alt={`Windek Background ${index + 1}`} 
+              alt=""
+              aria-hidden="true"
+              loading={index === 0 ? 'eager' : 'lazy'}
+              fetchPriority={index === 0 ? 'high' : 'low'}
+              decoding="async"
+              sizes="100vw"
               className={`w-full h-full object-cover transition-transform duration-[10000ms] ease-linear ${
                 index === currentImageIndex ? 'scale-110' : 'scale-100'
               }`}

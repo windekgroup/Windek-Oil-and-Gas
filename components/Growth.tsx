@@ -47,6 +47,9 @@ const Growth: React.FC = () => {
              <img 
                src="https://images.unsplash.com/photo-1621905251189-08b45d6a269e?q=80&w=1600&auto=format&fit=crop" 
                alt="Black Engineer" 
+               loading="lazy"
+               decoding="async"
+               sizes="100vw"
                className="w-full h-full object-cover opacity-20 grayscale" 
              />
              <div className="absolute inset-0 bg-gradient-to-r from-windek-dark via-windek-dark/80 to-transparent"></div>

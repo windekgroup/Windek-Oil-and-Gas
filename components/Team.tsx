@@ -28,6 +28,9 @@ const Team: React.FC = () => {
                 <img 
                   src={member.image} 
                   alt={member.name} 
+                  loading="lazy"
+                  decoding="async"
+                  sizes="(min-width: 1024px) 25vw, (min-width: 768px) 50vw, 100vw"
                   className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 grayscale group-hover:grayscale-0"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-windek-dark/90 via-transparent to-transparent opacity-80 group-hover:opacity-60 transition-opacity"></div>

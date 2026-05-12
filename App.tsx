@@ -8,10 +8,12 @@ import Growth from './components/Growth';
 import Contact from './components/Contact';
 import Team from './components/Team';
 import ScrollToTopButton from './components/ScrollToTopButton';
+import GoogleAnalytics from './components/GoogleAnalytics';
 
 function App() {
   return (
     <div className="font-sans antialiased text-slate-900 bg-white selection:bg-windek-blue selection:text-white">
+      <GoogleAnalytics />
       <Header />
       <main>
         <Hero />

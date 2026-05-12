@@ -51,6 +51,9 @@ const About: React.FC = () => {
               <img 
                 src="https://www.coastalcrestenergyltd.com/images/folio/wide.jpeg" 
                 alt="Oil and Gas Engineers" 
+                loading="lazy"
+                decoding="async"
+                sizes="(min-width: 1024px) 50vw, 100vw"
                 className="w-full h-auto object-cover"
               />
               <div className="absolute inset-0 bg-gradient-to-tr from-windek-dark/40 to-transparent"></div>

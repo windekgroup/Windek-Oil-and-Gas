@@ -14,6 +14,9 @@ const Projects: React.FC = () => {
           <img 
             src="https://i0.wp.com/www.mctimothyassociates.com/wp-content/uploads/2023/12/Oil-and-Gas-Storage-terminal-large.jpg" 
             alt="Refinery Infrastructure at Sunset" 
+            loading="lazy"
+            decoding="async"
+            sizes="(min-width: 1024px) 50vw, 100vw"
             className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105"
           />
           <div className="absolute inset-0 bg-windek-dark/60 group-hover:bg-windek-dark/40 transition-colors duration-500"></div>
