@@ -1,4 +1,5 @@
 User-agent: *
 Allow: /
+Host: windekoilandgasltd.com
 
 Sitemap: https://windekoilandgasltd.com/sitemap.xml

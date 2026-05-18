@@ -45,7 +45,7 @@ const Contact: React.FC = () => {
             <div className="space-y-6 sm:space-y-8 mt-8 sm:mt-12">
               <div>
                 <p className="text-xs font-bold text-gray-500 uppercase tracking-widest mb-2">Visit Us</p>
-                <p className="text-base sm:text-lg text-white font-light">{CONTACT_INFO.address}</p>
+                <address className="not-italic text-base sm:text-lg text-white font-light">{CONTACT_INFO.address}</address>
               </div>
               
               <div className="flex flex-col sm:flex-row gap-6 sm:gap-12">
@@ -80,20 +80,20 @@ const Contact: React.FC = () => {
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
                         <div className="space-y-2">
                             <label htmlFor="firstName" className="text-xs font-bold text-gray-500 uppercase tracking-wide">First Name</label>
-                            <input required name="First Name" type="text" className="w-full bg-gray-50 border-b-2 border-gray-200 p-2 sm:p-3 text-windek-dark text-sm focus:border-windek-blue focus:outline-none transition-colors" />
+                            <input id="firstName" required name="First Name" type="text" className="w-full bg-gray-50 border-b-2 border-gray-200 p-2 sm:p-3 text-windek-dark text-sm focus:border-windek-blue focus:outline-none transition-colors" />
                         </div>
                         <div className="space-y-2">
                             <label htmlFor="lastName" className="text-xs font-bold text-gray-500 uppercase tracking-wide">Last Name</label>
-                            <input required name="Last Name" type="text" className="w-full bg-gray-50 border-b-2 border-gray-200 p-2 sm:p-3 text-windek-dark text-sm focus:border-windek-blue focus:outline-none transition-colors" />
+                            <input id="lastName" required name="Last Name" type="text" className="w-full bg-gray-50 border-b-2 border-gray-200 p-2 sm:p-3 text-windek-dark text-sm focus:border-windek-blue focus:outline-none transition-colors" />
                         </div>
                     </div>
                     <div className="space-y-2">
                         <label htmlFor="email" className="text-xs font-bold text-gray-500 uppercase tracking-wide">Email Address</label>
-                        <input required name="email" type="email" className="w-full bg-gray-50 border-b-2 border-gray-200 p-2 sm:p-3 text-windek-dark text-sm focus:border-windek-blue focus:outline-none transition-colors" />
+                        <input id="email" required name="email" type="email" className="w-full bg-gray-50 border-b-2 border-gray-200 p-2 sm:p-3 text-windek-dark text-sm focus:border-windek-blue focus:outline-none transition-colors" />
                     </div>
                     <div className="space-y-2">
                         <label htmlFor="message" className="text-xs font-bold text-gray-500 uppercase tracking-wide">Inquiry</label>
-                        <textarea required name="message" rows={3} className="w-full bg-gray-50 border-b-2 border-gray-200 p-2 sm:p-3 text-windek-dark text-sm focus:border-windek-blue focus:outline-none transition-colors"></textarea>
+                        <textarea id="message" required name="message" rows={3} className="w-full bg-gray-50 border-b-2 border-gray-200 p-2 sm:p-3 text-windek-dark text-sm focus:border-windek-blue focus:outline-none transition-colors"></textarea>
                     </div>
 
                     <button 

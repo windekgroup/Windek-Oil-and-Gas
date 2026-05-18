@@ -36,7 +36,7 @@ const Hero: React.FC = () => {
   };
 
   return (
-    <section id="home" className="relative h-screen min-h-[700px] flex items-center bg-windek-dark overflow-hidden">
+    <section id="home" aria-label="Homepage hero section" className="relative h-screen min-h-[700px] flex items-center bg-windek-dark overflow-hidden">
       {/* Background Slideshow */}
       <div className="absolute inset-0 z-0">
         {backgroundImages.map((img, index) => (
