@@ -58,22 +58,28 @@ const Contact: React.FC = () => {
                    <a href={`tel:${CONTACT_INFO.phone}`} className="text-sm sm:text-base text-white hover:text-windek-blue transition-colors">{CONTACT_INFO.phone}</a>
                 </div>
               </div>
+
+              <div className="mt-8 rounded-3xl overflow-hidden border border-white/10 shadow-xl">
+                <iframe
+                  title="Windek Oil and Gas location map"
+                  src="https://maps.google.com/maps?q=19%20Redemption%20Road%2C%20Trans-Amadi%2C%20Port%20Harcourt%2C%20Rivers%20State%2C%20Nigeria&z=15&output=embed"
+                  className="w-full h-72 sm:h-80"
+                  loading="lazy"
+                  referrerPolicy="no-referrer-when-downgrade"
+                ></iframe>
+              </div>
             </div>
           </div>
 
           <div ref={formAnimation.ref} className={`bg-white rounded-sm p-6 sm:p-8 lg:p-12 relative overflow-hidden min-h-[550px] sm:min-h-[600px] flex flex-col justify-center ${formAnimation.className}`}>
-
-            {/* Form View */}
             <div>
                 <h3 className="text-windek-dark text-xl sm:text-2xl font-bold mb-4 sm:mb-6">Send a Message</h3>
-                
                 <form 
                   action="https://formsubmit.co/enquiries@windekoilandgasltd.com" 
                   method="POST"
                   onSubmit={handleSubmit}
                   className="space-y-4 sm:space-y-6"
                 >
-                    {/* FormSubmit.co hidden fields */}
                     <input type="hidden" name="_captcha" value="false" />
                     <input type="hidden" name="_autoresponse" value="Thank you for contacting Windek Oil and Gas. We have received your inquiry and will respond shortly." />
                     
