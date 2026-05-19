@@ -44,12 +44,14 @@ const Team: React.FC = () => {
               </div>
               
               <div className="absolute bottom-0 left-0 w-full p-6 text-white transform translate-y-2 group-hover:translate-y-0 transition-transform duration-300">
-                <p className="text-xs font-bold text-windek-blue uppercase tracking-widest mb-1">{member.role}</p>
-                <h3 className="text-xl font-bold mb-3">{member.name}</h3>
-                <div className="h-0 group-hover:h-auto overflow-hidden transition-all duration-300">
-                  <p className="text-sm text-gray-300 font-light opacity-0 group-hover:opacity-100 transition-opacity delay-100 duration-300">
-                    {member.bio}
-                  </p>
+                <div className="bg-black/40 backdrop-blur-md rounded-2xl p-5 transition-colors duration-300 group-hover:bg-black/70">
+                  <p className="text-xs font-bold text-windek-blue uppercase tracking-widest mb-1">{member.role}</p>
+                  <h3 className="text-xl font-bold mb-3">{member.name}</h3>
+                  <div className="mt-2 overflow-hidden max-h-0 opacity-0 transition-all duration-300 group-hover:max-h-40 group-hover:opacity-100">
+                    <p className="text-sm text-gray-100 leading-relaxed font-light">
+                      {member.bio}
+                    </p>
+                  </div>
                 </div>
               </div>
             </div>
