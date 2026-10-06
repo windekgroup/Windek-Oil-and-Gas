@@ -11,17 +11,6 @@ import ContactSection from '../components/ContactSection.astro';
 import FAQ from '../components/FAQ.astro';
 import { FAQ_ITEMS, TAGLINE, SLOGAN, SITE_URL } from '../data/site';
 
-const homeFaqs = {
-  '@context': 'https://schema.org',
-  '@type': 'FAQPage',
-  '@id': `${SITE_URL}/#faq`,
-  mainEntity: FAQ_ITEMS.map((f) => ({
-    '@type': 'Question',
-    name: f.question,
-    acceptedAnswer: { '@type': 'Answer', text: f.answer },
-  })),
-};
-
 const allServicesFaqs = [
   ...FAQ_ITEMS,
   {
@@ -30,6 +19,17 @@ const allServicesFaqs = [
       'Yes. Engineering, Procurement, Construction and Installation (EPCI) is part of Windek\'s Engineering and Logistics capability, backed by fabrication, modular construction, marine and land logistics, dredging and civil works.',
   },
 ];
+
+const homeFaqs = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  '@id': `${SITE_URL}/#faq`,
+  mainEntity: allServicesFaqs.map((f) => ({
+    '@type': 'Question',
+    name: f.question,
+    acceptedAnswer: { '@type': 'Answer', text: f.answer },
+  })),
+};
 ---
 
 <BaseLayout
@@ -48,12 +48,24 @@ const allServicesFaqs = [
     intro="The four leads accountable for operations, commercial growth, people and finance across every service line."
   />
 
-  <section class="section-y bg-white" id="faq">
-    <div class="max-w-7xl mx-auto gutter">
+  <section class="section-y relative overflow-hidden bg-white" id="faq">
+    <div
+      class="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-windek-blue/50 to-transparent"
+      aria-hidden="true"
+    >
+    </div>
+    <div
+      class="pointer-events-none absolute -top-40 right-0 h-[28rem] w-[28rem] rounded-full bg-windek-blue/10 blur-3xl"
+      aria-hidden="true"
+    >
+    </div>
+    <div class="relative max-w-7xl mx-auto gutter">
       <FAQ
         items={allServicesFaqs}
         heading="Questions Clients Ask Us"
         intro="What Windek does, where we operate, and how the flagship LPG terminal fits into the Nigerian market."
+        eyebrow="Client Questions"
+        showCta
       />
     </div>
   </section>

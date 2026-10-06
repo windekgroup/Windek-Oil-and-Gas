@@ -459,6 +459,28 @@
   }
 }
 
+/* --- FAQ accordion ---------------------------------------------------- */
+
+/* Native <details> opens instantly. Where the browser exposes
+   ::details-content, animate the panel height instead. Progressive in two
+   directions: without the pseudo-element the accordion still works, and an
+   unsupported calc-size() falls back to `auto` so the answer is never
+   clipped. Scoped to no-preference so reduced-motion visitors get the
+   instant native behaviour rather than a transition to opt out of. */
+@media (prefers-reduced-motion: no-preference) {
+  @supports selector(::details-content) {
+    .faq-item::details-content {
+      block-size: 0;
+      overflow: clip;
+      transition: block-size 0.32s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    .faq-item[open]::details-content {
+      block-size: calc-size(auto, size);
+    }
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   /* The reduced-motion block above collapses durations; this additionally
      guarantees no end-state is left mid-transform by a killed animation. */

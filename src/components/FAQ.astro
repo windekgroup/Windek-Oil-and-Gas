@@ -1,21 +1,31 @@
 ---
-import { ChevronDown } from 'lucide-astro';
+import { ArrowRight, Mail, Phone, Plus } from 'lucide-astro';
+import { CONTACT } from '../data/site';
 import type { FaqItem } from '../data/types';
 
 export interface Props {
   items: FaqItem[];
   heading?: string;
   intro?: string;
+  /** Small label that sits above the heading. */
+  eyebrow?: string;
   idPrefix?: string;
   schemaId?: string;
+  /**
+   * Shows the contact card under the intro. Off by default so pages that
+   * already end in a CTA band don't publish two calls to action back to back.
+   */
+  showCta?: boolean;
 }
 
 const {
   items,
   heading = 'Frequently Asked Questions',
   intro = 'Straight answers to the questions clients ask us most often.',
+  eyebrow = 'FAQ',
   idPrefix = 'faq',
   schemaId,
+  showCta = false,
 } = Astro.props;
 
 const schema = schemaId
@@ -32,27 +42,88 @@ const schema = schemaId
   : null;
 ---
 
-<div>
-  <div class="max-w-2xl mb-10 sm:mb-12">
-    <h2 class="text-display-3 font-bold text-windek-dark mb-3">
-      {heading}
-    </h2>
+<div class="grid lg:grid-cols-12 gap-10 lg:gap-12 xl:gap-16 items-start">
+  <header class="lg:col-span-4 lg:sticky lg:top-28" data-reveal="up">
+    <span class="eyebrow">{eyebrow}</span>
+    <h2 class="text-display-2 font-bold text-windek-dark mb-4">{heading}</h2>
     <p class="text-sm sm:text-base text-slate-600 font-light">{intro}</p>
-  </div>
 
-  <div class="space-y-3 max-w-3xl">
+    {
+      showCta && (
+        <div class="relative mt-8 overflow-hidden rounded-lg bg-windek-dark p-6 sm:p-7">
+          <span
+            class="pointer-events-none absolute -top-16 -right-12 h-44 w-44 rounded-full bg-windek-blue/25 blur-3xl"
+            aria-hidden="true"
+          />
+          <div class="relative">
+            <p class="mb-2 text-xs font-bold uppercase tracking-widest text-windek-blue">
+              Talk to our team
+            </p>
+            <p class="mb-5 text-sm font-light leading-relaxed text-gray-300">
+              Scope, capacity or tender questions go straight to the commercial team — not a
+              ticket queue.
+            </p>
+            <div class="space-y-3 border-t border-white/10 pt-5">
+              <a
+                href={`tel:${CONTACT.phoneHref}`}
+                class="group flex items-center gap-3 text-sm text-white transition-colors hover:text-windek-blue"
+              >
+                <Phone class="h-4 w-4 shrink-0 text-windek-blue" aria-hidden="true" />
+                <span class="group-hover:underline underline-offset-4">{CONTACT.phone}</span>
+              </a>
+              <a
+                href={CONTACT.emailHref}
+                class="group flex items-center gap-3 break-all text-sm text-white transition-colors hover:text-windek-blue"
+              >
+                <Mail class="h-4 w-4 shrink-0 text-windek-blue" aria-hidden="true" />
+                <span class="group-hover:underline underline-offset-4">{CONTACT.email}</span>
+              </a>
+            </div>
+            <a
+              href="/contact/"
+              class="group mt-6 inline-flex items-center gap-2 rounded bg-windek-blue px-5 py-3 text-xs font-bold uppercase tracking-widest text-white transition-colors hover:bg-windek-blue-700"
+            >
+              Send an enquiry
+              <ArrowRight
+                class="h-4 w-4 transition-transform group-hover:translate-x-1"
+                aria-hidden="true"
+              />
+            </a>
+          </div>
+        </div>
+      )
+    }
+  </header>
+
+  <div class="lg:col-span-8 border-t border-slate-200">
     {
       items.map((item, i) => (
-        <details id={`${idPrefix}-${i + 1}`} class="group bg-white border border-gray-200 rounded-lg overflow-hidden hover:border-windek-blue/40 transition-colors">
-          <summary class="flex items-start justify-between gap-4 p-5 sm:p-6 cursor-pointer list-none font-semibold text-windek-dark hover:text-windek-blue transition-colors">
-            <span class="text-sm sm:text-base">{item.question}</span>
-            <ChevronDown
-              class="w-5 h-5 flex-shrink-0 text-windek-blue mt-0.5 transition-transform group-open:rotate-180"
+        <details
+          id={`${idPrefix}-${i + 1}`}
+          class="faq-item group border-b border-slate-200 transition-colors open:bg-windek-blue/5"
+          data-reveal="up"
+        >
+          <summary
+            class="flex cursor-pointer list-none items-start gap-3 px-3 py-5 sm:gap-5 sm:px-4 sm:py-6 [&::-webkit-details-marker]:hidden"
+          >
+            <span
+              class="w-7 shrink-0 pt-1 text-[0.6875rem] font-black tabular-nums tracking-[0.14em] text-slate-400 transition-colors group-open:text-windek-blue sm:w-9"
               aria-hidden="true"
-            />
+            >
+              {String(i + 1).padStart(2, '0')}
+            </span>
+            <span class="flex-1 text-base font-semibold leading-snug text-windek-dark transition-colors group-hover:text-windek-blue group-open:text-windek-blue sm:text-lg">
+              {item.question}
+            </span>
+            <span
+              class="mt-0.5 grid h-9 w-9 shrink-0 place-items-center rounded-full border border-slate-200 text-windek-blue transition-all duration-300 group-hover:border-windek-blue/60 group-hover:bg-windek-blue/10 group-open:border-windek-blue group-open:bg-windek-blue group-open:text-white"
+              aria-hidden="true"
+            >
+              <Plus class="h-4 w-4 transition-transform duration-300 group-open:rotate-45" />
+            </span>
           </summary>
-          <div class="px-5 sm:px-6 pb-5 sm:pb-6 -mt-1">
-            <p class="text-sm sm:text-base text-slate-600 leading-relaxed prose-windek">{item.answer}</p>
+          <div class="pb-6 pl-[3.25rem] pr-3 sm:pb-7 sm:pl-[4.5rem] sm:pr-4">
+            <p class="prose-windek text-sm sm:text-base">{item.answer}</p>
           </div>
         </details>
       ))
