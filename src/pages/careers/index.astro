@@ -1,0 +1,165 @@
+---
+import { HardHat, Users, GraduationCap, CheckCircle2 } from 'lucide-astro';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHero from '../../components/PageHero.astro';
+import ContactSection from '../../components/ContactSection.astro';
+import { TEAM_MEMBERS } from '../../data/site';
+
+const disciplines = [
+  {
+    icon: 'hardhat',
+    title: 'Operations and Engineering',
+    body: 'Well operations, project engineering, EPCI delivery, civil and mechanical works, and HSE roles on active sites.',
+  },
+  {
+    icon: 'users',
+    title: 'Commercial and Business Development',
+    body: 'Tender management, key account management, supplier engagement and commercial proposals.',
+  },
+  {
+    icon: 'graduation',
+    title: 'Technical training and internships',
+    body: 'Structured industrial training placements for students of engineering, geoscience and technical disciplines.',
+  },
+];
+
+const icons = { hardhat: HardHat, users: Users, graduation: GraduationCap };
+---
+
+<BaseLayout
+  title="Careers | Windek Oil and Gas Limited Nigeria"
+  description="Build a career in Nigerian oil and gas with Windek. Opportunities across upstream operations, LPG infrastructure and EPCI engineering in Port Harcourt, Rivers State."
+  path="/careers/"
+  breadcrumbs={[
+    { name: 'Home', href: '/' },
+    { name: 'Careers', href: '/careers/' },
+  ]}
+>
+  <PageHero
+    eyebrow="Careers"
+    title="Build Energy Infrastructure With Us"
+    intro="We develop local engineering and project capability in Nigeria. That means real technical work, site exposure and long-term project continuity for people who join us."
+    image="/images/engineering-logistics.jpg"
+    imageAlt="Windek engineering and construction operations in Rivers State"
+    imageWidth={800}
+    imageHeight={530}
+  />
+
+  <section class="section-y bg-white">
+    <div class="max-w-7xl mx-auto gutter">
+      <div class="max-w-3xl mb-12 sm:mb-16">
+        <span class="eyebrow">
+          Why Join Windek
+        </span>
+        <h2 class="text-display-2 font-bold text-windek-dark mb-5">
+          Capability built locally, careers built with it
+        </h2>
+        <div class="prose-windek text-slate-600">
+          <p>
+            As a 100% indigenous operator, our growth depends on developing Nigerian engineering,
+            project management and technical workforce capability. That means our people get work on
+            substantial infrastructure projects rather than short task-based assignments.
+          </p>
+          <p>
+            Our flagship LPG Terminal Facility is a multi-year build with genuine scope for
+            mechanical, civil, instrumentation, HSE and project controls experience. Upstream
+            operations work offers field exposure across drilling, completion and production support.
+          </p>
+        </div>
+      </div>
+
+      <div class="grid md:grid-cols-3 gap-6 sm:gap-8">
+        {
+          disciplines.map((d) => {
+            const Icon = icons[d.icon as keyof typeof icons];
+            return (
+              <div class="bg-windek-gray p-6 sm:p-7 rounded-lg">
+                <span class="w-12 h-12 rounded-lg bg-windek-blue/10 border border-windek-blue/30 flex items-center justify-center mb-5">
+                  <Icon class="w-6 h-6 text-windek-blue" stroke-width={1.5} aria-hidden="true" />
+                </span>
+                <h3 class="text-lg font-bold text-windek-dark mb-2">{d.title}</h3>
+                <p class="text-sm text-gray-600 leading-relaxed">{d.body}</p>
+              </div>
+            );
+          })
+        }
+      </div>
+    </div>
+  </section>
+
+  <section class="py-16 sm:py-20 bg-windek-gray">
+    <div class="max-w-4xl mx-auto gutter text-center">
+      <h2 class="text-display-3 font-bold text-windek-dark mb-5">
+        Current vacancies
+      </h2>
+      <p class="text-slate-600 leading-relaxed mb-8">
+        We do not currently have a list of open positions published on this page. Rather than
+        advertise generic listings, we keep a live talent pipeline and contact people when a role
+        matching their profile becomes available.
+      </p>
+      <div class="bg-white border border-gray-200 rounded-lg p-6 sm:p-8 text-left max-w-2xl mx-auto">
+        <h3 class="font-bold text-windek-dark mb-4">Register your interest</h3>
+        <p class="text-sm text-gray-600 leading-relaxed mb-5">
+          Send us your CV and a short note covering the disciplines you want to work in, your
+          current location and your availability. Include technical certifications and any
+          upstream, midstream, terminal or construction experience.
+        </p>
+        <ul class="space-y-2.5 mb-6">
+          {
+            [
+              'Send your CV to info@windekoilandgasltd.com',
+              'Use the subject line: Career enquiry — your name and discipline',
+              'Mention HSE, technical and any project-specific certifications',
+            ].map((item) => (
+              <li class="flex items-start gap-3 text-sm text-gray-600">
+                <CheckCircle2 class="w-4 h-4 text-windek-blue flex-shrink-0 mt-0.5" aria-hidden="true" />
+                {item}
+              </li>
+            ))
+          }
+        </ul>
+        <a
+          href="mailto:info@windekoilandgasltd.com?subject=Career%20enquiry"
+          class="inline-flex items-center px-6 py-3.5 bg-windek-blue text-white text-xs font-bold uppercase tracking-widest rounded hover:bg-windek-blue-700 transition-colors"
+        >
+          Email Your CV
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <section class="py-16 sm:py-20 bg-white">
+    <div class="max-w-7xl mx-auto gutter">
+      <div class="max-w-2xl mb-10">
+        <h2 class="text-display-3 font-bold text-windek-dark mb-3">
+          Leadership you would work with
+        </h2>
+        <p class="text-slate-600 font-light">
+          Our people function is led by a team with operations, commercial, finance and talent
+          responsibilities.
+        </p>
+      </div>
+      <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        {
+          TEAM_MEMBERS.map((m) => (
+            <div class="text-center">
+              <img
+                src={m.image}
+                alt={`${m.name}, ${m.role}`}
+                width={745}
+                height={745}
+                loading="lazy"
+                decoding="async"
+                class="w-full aspect-square object-cover rounded-lg mb-4"
+              />
+              <h3 class="font-bold text-windek-dark">{m.name}</h3>
+              <p class="text-xs font-bold text-windek-blue uppercase tracking-widest mt-1">{m.role}</p>
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <ContactSection />
+</BaseLayout>

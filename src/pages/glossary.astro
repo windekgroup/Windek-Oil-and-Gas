@@ -1,0 +1,129 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHero from '../components/PageHero.astro';
+import CTABand from '../components/CTABand.astro';
+import { GLOSSARY, SITE_URL } from '../data/site';
+
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'DefinedTermSet',
+  '@id': `${SITE_URL}/glossary/#termset`,
+  name: 'Nigerian Oil and Gas Glossary',
+  url: `${SITE_URL}/glossary/`,
+  description:
+    'Plain-English definitions of the oil, gas, LPG and infrastructure terms used across Nigerian energy projects.',
+  hasDefinedTerm: GLOSSARY.map((t) => ({
+    '@type': 'DefinedTerm',
+    name: t.term,
+    description: t.definition,
+    inDefinedTermSet: `${SITE_URL}/glossary/#termset`,
+  })),
+};
+
+const categories = [...new Set(GLOSSARY.map((t) => t.category))];
+const initial = Astro.url.searchParams.get('q')?.trim() ?? '';
+---
+
+<BaseLayout
+  title="Oil and Gas Glossary | Windek Nigeria"
+  description="A plain-English glossary of Nigerian oil, gas and LPG terms: upstream, midstream, EPCI, terminal, gas flaring, local content and infrastructure explained."
+  path="/glossary/"
+  breadcrumbs={[
+    { name: 'Home', href: '/' },
+    { name: 'Glossary', href: '/glossary/' },
+  ]}
+  jsonLd={schema}
+>
+  <PageHero
+    eyebrow="Glossary"
+    title="Nigerian Energy Terms, Explained"
+    intro="Plain-English definitions of the terms used across Nigerian oil, gas, LPG and infrastructure projects."
+    image="/images/midstream-lpg.jpg"
+    imageAlt="Midstream storage and pipeline infrastructure"
+    imageWidth={800}
+    imageHeight={530}
+  />
+
+  <section class="py-16 sm:py-20 bg-white">
+    <div class="max-w-7xl mx-auto gutter">
+      <form class="max-w-xl mb-10" role="search" method="get">
+        <label for="glossary-search" class="sr-only">Search glossary terms</label>
+        <input
+          type="search"
+          id="glossary-search"
+          name="q"
+          value={initial}
+          placeholder="Search terms, e.g. LPG, EPCI, flaring"
+          class="w-full px-5 py-3.5 bg-windek-gray border border-gray-200 rounded-lg text-sm focus:border-windek-blue focus:ring-2 focus:ring-windek-blue/20 outline-none"
+        />
+      </form>
+
+      <nav class="flex flex-wrap gap-2 mb-10" aria-label="Glossary categories">
+        <span class="px-3 py-1.5 text-xs font-bold uppercase tracking-widest bg-windek-blue text-white rounded">
+          All terms
+        </span>
+        {
+          categories.map((cat) => (
+            <a
+              href={`/glossary/#${cat.toLowerCase().replace(/\s+/g, '-')}`}
+              class="px-3 py-1.5 text-xs font-bold uppercase tracking-widest bg-windek-gray text-gray-600 rounded hover:bg-windek-blue hover:text-white transition-colors"
+            >
+              {cat}
+            </a>
+          ))
+        }
+      </nav>
+
+      <div class="grid md:grid-cols-2 gap-x-10 gap-y-10">
+        {
+          categories.map((cat) => (
+            <section id={cat.toLowerCase().replace(/\s+/g, '-')} class="scroll-mt-28">
+              <h2 class="text-xs font-bold uppercase tracking-widest text-windek-blue mb-5 pb-2 border-b border-gray-200">
+                {cat}
+              </h2>
+              <dl class="space-y-5">
+                {GLOSSARY.filter((t) => t.category === cat).map((term) => (
+                  <div>
+                    <dt class="font-bold text-windek-dark mb-1">{term.term}</dt>
+                    <dd class="text-sm text-gray-600 leading-relaxed">{term.definition}</dd>
+                  </div>
+                ))}
+              </dl>
+            </section>
+          ))
+        }
+      </div>
+
+      <p class="text-xs text-gray-400 mt-12" id="no-results" hidden>
+        No terms match your search. <a href="/glossary/" class="text-windek-blue underline">Clear search</a>
+      </p>
+    </div>
+  </section>
+
+  <CTABand
+    heading="Term you did not find, or need explained?"
+    primaryLabel="Ask Our Team"
+    secondaryLabel="Read Insights"
+    secondaryHref="/insights/"
+  />
+</BaseLayout>
+
+<script>
+  const input = document.getElementById('glossary-search') as HTMLInputElement | null;
+  const noResults = document.getElementById('no-results');
+  const terms = Array.from(document.querySelectorAll<HTMLElement>('dl > div'));
+
+  function filter() {
+    const q = (input?.value ?? '').trim().toLowerCase();
+    let visible = 0;
+    terms.forEach((el) => {
+      const match = !q || (el.textContent ?? '').toLowerCase().includes(q);
+      el.style.display = match ? '' : 'none';
+      if (match) visible++;
+    });
+    if (noResults) noResults.hidden = visible > 0;
+  }
+
+  input?.addEventListener('input', filter);
+  filter();
+</script>

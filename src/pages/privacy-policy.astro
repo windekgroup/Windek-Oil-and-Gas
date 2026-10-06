@@ -1,0 +1,118 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHero from '../components/PageHero.astro';
+import { COMPANY_NAME, CONTACT, RC_NUMBER } from '../data/site';
+---
+
+<BaseLayout
+  title="Privacy Policy | Windek Oil and Gas Limited"
+  description="How Windek Oil and Gas Limited collects, uses and protects personal data submitted through this website, including enquiries and career applications."
+  path="/privacy-policy/"
+  breadcrumbs={[
+    { name: 'Home', href: '/' },
+    { name: 'Privacy Policy', href: '/privacy-policy/' },
+  ]}
+>
+  <PageHero
+    eyebrow="Legal"
+    title="Privacy Policy"
+    intro="How we handle personal data submitted through this website."
+    image="/images/about-operations.jpg"
+    imageAlt="Windek Oil and Gas operations team reviewing field engineering work"
+  />
+
+  <section class="section-y bg-white">
+    <div class="max-w-4xl mx-auto gutter">
+      <article class="prose-windek text-slate-600">
+        <p class="text-sm text-gray-400">
+          Last updated: 1 October 2026. Applies to {COMPANY_NAME} (RC {RC_NUMBER.replace('RC', '')}).
+        </p>
+
+        <h2>1. Who we are</h2>
+        <p>
+          {COMPANY_NAME} is a company registered in Nigeria, headquartered at
+          {CONTACT.address.full}. For questions about this policy or the data we hold, contact us at
+          <a href={CONTACT.emailHref}>{CONTACT.email}</a> or on <a href={`tel:${CONTACT.phoneHref}`}>{CONTACT.phone}</a>.
+        </p>
+
+        <h2>2. What we collect</h2>
+        <p>We only collect information you choose to give us:</p>
+        <ul>
+          <li>Contact enquiry details: your name, email address, phone number, company and the content of your message.</li>
+          <li>Career enquiry details: your CV, technical certifications and the experience you describe in your application.</li>
+          <li>Basic technical data about your visit, such as browser type, device type and pages viewed, collected through analytics.</li>
+        </ul>
+        <p>
+          We do not ask for and do not seek special category personal data through this website.
+        </p>
+
+        <h2>3. Why we use it</h2>
+        <ul>
+          <li>To respond to your enquiry, prepare a quotation or assess a project requirement.</li>
+          <li>To consider your application for employment or industrial training.</li>
+          <li>To understand how the website is used so we can improve it.</li>
+          <li>To meet legal, tax and regulatory record-keeping obligations that apply to a Nigerian registered company.</li>
+        </ul>
+
+        <h2>4. How long we keep it</h2>
+        <p>
+          Enquiry records are retained for as long as needed to deal with the enquiry and any
+          resulting commercial relationship, and afterwards for the period required by applicable
+          law. Career applications are retained for the duration of recruitment and a reasonable
+          period afterwards, unless you ask us to delete them sooner.
+        </p>
+
+        <h2>5. Analytics</h2>
+        <p>
+          This website uses Google Analytics to measure aggregate usage. IP addresses are anonymised
+          before storage. You can opt out using the Google Analytics browser add-on, and your
+          choice is respected by this website.
+        </p>
+
+        <h2>6. Sharing your information</h2>
+        <p>
+          We do not sell your personal information. We share it only where necessary: with service
+          providers that host or support the website and process enquiries on our behalf, and where
+          disclosure is required by Nigerian law, a regulator or a court. Those providers act under
+          confidentiality obligations.
+        </p>
+
+        <h2>7. Your rights</h2>
+        <p>
+          You can ask us what personal data we hold about you, request a correction or deletion, or
+          object to how we use it. Contact us at
+          <a href={CONTACT.emailHref}>{CONTACT.email}</a> and we will respond within a reasonable
+          time. Where we hold your data because a legal obligation requires it, we will explain why
+          we cannot delete it.
+        </p>
+
+        <h2>8. Cookies</h2>
+        <p>
+          The website uses essential cookies required for the site to function, and analytics cookies
+          that help us understand aggregate usage. Analytics cookies are only set once you have
+          interacted with or visited the site.
+        </p>
+
+        <h2>9. Security</h2>
+        <p>
+          We take reasonable technical and organisational measures to protect personal data
+          submitted through this website, including restricting access to staff who need it and
+          using HTTPS for data in transit.
+        </p>
+
+        <h2>10. Changes to this policy</h2>
+        <p>
+          We may update this policy from time to time. The revision date at the top of this page
+          shows the current version, and the page URL will remain unchanged.
+        </p>
+
+        <h2>Contact</h2>
+        <p>
+          {COMPANY_NAME}<br />
+          {CONTACT.address.full}<br />
+          <a href={CONTACT.emailHref}>{CONTACT.email}</a> · <a href={`tel:${CONTACT.phoneHref}`}>{CONTACT.phone}</a>
+        </p>
+      </article>
+    </div>
+  </section>
+</BaseLayout>

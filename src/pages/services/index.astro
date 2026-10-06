@@ -1,0 +1,141 @@
+---
+import { ArrowRight } from 'lucide-astro';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHero from '../../components/PageHero.astro';
+import CTABand from '../../components/CTABand.astro';
+import { SERVICES, SITE_URL } from '../../data/site';
+
+// Overview copy lives here rather than reusing each service's `intro`, so this
+// collection page targets its own terms (service mix, coverage, how to engage)
+// instead of competing with the individual service pages for the same phrases.
+const OVERVIEW: Record<string, string> = {
+  'upstream-operations':
+    'Our upstream line covers the full well lifecycle in Nigeria, from exploration planning through drilling, completion and production support. Operators engage us either for a single well programme or as an ongoing technical partner across their field.',
+  'lpg-infrastructure':
+    'Our infrastructure line designs, builds and operates the storage, terminal and distribution assets the LPG market is short of. It covers bulk storage development, terminal construction and operation, pipeline and distribution services, and bottling capacity, sized to regional demand rather than to a single site.',
+  'engineering-logistics':
+    'Our engineering and logistics line executes the physical works behind energy projects. It combines EPCI delivery with fabrication, marine and land logistics, dredging and civil works capability in the Niger Delta, so delivery does not depend on third-party mobilisation.',
+};
+
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'CollectionPage',
+  '@id': `${SITE_URL}/services/#collection`,
+  url: `${SITE_URL}/services/`,
+  name: 'Windek Oil and Gas Services',
+  mainEntity: {
+    '@type': 'ItemList',
+    itemListElement: SERVICES.map((s, i) => ({
+      '@type': 'ListItem',
+      position: i + 1,
+      item: {
+        '@type': 'Service',
+        '@id': `${SITE_URL}/services/${s.slug}/#service`,
+        name: s.title,
+        serviceType: s.title,
+        url: `${SITE_URL}/services/${s.slug}/`,
+        provider: { '@id': `${SITE_URL}/#organization` },
+      },
+    })),
+  },
+};
+---
+
+<BaseLayout
+  title="Oil and Gas Services | Windek Oil and Gas Nigeria"
+  description="Windek provides upstream well delivery, midstream and LPG storage infrastructure, and EPCI engineering, fabrication and marine logistics services across Nigeria."
+  path="/services/"
+  breadcrumbs={[
+    { name: 'Home', href: '/' },
+    { name: 'Services', href: '/services/' },
+  ]}
+  jsonLd={schema}
+>
+  <PageHero
+    eyebrow="What We Do"
+    title="Three Integrated Service Lines"
+    intro="Upstream operations, midstream and LPG infrastructure, and engineering and logistics — delivered by one accountable indigenous team."
+    image="/images/hero-upstream.jpg"
+    imageAlt="Upstream oil and gas operations in Nigeria"
+  />
+
+  <section class="section-y bg-white">
+    <div class="max-w-7xl mx-auto gutter">
+      <div class="max-w-3xl mb-12 sm:mb-16">
+        <span class="eyebrow">How We Scope Work</span>
+        <h2 class="text-display-2 font-bold text-windek-dark mb-4 sm:mb-6">
+          One contract, three capability lines
+        </h2>
+        <p class="text-sm sm:text-base text-slate-600 font-light">
+          Most projects touch more than one discipline. A terminal needs upstream reservoir work,
+          midstream engineering and marine logistics in the same programme. Windek keeps all three
+          in-house, so a single team owns the scope, the schedule and the site. Clients engage us
+          for a standalone service or for a combined package covering the whole chain, and they
+          deal with one commercial contact throughout.
+        </p>
+      </div>
+
+      <div class="space-y-8 sm:space-y-12">
+        {
+          SERVICES.map((service, i) => (
+            <article class="grid lg:grid-cols-2 gap-8 sm:gap-10 items-center">
+              <div class:list={['relative', i % 2 === 1 ? 'lg:order-2' : '']}>
+                <div class="rounded-lg overflow-hidden shadow-xl">
+                  <img
+                    src={service.image}
+                    alt={service.imageAlt}
+                    width={service.imageWidth}
+                    height={service.imageHeight}
+                    loading="lazy"
+                    decoding="async"
+                    class="w-full h-auto object-cover aspect-[3/2]"
+                  />
+                </div>
+                {/* Hidden on the narrowest screens: a -left offset cannot clear the gutter
+                    without pushing the page into horizontal scroll. */}
+                <div
+                  class="hidden sm:block absolute -bottom-5 left-6 bg-windek-blue text-white px-5 py-3 rounded shadow-lg"
+                >
+                  <span class="text-xs font-black tracking-tighter">0{i + 1}</span>
+                </div>
+              </div>
+
+              <div class:list={[i % 2 === 1 ? 'lg:order-1' : '']}>
+                <p class="text-xs font-bold uppercase tracking-widest text-windek-blue mb-2">
+                  {service.tagline}
+                </p>
+                <h2 class="text-display-3 font-bold text-windek-dark mb-4">
+                  {service.title}
+                </h2>
+                <p class="text-slate-600 leading-relaxed mb-5">{OVERVIEW[service.slug] ?? service.intro}</p>
+
+                <ul class="grid sm:grid-cols-2 gap-2.5 mb-6">
+                  {service.items.map((item) => (
+                    <li class="flex items-start gap-2.5 text-sm text-gray-600">
+                      <span class="w-1.5 h-1.5 rounded-full bg-windek-blue mt-2 flex-shrink-0" aria-hidden="true" />
+                      {item}
+                    </li>
+                  ))}
+                </ul>
+
+                <a
+                  href={`/services/${service.slug}/`}
+                  class="group inline-flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-windek-blue hover:text-windek-dark transition-colors"
+                >
+                  Service Details
+                  <ArrowRight class="w-4 h-4 group-hover:translate-x-1 transition-transform" aria-hidden="true" />
+                </a>
+              </div>
+            </article>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <CTABand
+    heading="Need a capability across the value chain?"
+    secondaryLabel="See Our Projects"
+    secondaryHref="/projects/"
+  />
+</BaseLayout>

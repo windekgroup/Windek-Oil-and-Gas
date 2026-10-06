@@ -1,0 +1,143 @@
+---
+import { Droplet, Menu, X } from 'lucide-astro';
+import { NAV_ITEMS, COMPANY_NAME } from '../data/site';
+
+const current = Astro.url.pathname;
+const isActive = (href: string) =>
+  href === '/' ? current === '/' : current === href || current.startsWith(href);
+---
+
+<header
+  id="site-header"
+  class="site-header header-shell fixed inset-x-0 top-0 z-50"
+  data-state="top"
+>
+  <div class="max-w-7xl mx-auto gutter">
+    <div class="flex items-center justify-between gap-4">
+      <a href="/" class="flex items-center gap-3 group" aria-label={`${COMPANY_NAME} home`}>
+        <span
+          class="w-10 h-10 sm:w-11 sm:h-11 bg-windek-blue rounded-xl flex items-center justify-center flex-shrink-0"
+        >
+          <Droplet class="w-6 h-6 text-white" stroke-width={2.5} aria-hidden="true" />
+        </span>
+        <span class="flex flex-col leading-none">
+          <span class="text-white text-lg sm:text-xl font-extrabold tracking-tight">WINDEK</span>
+          <span class="text-windek-blue text-[9px] sm:text-[10px] font-bold tracking-[0.2em] mt-0.5"
+            >OIL &amp; GAS</span
+          >
+        </span>
+      </a>
+
+      <nav class="hidden lg:flex items-center gap-6 xl:gap-8" aria-label="Main navigation">
+        {
+          NAV_ITEMS.map((item) => (
+            <a
+              href={item.href}
+              aria-current={isActive(item.href) ? 'page' : undefined}
+              class:list={[
+                'text-sm font-medium transition-colors hover:text-windek-blue',
+                isActive(item.href) ? 'text-windek-blue' : 'text-white/90',
+              ]}
+            >
+              {item.label}
+            </a>
+          ))
+        }
+        <a
+          href="/contact/"
+          class="px-5 py-2.5 bg-windek-blue text-white text-xs font-bold uppercase tracking-wider rounded hover:bg-windek-blue-700 transition-colors"
+        >
+          Get a Quote
+        </a>
+      </nav>
+
+      <button
+        type="button"
+        id="menu-toggle"
+        class="lg:hidden text-white p-2 -mr-2 flex items-center justify-center"
+        aria-expanded="false"
+        aria-controls="mobile-menu"
+        aria-label="Open menu"
+      >
+        <Menu id="menu-icon-open" class="w-6 h-6" aria-hidden="true" />
+        <X id="menu-icon-close" class="w-6 h-6 hidden" aria-hidden="true" />
+      </button>
+    </div>
+
+    <nav
+      id="mobile-menu"
+      class="lg:hidden hidden mt-4 rounded-xl p-2 glass-dark"
+      aria-label="Mobile navigation"
+    >
+      {
+        NAV_ITEMS.map((item) => (
+          <a
+            href={item.href}
+            aria-current={isActive(item.href) ? 'page' : undefined}
+            class:list={[
+              'block px-4 py-3 rounded-lg text-sm font-medium transition-colors hover:bg-white/5',
+              isActive(item.href) ? 'text-windek-blue' : 'text-white',
+            ]}
+          >
+            {item.label}
+          </a>
+        ))
+      }
+      <a
+        href="/contact/"
+        class="block mt-1 px-4 py-3 rounded-lg bg-windek-blue text-white text-center text-sm font-bold uppercase tracking-wider"
+      >
+        Get a Quote
+      </a>
+    </nav>
+  </div>
+</header>
+
+<script>
+  const header = document.getElementById('site-header');
+  const toggle = document.getElementById('menu-toggle');
+  const menu = document.getElementById('mobile-menu');
+  const iconOpen = document.getElementById('menu-icon-open');
+  const iconClose = document.getElementById('menu-icon-close');
+
+  // Desktop breakpoint matches the `lg` classes above.
+  const DESKTOP = 1024;
+
+  function setScrolled() {
+    if (!header) return;
+    header.dataset.state = window.scrollY > 10 ? 'scrolled' : 'top';
+  }
+
+  setScrolled();
+  window.addEventListener('scroll', setScrolled, { passive: true });
+
+  function setMenu(open: boolean) {
+    if (!toggle || !menu) return;
+    menu.classList.toggle('hidden', !open);
+    toggle.setAttribute('aria-expanded', String(open));
+    toggle.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
+    iconOpen?.classList.toggle('hidden', open);
+    iconClose?.classList.toggle('hidden', !open);
+    // Prevent the page behind the drawer from scrolling on touch devices.
+    document.body.classList.toggle('overflow-hidden', open);
+  }
+
+  toggle?.addEventListener('click', () => {
+    setMenu(toggle.getAttribute('aria-expanded') !== 'true');
+  });
+
+  // Navigating away should never leave the drawer latched open.
+  menu?.querySelectorAll('a').forEach((link) => link.addEventListener('click', () => setMenu(false)));
+
+  document.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape' && toggle?.getAttribute('aria-expanded') === 'true') {
+      setMenu(false);
+      toggle.focus();
+    }
+  });
+
+  // Growing past the lg breakpoint reveals the desktop nav, so hide the drawer.
+  window.matchMedia(`(min-width: ${DESKTOP}px)`).addEventListener('change', (event) => {
+    if (event.matches) setMenu(false);
+  });
+</script>

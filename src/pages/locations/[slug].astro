@@ -1,0 +1,149 @@
+---
+import { MapPin, Phone, Mail, ArrowRight } from 'lucide-astro';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHero from '../../components/PageHero.astro';
+import CTABand from '../../components/CTABand.astro';
+import { LOCATIONS, SITE_URL, CONTACT } from '../../data/site';
+
+export function getStaticPaths() {
+  return LOCATIONS.map((location) => ({
+    params: { slug: location.slug },
+    props: { location },
+  }));
+}
+
+type Location = (typeof LOCATIONS)[number];
+
+interface Props {
+  location: Location;
+}
+
+const { location } = Astro.props;
+
+const pageTitle =
+  location.name === location.region
+    ? `${location.name} | Windek Oil and Gas`
+    : `${location.name}, ${location.region} | Windek Oil and Gas`;
+
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'Place',
+  '@id': `${SITE_URL}/locations/${location.slug}/#place`,
+  name: `${location.name}, ${location.region}`,
+  description: location.description,
+  url: `${SITE_URL}/locations/${location.slug}/`,
+  address: {
+    '@type': 'PostalAddress',
+    streetAddress: location.address,
+    addressLocality: location.name,
+    addressRegion: location.region,
+    addressCountry: 'NG',
+  },
+  geo: {
+    '@type': 'GeoCoordinates',
+    latitude: location.coordinates.latitude,
+    longitude: location.coordinates.longitude,
+  },
+  ...(location.slug === 'port-harcourt'
+    ? {
+        telephone: CONTACT.phone,
+        email: CONTACT.email,
+        openingHours: 'Mo-Fr 08:00-17:00',
+        hasMap: CONTACT.mapUrl,
+      }
+    : {}),
+};
+---
+
+<BaseLayout
+  title={pageTitle}
+  description={location.metaDescription}
+  path={`/locations/${location.slug}/`}
+  image={location.image}
+  imageAlt={location.imageAlt}
+  breadcrumbs={[
+    { name: 'Home', href: '/' },
+    { name: 'Locations', href: '/locations/' },
+    { name: location.name, href: `/locations/${location.slug}/` },
+  ]}
+  jsonLd={schema}
+>
+  <PageHero
+    eyebrow={location.type}
+    title={location.name}
+    intro={location.description}
+    image={location.image}
+    imageAlt={location.imageAlt}
+    imageWidth={location.imageWidth}
+    imageHeight={location.imageHeight}
+  />
+
+  <section class="section-y bg-white">
+    <div class="max-w-7xl mx-auto gutter">
+      <div class="grid lg:grid-cols-3 gap-10 lg:gap-14">
+        <div class="lg:col-span-2">
+          <h2 class="text-display-3 font-bold text-windek-dark mb-5">
+            Windek in {location.region}
+          </h2>
+          <div class="prose-windek text-slate-600 mb-10">
+            <p>{location.description}</p>
+            <p>
+              {location.type === 'Headquarters'
+                ? 'Our head office is the base for corporate leadership, commercial operations and project management across all three service lines.'
+                : location.type === 'Operating Region'
+                  ? 'Our engineering and logistics work is delivered from this region, supported by marine terminals, fabrication capacity and overland haulage routes.'
+                  : 'This site hosts our flagship LPG Terminal Facility, positioned between gas production and the South East and South South consumption markets.'}
+            </p>
+          </div>
+
+          <h2 class="text-display-3 font-bold text-windek-dark mb-5">
+            Capabilities here
+          </h2>
+          <ul class="space-y-3">
+            {
+              location.services.map((s) => (
+                <li class="flex items-start gap-3 bg-windek-gray p-4 rounded">
+                  <MapPin class="w-4 h-4 text-windek-blue flex-shrink-0 mt-0.5" aria-hidden="true" />
+                  <span class="text-sm text-gray-700">{s}</span>
+                </li>
+              ))
+            }
+          </ul>
+        </div>
+
+        <aside class="lg:col-span-1">
+          <div class="bg-windek-gray p-6 rounded-lg lg:sticky lg:top-28">
+            <h2 class="text-lg font-bold text-windek-dark mb-4">Location details</h2>
+            <address class="not-italic space-y-4 text-sm text-gray-600">
+              <p class="flex items-start gap-3">
+                <MapPin class="w-4 h-4 text-windek-blue flex-shrink-0 mt-0.5" aria-hidden="true" />
+                <span>{location.address}</span>
+              </p>
+              <p class="flex items-center gap-3">
+                <Phone class="w-4 h-4 text-windek-blue flex-shrink-0" aria-hidden="true" />
+                <a href={`tel:${location.phone}`} class="hover:text-windek-blue transition-colors"
+                  >{location.phone}</a
+                >
+              </p>
+              <p class="flex items-center gap-3">
+                <Mail class="w-4 h-4 text-windek-blue flex-shrink-0" aria-hidden="true" />
+                <a href={`mailto:${location.email}`} class="hover:text-windek-blue transition-colors break-all"
+                  >{location.email}</a
+                >
+              </p>
+            </address>
+            <a
+              href="/locations/"
+              class="group inline-flex items-center gap-2 mt-6 text-xs font-bold uppercase tracking-widest text-windek-blue hover:text-windek-dark transition-colors"
+            >
+              All locations
+              <ArrowRight class="w-4 h-4 group-hover:translate-x-1 transition-transform" aria-hidden="true" />
+            </a>
+          </div>
+        </aside>
+      </div>
+    </div>
+  </section>
+
+  <CTABand heading={`Need us on site in ${location.region}?`} />
+</BaseLayout>

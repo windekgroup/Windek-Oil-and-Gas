@@ -1,0 +1,119 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHero from '../../components/PageHero.astro';
+import CTABand from '../../components/CTABand.astro';
+import { PROJECT, SITE_URL } from '../../data/site';
+
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'CollectionPage',
+  '@id': `${SITE_URL}/projects/#collection`,
+  url: `${SITE_URL}/projects/`,
+  name: 'Windek Oil and Gas Projects',
+  mainEntity: {
+    '@type': 'ItemList',
+    itemListElement: [
+      {
+        '@type': 'ListItem',
+        position: 1,
+        item: {
+          '@type': 'Project',
+          '@id': `${SITE_URL}/projects/${PROJECT.slug}/#project`,
+          name: PROJECT.name,
+          url: `${SITE_URL}/projects/${PROJECT.slug}/`,
+        },
+      },
+    ],
+  },
+};
+---
+
+<BaseLayout
+  title="Projects | Windek Oil and Gas Limited Nigeria"
+  description="Project case studies from Windek, including the 20,000 MT LPG Terminal Facility at Atabrikang, Akwa Ibom: a $100M EPCI infrastructure investment in Nigeria."
+  path="/projects/"
+  breadcrumbs={[
+    { name: 'Home', href: '/' },
+    { name: 'Projects', href: '/projects/' },
+  ]}
+  jsonLd={schema}
+>
+  <PageHero
+    eyebrow="Projects"
+    title="Infrastructure We Are Building"
+    intro="Flagship infrastructure investments across the Nigerian energy value chain, delivered with accountable local partners."
+    image="/images/lpg-terminal.jpg"
+    imageAlt="Bulk LPG storage tanks at a coastal oil and gas terminal"
+    imageWidth={1600}
+    imageHeight={1200}
+  />
+
+  <section class="section-y bg-white">
+    <div class="max-w-7xl mx-auto gutter">
+      <article class="group">
+        <a href={`/projects/${PROJECT.slug}/`} class="block">
+          <div class="relative rounded-lg overflow-hidden shadow-xl mb-8">
+            <img
+              src={PROJECT.image}
+              alt={PROJECT.imageAlt}
+              width={PROJECT.imageWidth}
+              height={PROJECT.imageHeight}
+              loading="lazy"
+              decoding="async"
+              class="w-full h-auto object-cover aspect-[21/9] transition-transform duration-700 group-hover:scale-[1.03]"
+            />
+            <div class="absolute inset-0 bg-gradient-to-t from-windek-dark/90 to-transparent"></div>
+            <div class="absolute bottom-0 left-0 p-6 sm:p-8">
+              <p class="text-xs font-bold uppercase tracking-widest text-windek-blue mb-2">
+                {PROJECT.location}
+              </p>
+              <h2 class="text-display-3 font-bold text-white mb-1">{PROJECT.name}</h2>
+              <p class="text-gray-300 text-sm">{PROJECT.subtitle}</p>
+            </div>
+          </div>
+        </a>
+
+        <div class="grid lg:grid-cols-3 gap-8 lg:gap-12">
+          <div class="lg:col-span-2">
+            <p class="text-slate-600 leading-relaxed mb-6">{PROJECT.summary}</p>
+            <ul class="space-y-2.5">
+              {
+                PROJECT.outcomes.map((outcome) => (
+                  <li class="flex items-start gap-3 text-sm text-gray-600">
+                    <span
+                      class="w-1.5 h-1.5 rounded-full bg-windek-blue mt-2 flex-shrink-0"
+                      aria-hidden="true"
+                    />
+                    {outcome}
+                  </li>
+                ))
+              }
+            </ul>
+            <a
+              href={`/projects/${PROJECT.slug}/`}
+              class="group/link inline-flex items-center gap-2 mt-8 px-7 py-3.5 bg-windek-dark text-white text-xs font-bold uppercase tracking-widest rounded hover:bg-windek-blue transition-colors"
+            >
+              Read the Case Study
+            </a>
+          </div>
+
+          <dl class="bg-windek-gray p-6 rounded-lg h-max">
+            {
+              PROJECT.stats.map((stat) => (
+                <div class="border-b border-gray-200 py-3 first:pt-0 last:border-0 last:pb-0">
+                  <dt class="text-xs uppercase tracking-widest text-gray-500">{stat.label}</dt>
+                  <dd class="text-lg font-bold text-windek-dark">{stat.value}</dd>
+                </div>
+              ))
+            }
+          </dl>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <CTABand
+    heading="Planning an infrastructure project?"
+    secondaryLabel="Our Services"
+  />
+</BaseLayout>

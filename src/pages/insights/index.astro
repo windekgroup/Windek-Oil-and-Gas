@@ -1,0 +1,114 @@
+---
+import { ArrowRight, Clock } from 'lucide-astro';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHero from '../../components/PageHero.astro';
+import CTABand from '../../components/CTABand.astro';
+import { ARTICLES } from '../../data/articles';
+import { getTeamMember } from '../../data/site';
+import { SITE_URL } from '../../data/site';
+
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'Blog',
+  '@id': `${SITE_URL}/insights/#blog`,
+  url: `${SITE_URL}/insights/`,
+  name: 'Windek Insights',
+  description:
+    'Analysis on Nigerian LPG infrastructure, local content on EPCI projects, gas flaring and commercial energy decisions.',
+  publisher: { '@id': `${SITE_URL}/#organization` },
+  blogPost: ARTICLES.map((a) => ({
+    '@type': 'BlogPosting',
+    headline: a.title,
+    description: a.description,
+    datePublished: a.date,
+    dateModified: a.updated ?? a.date,
+    url: `${SITE_URL}/insights/${a.slug}/`,
+    author: {
+      '@type': 'Person',
+      name: getTeamMember(a.author)?.name ?? 'Windek Oil and Gas Limited',
+    },
+  })),
+};
+
+const formatDate = (iso: string) =>
+  new Date(iso).toLocaleDateString('en-NG', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+    timeZone: 'UTC',
+  });
+---
+
+<BaseLayout
+  title="Insights | Nigerian Energy and LPG Analysis"
+  description="Practical analysis from Windek on Nigerian LPG storage, local content in EPCI projects, gas flaring and energy infrastructure investment decisions."
+  path="/insights/"
+  breadcrumbs={[
+    { name: 'Home', href: '/' },
+    { name: 'Insights', href: '/insights/' },
+  ]}
+  jsonLd={schema}
+>
+  <PageHero
+    eyebrow="Insights"
+    title="Energy Infrastructure, Explained"
+    intro="Straightforward analysis of the market and policy decisions behind Nigerian energy infrastructure."
+    image="/images/hero-upstream.jpg"
+    imageAlt="Nigerian oil and gas operations"
+    imageWidth={800}
+    imageHeight={530}
+  />
+
+  <section class="section-y bg-white">
+    <div class="max-w-7xl mx-auto gutter">
+      <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
+        {
+          ARTICLES.map((article) => (
+            <article class="group bg-windek-gray flex flex-col hover:shadow-lg transition-shadow">
+              <div class="p-6 sm:p-7 flex-1">
+                <div class="flex items-center gap-3 mb-4 text-xs">
+                  <span class="px-2.5 py-1 bg-windek-blue/10 text-windek-blue font-bold uppercase tracking-widest rounded">
+                    {article.category}
+                  </span>
+                  <span class="flex items-center gap-1 text-gray-500">
+                    <Clock class="w-3.5 h-3.5" aria-hidden="true" />
+                    {article.readingTime}
+                  </span>
+                </div>
+
+                <h2 class="text-lg sm:text-xl font-bold text-windek-dark mb-3 leading-snug">
+                  <a href={`/insights/${article.slug}/`} class="hover:text-windek-blue transition-colors">
+                    {article.title}
+                  </a>
+                </h2>
+                <p class="text-sm text-gray-600 leading-relaxed mb-5">{article.description}</p>
+
+                <p class="text-xs text-gray-400">
+                  <time datetime={article.date}>{formatDate(article.date)}</time>
+                  <span class="mx-2" aria-hidden="true">·</span>
+                  {getTeamMember(article.author)?.name ?? 'Windek'}
+                </p>
+              </div>
+
+              <div class="px-6 sm:px-7 pb-6 sm:pb-7">
+                <a
+                  href={`/insights/${article.slug}/`}
+                  class="group/link inline-flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-windek-blue hover:text-windek-dark transition-colors"
+                >
+                  Read Article
+                  <ArrowRight class="w-4 h-4 group-hover/link:translate-x-1 transition-transform" aria-hidden="true" />
+                </a>
+              </div>
+            </article>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <CTABand
+    heading="Have a question about your market?"
+    secondaryLabel="Glossary"
+    secondaryHref="/glossary/"
+  />
+</BaseLayout>

@@ -1,0 +1,180 @@
+---
+import { Check, ArrowRight } from 'lucide-astro';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHero from '../../components/PageHero.astro';
+import CTABand from '../../components/CTABand.astro';
+import FAQ from '../../components/FAQ.astro';
+import { SERVICES, SITE_URL } from '../../data/site';
+import type { ServiceItem } from '../../data/types';
+
+export function getStaticPaths() {
+  return SERVICES.map((service) => ({
+    params: { slug: service.slug },
+    props: { service },
+  }));
+}
+
+interface Props {
+  service: ServiceItem;
+}
+
+const { service } = Astro.props;
+const others = SERVICES.filter((s) => s.slug !== service.slug);
+
+const serviceSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'Service',
+  '@id': `${SITE_URL}/services/${service.slug}/#service`,
+  name: service.title,
+  serviceType: service.title,
+  description: service.summary,
+  url: `${SITE_URL}/services/${service.slug}/`,
+  image: `${SITE_URL}${service.image}`,
+  provider: { '@id': `${SITE_URL}/#organization` },
+  areaServed: { '@type': 'Country', name: 'Nigeria' },
+  availableChannel: {
+    '@type': 'ServiceChannel',
+    serviceUrl: `${SITE_URL}/contact/`,
+    servicePhone: '+2348085269328',
+  },
+  hasOfferCatalog: {
+    '@type': 'OfferCatalog',
+    name: `${service.title} capabilities`,
+    itemListElement: service.items.map((item, i) => ({
+      '@type': 'Offer',
+      position: i + 1,
+      itemOffered: { '@type': 'Service', name: item },
+    })),
+  },
+};
+
+const breadcrumbItems = [
+  { name: 'Home', href: '/' },
+  { name: 'Services', href: '/services/' },
+  { name: service.title, href: `/services/${service.slug}/` },
+];
+---
+
+<BaseLayout
+  title={`${service.title} in Nigeria`}
+  description={service.summary}
+  path={`/services/${service.slug}/`}
+  image={service.image}
+  imageAlt={service.imageAlt}
+  breadcrumbs={breadcrumbItems}
+  jsonLd={serviceSchema}
+>
+  <PageHero
+    eyebrow="Service"
+    title={service.title}
+    intro={service.intro}
+    image={service.image}
+    imageAlt={service.imageAlt}
+    imageWidth={service.imageWidth}
+    imageHeight={service.imageHeight}
+  />
+
+  <section class="section-y bg-white">
+    <div class="max-w-7xl mx-auto gutter">
+      <div class="grid lg:grid-cols-3 gap-10 lg:gap-14">
+        <div class="lg:col-span-2">
+          <h2 class="text-display-3 font-bold text-windek-dark mb-6">
+            Core capabilities
+          </h2>
+          <div class="space-y-6 mb-12">
+            {
+              service.capabilities.map((cap) => (
+                <div class="border-l-2 border-windek-blue pl-5">
+                  <h3 class="font-bold text-windek-dark mb-1.5">{cap.title}</h3>
+                  <p class="text-slate-600 leading-relaxed text-sm sm:text-base">{cap.description}</p>
+                </div>
+              ))
+            }
+          </div>
+
+          <h2 class="text-display-3 font-bold text-windek-dark mb-6">
+            Service scope
+          </h2>
+          <ul class="grid sm:grid-cols-2 gap-3">
+            {
+              service.items.map((item) => (
+                <li class="flex items-start gap-3 bg-windek-gray p-4 rounded">
+                  <Check class="w-4 h-4 text-windek-blue flex-shrink-0 mt-1" aria-hidden="true" />
+                  <span class="text-sm text-gray-700">{item}</span>
+                </li>
+              ))
+            }
+          </ul>
+        </div>
+
+        <aside class="lg:col-span-1">
+          <div class="bg-windek-gray p-6 rounded-lg lg:sticky lg:top-28">
+            <h2 class="text-lg font-bold text-windek-dark mb-4">Talk to an engineer</h2>
+            <p class="text-sm text-gray-500 leading-relaxed mb-5">
+              Send us your scope, capacity requirement or tender and our commercial team will
+              respond during Nigerian business hours.
+            </p>
+            <a
+              href={`/contact/?topic=${encodeURIComponent(service.shortTitle)}`}
+              class="flex items-center justify-center gap-2 w-full px-5 py-3.5 bg-windek-blue text-white text-xs font-bold uppercase tracking-widest rounded hover:bg-windek-blue-700 transition-colors"
+            >
+              Enquire About This Service
+              <ArrowRight class="w-4 h-4" aria-hidden="true" />
+            </a>
+            <div class="mt-6 pt-6 border-t border-gray-200 space-y-3 text-sm">
+              <a
+                href="tel:+2348085269328"
+                class="block text-gray-600 hover:text-windek-blue transition-colors"
+                >+234 808 526 9328</a
+              >
+              <a
+                href="mailto:info@windekoilandgasltd.com"
+                class="block text-gray-600 hover:text-windek-blue transition-colors break-all"
+                >info@windekoilandgasltd.com</a
+              >
+            </div>
+          </div>
+
+          <div class="mt-6 border border-gray-200 p-6 rounded-lg">
+            <h2 class="text-sm font-bold uppercase tracking-widest text-windek-dark mb-4">
+              Other services
+            </h2>
+            <ul class="space-y-3">
+              {
+                others.map((other) => (
+                  <li>
+                    <a
+                      href={`/services/${other.slug}/`}
+                      class="text-sm text-gray-600 hover:text-windek-blue transition-colors flex items-start gap-2"
+                    >
+                      <ArrowRight class="w-3.5 h-3.5 mt-1 text-windek-blue flex-shrink-0" aria-hidden="true" />
+                      {other.title}
+                    </a>
+                  </li>
+                ))
+              }
+            </ul>
+          </div>
+        </aside>
+      </div>
+    </div>
+  </section>
+
+  <section class="py-16 sm:py-20 bg-windek-gray">
+    <div class="max-w-7xl mx-auto gutter">
+      <FAQ
+        items={service.faqs}
+        heading={`${service.title} questions`}
+        intro={`Common questions about ${service.title.toLowerCase()} and how Windek delivers it.`}
+        idPrefix={`${service.slug}-faq`}
+        schemaId={`${SITE_URL}/services/${service.slug}/#faq`}
+      />
+    </div>
+  </section>
+
+  <CTABand
+    heading={`Ready to discuss ${service.shortTitle.toLowerCase()} requirements?`}
+    secondaryLabel="All Services"
+    secondaryHref="/services/"
+  />
+</BaseLayout>

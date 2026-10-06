@@ -1,0 +1,169 @@
+---
+import { MapPin, Phone, Mail, ArrowRight } from 'lucide-astro';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHero from '../../components/PageHero.astro';
+import CTABand from '../../components/CTABand.astro';
+import { LOCATIONS, SITE_URL, CONTACT } from '../../data/site';
+
+// Short card blurbs for this index only. Each location's full `description`
+// belongs to its own detail page, so the index stays a distinct target rather
+// than duplicating those pages.
+const CARD_COPY: Record<string, string> = {
+  'port-harcourt':
+    'Corporate headquarters in Trans-Amadi, and the base for leadership, commercial operations and project management across all three service lines.',
+  'rivers-state':
+    'Where Windek was founded, and the operating base for much of our engineering, fabrication and logistics work.',
+  'akwa-ibom':
+    'Site of the flagship 20,000 metric tonne LPG storage and distribution hub at Atabrikang, sited between production and the Southern Nigerian consumption corridor.',
+};
+
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'ItemList',
+  '@id': `${SITE_URL}/locations/#locations`,
+  name: 'Windek Oil and Gas operating locations in Nigeria',
+  itemListElement: LOCATIONS.map((loc, i) => ({
+    '@type': 'ListItem',
+    position: i + 1,
+    item: {
+      '@type': 'Place',
+      '@id': `${SITE_URL}/locations/${loc.slug}/#place`,
+      name: `${loc.name}, ${loc.region}`,
+      description: CARD_COPY[loc.slug] ?? loc.description,
+      address: { '@type': 'PostalAddress', addressLocality: loc.name, addressRegion: loc.region, addressCountry: 'NG' },
+      geo: {
+        '@type': 'GeoCoordinates',
+        latitude: loc.coordinates.latitude,
+        longitude: loc.coordinates.longitude,
+      },
+    },
+  })),
+};
+---
+
+<BaseLayout
+  title="Locations in Nigeria | Windek Oil and Gas"
+  description="Windek operates from its Port Harcourt headquarters in Rivers State and delivers projects nationwide, including the LPG Terminal Facility at Atabrikang, Akwa Ibom."
+  path="/locations/"
+  breadcrumbs={[
+    { name: 'Home', href: '/' },
+    { name: 'Locations', href: '/locations/' },
+  ]}
+  jsonLd={schema}
+>
+  <PageHero
+    eyebrow="Where We Work"
+    title="Operating Across Nigeria"
+    intro="Headquartered in Port Harcourt, with an operating footprint in Rivers State and a flagship project in Akwa Ibom."
+    image="/images/engineering-logistics.jpg"
+    imageAlt="Engineering and logistics operations across the Niger Delta"
+    imageWidth={800}
+    imageHeight={530}
+  />
+
+  <section class="section-y bg-white">
+    <div class="max-w-7xl mx-auto gutter">
+      <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
+        {
+          LOCATIONS.map((loc) => (
+            <article class="bg-windek-gray rounded-lg overflow-hidden flex flex-col">
+              <div class="h-44 overflow-hidden">
+                <img
+                  src={loc.image}
+                  alt={loc.imageAlt}
+                  width={loc.imageWidth}
+                  height={loc.imageHeight}
+                  loading="lazy"
+                  decoding="async"
+                  class="w-full h-full object-cover"
+                />
+              </div>
+              <div class="p-6 flex flex-col flex-1">
+                <p class="text-xs font-bold uppercase tracking-widest text-windek-blue mb-2">
+                  {loc.type}
+                </p>
+                <h2 class="text-xl font-bold text-windek-dark mb-1">{loc.name}</h2>
+                <p class="text-sm text-gray-500 mb-4">{loc.region}, {loc.country}</p>
+                <p class="text-sm text-gray-600 leading-relaxed mb-5 flex-1">
+                  {CARD_COPY[loc.slug] ?? loc.description}
+                </p>
+
+                <ul class="space-y-1.5 mb-5">
+                  {loc.services.map((s) => (
+                    <li class="text-xs text-gray-500 flex items-start gap-2">
+                      <span class="w-1 h-1 rounded-full bg-windek-blue mt-1.5 flex-shrink-0" aria-hidden="true" />
+                      {s}
+                    </li>
+                  ))}
+                </ul>
+
+                <a
+                  href={`/locations/${loc.slug}/`}
+                  class="group inline-flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-windek-blue hover:text-windek-dark transition-colors"
+                >
+                  Location Details
+                  <ArrowRight class="w-4 h-4 group-hover:translate-x-1 transition-transform" aria-hidden="true" />
+                </a>
+              </div>
+            </article>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <section class="py-16 sm:py-20 bg-windek-gray">
+    <div class="max-w-7xl mx-auto gutter">
+      <div class="grid lg:grid-cols-2 gap-10 lg:gap-14 items-center">
+        <div>
+          <span class="eyebrow">
+            Head Office
+          </span>
+          <h2 class="text-display-3 font-bold text-windek-dark mb-5">
+            Visit us in Port Harcourt
+          </h2>
+          <address class="not-italic space-y-4 text-gray-600 mb-8">
+            <p class="flex items-start gap-3">
+              <MapPin class="w-5 h-5 text-windek-blue flex-shrink-0 mt-0.5" aria-hidden="true" />
+              <span>{CONTACT.address.full}</span>
+            </p>
+            <p class="flex items-center gap-3">
+              <Phone class="w-5 h-5 text-windek-blue flex-shrink-0" aria-hidden="true" />
+              <a href={`tel:${CONTACT.phoneHref}`} class="hover:text-windek-blue transition-colors"
+                >{CONTACT.phone}</a
+              >
+            </p>
+            <p class="flex items-center gap-3">
+              <Mail class="w-5 h-5 text-windek-blue flex-shrink-0" aria-hidden="true" />
+              <a href={CONTACT.emailHref} class="hover:text-windek-blue transition-colors break-all"
+                >{CONTACT.email}</a
+              >
+            </p>
+          </address>
+          <a
+            href={CONTACT.mapUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            class="inline-flex items-center gap-2 px-6 py-3.5 bg-windek-dark text-white text-xs font-bold uppercase tracking-widest rounded hover:bg-windek-blue transition-colors"
+          >
+            Open in Google Maps
+          </a>
+        </div>
+
+        <div class="rounded-lg overflow-hidden shadow-lg border border-gray-200">
+          <iframe
+            title="Map showing Windek Oil and Gas Limited head office at 19 Redemption Road, Trans-Amadi, Port Harcourt, Rivers State"
+            src="https://www.google.com/maps?q=19%20Redemption%20Road%20Trans-Amadi%20Port%20Harcourt%20Rivers%20State%20Nigeria&output=embed"
+            width="600"
+            height="450"
+            loading="lazy"
+            referrerpolicy="no-referrer-when-downgrade"
+            class="w-full h-full min-h-[320px] border-0"
+          ></iframe>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <CTABand heading="Want a site visit or a supplier call?" />
+</BaseLayout>

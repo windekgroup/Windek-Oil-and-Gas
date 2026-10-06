@@ -1,0 +1,71 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHero from '../../components/PageHero.astro';
+import ContactSection from '../../components/ContactSection.astro';
+import FAQ from '../../components/FAQ.astro';
+import { CONTACT, SITE_URL } from '../../data/site';
+
+const contactSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'ContactPage',
+  '@id': `${SITE_URL}/contact/#contactpage`,
+  url: `${SITE_URL}/contact/`,
+  name: 'Contact Windek Oil and Gas Limited',
+  mainEntity: { '@id': `${SITE_URL}/#organization` },
+};
+
+const faqs = [
+  {
+    question: 'How do I contact Windek Oil and Gas Limited?',
+    answer: `You can reach us by phone on ${CONTACT.phone}, by email at ${CONTACT.email}, or by visiting our head office at ${CONTACT.address.full}. You can also send an enquiry through the form on this page, which arrives directly in our info inbox.`,
+  },
+  {
+    question: 'What are your business hours?',
+    answer:
+      'Our office is open Monday to Friday, 8:00 to 17:00 West Africa Time. Enquiries sent outside those hours are reviewed at the start of the next business day.',
+  },
+  {
+    question: 'What should I include in an enquiry?',
+    answer:
+      'For infrastructure or EPCI enquiries, include your scope, site location, required capacity or tonnage, and your target timeline. For supplier registration, include your company details, registered capability categories and the categories of equipment or materials you supply.',
+  },
+  {
+    question: 'Do you supply to clients outside Nigeria?',
+    answer:
+      'Windek is a Nigerian registered company delivering services to clients in Nigeria. We are open to discussing partnerships and supplier relationships, so if you are based outside Nigeria, please contact us with your proposal and we will respond during Nigerian business hours.',
+  },
+];
+---
+
+<BaseLayout
+  title="Contact Windek Oil and Gas | Port Harcourt"
+  description={`Contact Windek Oil and Gas Limited in Port Harcourt: call ${CONTACT.phone}, email ${CONTACT.email}, or enquire about LPG storage, upstream or EPCI projects.`}
+  path="/contact/"
+  breadcrumbs={[
+    { name: 'Home', href: '/' },
+    { name: 'Contact', href: '/contact/' },
+  ]}
+  jsonLd={contactSchema}
+>
+  <PageHero
+    eyebrow="Contact"
+    title="Talk to Our Team"
+    intro="Whether you have a project scope, a capacity requirement or a tender, our commercial team is the right first point of contact."
+    image="/images/about-operations.jpg"
+    imageAlt="Windek Oil and Gas team available for enquiries"
+  />
+
+  <ContactSection />
+
+  <section class="py-16 sm:py-20 bg-windek-gray">
+    <div class="max-w-7xl mx-auto gutter">
+      <FAQ
+        items={faqs}
+        heading="Before you send"
+        intro="What to expect when you contact us, and what helps us respond usefully."
+        idPrefix="contact-faq"
+        schemaId={`${SITE_URL}/contact/#faq`}
+      />
+    </div>
+  </section>
+</BaseLayout>

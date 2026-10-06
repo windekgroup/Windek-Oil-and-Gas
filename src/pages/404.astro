@@ -1,0 +1,82 @@
+---
+import { ArrowRight, Search } from 'lucide-astro';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { NAV_ITEMS, SERVICES, CONTACT } from '../data/site';
+
+const quickLinks = [
+  ...NAV_ITEMS.filter((n) => n.href !== '/'),
+  ...SERVICES.map((s) => ({ label: s.title, href: `/services/${s.slug}/` })),
+];
+---
+
+<BaseLayout
+  title="Page Not Found | Windek Oil and Gas Limited"
+  description="The page you requested could not be found. Browse our oil and gas services, projects and locations, or contact Windek directly."
+  path="/404/"
+  noindex
+>
+  <section class="bg-windek-dark min-h-[85svh] flex items-center pt-28 sm:pt-36 pb-16">
+    <div class="max-w-7xl mx-auto gutter w-full">
+      <div class="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+        <div>
+          <p class="text-windek-blue font-black text-6xl sm:text-8xl leading-none mb-6">404</p>
+          <h1 class="text-display-2 font-bold text-white mb-5">We could not find that page</h1>
+          <p class="text-gray-300 font-light leading-relaxed mb-8 max-w-lg">
+            The page may have been moved or the address may be mistyped. Use the links below, or
+            contact us and we will point you to the right place.
+          </p>
+          <div class="flex flex-col sm:flex-row gap-3">
+            <a
+              href="/"
+              class="group inline-flex items-center justify-center gap-2 px-6 py-3.5 bg-windek-blue text-white text-xs font-bold uppercase tracking-widest rounded hover:bg-windek-blue-700 transition-colors"
+            >
+              Back to home
+              <ArrowRight class="w-4 h-4 group-hover:translate-x-1 transition-transform" aria-hidden="true" />
+            </a>
+            <a
+              href="/contact/"
+              class="inline-flex items-center justify-center px-6 py-3.5 border border-white/25 text-white text-xs font-bold uppercase tracking-widest rounded hover:bg-white hover:text-windek-dark transition-colors"
+            >
+              Contact Us
+            </a>
+          </div>
+          <div class="mt-10 pt-8 border-t border-white/10 text-sm text-gray-400 space-y-1.5">
+            <p>
+              Phone: <a
+                href={CONTACT.phoneHref}
+                class="text-windek-blue hover:text-white py-1 inline-block">{CONTACT.phone}</a
+              >
+            </p>
+            <p>
+              Email: <a
+                href={CONTACT.emailHref}
+                class="text-windek-blue hover:text-white break-all py-1 inline-block">{CONTACT.email}</a
+              >
+            </p>
+          </div>
+        </div>
+
+        <div>
+          <h2 class="flex items-center gap-2 text-white text-sm font-bold uppercase tracking-widest mb-4">
+            <Search class="w-4 h-4 text-windek-blue" aria-hidden="true" />
+            Popular pages
+          </h2>
+          <ul class="grid sm:grid-cols-2 gap-x-8">
+            {
+              quickLinks.map((link) => (
+                <li>
+                  <a
+                    href={link.href}
+                    class="block py-2.5 text-gray-300 hover:text-windek-blue transition-colors text-sm border-b border-white/5"
+                  >
+                    {link.label}
+                  </a>
+                </li>
+              ))
+            }
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

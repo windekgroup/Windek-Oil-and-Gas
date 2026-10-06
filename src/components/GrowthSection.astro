@@ -1,0 +1,50 @@
+---
+import { ShieldCheck, TrendingUp, Zap } from 'lucide-astro';
+import { GROWTH_GOALS } from '../data/site';
+
+const icons = {
+  shield: ShieldCheck,
+  trending: TrendingUp,
+  zap: Zap,
+};
+---
+
+<section id="growth" class="section-y bg-windek-dark text-white relative overflow-hidden">
+  <div class="max-w-7xl mx-auto gutter relative z-10">
+    <div class="max-w-2xl mb-12 sm:mb-16">
+      <span class="eyebrow">Our Trajectory</span>
+      <h2 class="text-display-2 font-bold mb-4">
+        Building for the <span class="text-transparent bg-clip-text bg-gradient-to-r from-windek-blue to-white">Long Term</span>
+      </h2>
+      <p class="text-gray-400 text-sm sm:text-base font-light">
+        A phased strategy that grows capacity, widens our geographic reach and prepares for cleaner
+        energy.
+      </p>
+    </div>
+
+    <div class="grid md:grid-cols-3 gap-6 sm:gap-8">
+      {
+        GROWTH_GOALS.map((goal, i) => {
+          const Icon = icons[goal.icon as keyof typeof icons];
+          return (
+            <div class="relative group">
+              <div class:list={['rounded-lg border border-white/10 p-6 sm:p-8 h-full transition-[transform,border-color,background-color] duration-300 ease-out hover:-translate-y-1 motion-reduce:hover:translate-y-0 hover:border-windek-blue/50', i === 1 ? 'bg-windek-blue/5' : 'bg-white/[0.02]']}>
+                <div class="flex items-center justify-between mb-6">
+                  <div class="w-12 h-12 rounded-lg bg-windek-blue/10 border border-windek-blue/30 flex items-center justify-center">
+                    <Icon class="w-6 h-6 text-windek-blue" stroke-width={1.5} aria-hidden="true" />
+                  </div>
+                  {i < GROWTH_GOALS.length - 1 && (
+                    <span class="hidden md:block text-white/10 text-3xl font-black" aria-hidden="true">→</span>
+                  )}
+                </div>
+                <p class="text-windek-blue text-xs font-bold tracking-widest uppercase mb-2">{goal.period}</p>
+                <h3 class="text-lg sm:text-xl font-bold mb-3">{goal.title}</h3>
+                <p class="text-sm text-gray-400 font-light leading-relaxed">{goal.description}</p>
+              </div>
+            </div>
+          );
+        })
+      }
+    </div>
+  </div>
+</section>

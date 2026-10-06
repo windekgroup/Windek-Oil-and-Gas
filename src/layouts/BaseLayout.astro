@@ -1,0 +1,381 @@
+---
+import '../styles/global.css';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import ScrollToTopButton from '../components/ScrollToTopButton.astro';
+import {
+  COMPANY_NAME,
+  SITE_URL,
+  CONTACT,
+  RC_NUMBER,
+  SERVICES,
+} from '../data/site';
+import { getArticle } from '../data/articles';
+
+export interface Props {
+  title: string;
+  description: string;
+  path: string;
+  image?: string;
+  imageAlt?: string;
+  ogType?: string;
+  noindex?: boolean;
+  breadcrumbs?: { name: string; href: string }[];
+  jsonLd?: Record<string, unknown> | Record<string, unknown>[];
+}
+
+const {
+  title,
+  description,
+  path,
+  image = '/og-image.png',
+  imageAlt = 'Windek Oil and Gas Limited — fueling growth and powering Nigeria',
+  ogType = 'website',
+  noindex = false,
+  breadcrumbs,
+  jsonLd,
+} = Astro.props;
+
+const site = Astro.site ?? new URL(SITE_URL);
+const canonical = new URL(path, site).href;
+const ogImage = new URL(image, site).href;
+
+// Titles are authored per page (already brand-suffixed and length-checked)
+const fullTitle = title;
+
+const robots = noindex
+  ? 'noindex, nofollow'
+  : 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1';
+
+const article = path.startsWith('/insights/') && path !== '/insights/'
+  ? getArticle(path.replace('/insights/', '').replace(/\/$/, ''))
+  : undefined;
+
+const organizationSchema = {
+  '@type': ['Organization', 'LocalBusiness', 'EnergyCompany'],
+  '@id': `${SITE_URL}/#organization`,
+  name: COMPANY_NAME,
+  legalName: COMPANY_NAME,
+  alternateName: 'Windek',
+  url: `${SITE_URL}/`,
+  logo: { '@id': `${SITE_URL}/#logo` },
+  image: { '@type': 'ImageObject', url: `${SITE_URL}/og-image.png`, width: 1200, height: 630 },
+  slogan: 'Fueling Growth. Powering Nigeria.',
+  description,
+  email: CONTACT.email,
+  telephone: CONTACT.phone,
+  vatID: RC_NUMBER,
+  identifier: {
+    '@type': 'PropertyValue',
+    name: 'CAC Registration Number',
+    value: RC_NUMBER,
+  },
+  address: {
+    '@type': 'PostalAddress',
+    streetAddress: CONTACT.address.street,
+    addressLocality: CONTACT.address.locality,
+    addressRegion: CONTACT.address.region,
+    addressCountry: CONTACT.address.countryCode,
+  },
+  geo: {
+    '@type': 'GeoCoordinates',
+    latitude: CONTACT.geo.latitude,
+    longitude: CONTACT.geo.longitude,
+  },
+  hasMap: CONTACT.mapUrl,
+  areaServed: [
+    { '@type': 'Country', name: 'Nigeria' },
+    { '@type': 'AdministrativeArea', name: 'Rivers State, Nigeria' },
+    { '@type': 'AdministrativeArea', name: 'Akwa Ibom, Nigeria' },
+  ],
+  contactPoint: [
+    {
+      '@type': 'ContactPoint',
+      telephone: CONTACT.phone,
+      contactType: 'sales',
+      email: CONTACT.email,
+      areaServed: 'NG',
+      availableLanguage: ['English'],
+    },
+  ],
+  knowsAbout: [
+    'Upstream oil and gas operations',
+    'LPG storage and terminal development',
+    'Midstream infrastructure',
+    'Engineering procurement construction and installation',
+    'Marine and land logistics',
+    'Gas flaring reduction',
+  ],
+  makesOffer: { '@id': `${SITE_URL}/#services` },
+  employee: [
+    { '@id': `${SITE_URL}/about/leadership/#emmanuel-uwandu` },
+    { '@id': `${SITE_URL}/about/leadership/#motunrayo-adeogun` },
+    { '@id': `${SITE_URL}/about/leadership/#joy-makanjuola` },
+    { '@id': `${SITE_URL}/about/leadership/#dorcas-oloniyo` },
+  ],
+};
+
+const websiteSchema = {
+  '@type': 'WebSite',
+  '@id': `${SITE_URL}/#website`,
+  url: `${SITE_URL}/`,
+  name: COMPANY_NAME,
+  description: 'Official website of Windek Oil and Gas Limited, a Port Harcourt based indigenous oil and gas and LPG infrastructure company serving Nigeria.',
+  inLanguage: 'en-NG',
+  publisher: { '@id': `${SITE_URL}/#organization` },
+};
+
+const logoSchema = {
+  '@type': 'ImageObject',
+  '@id': `${SITE_URL}/#logo`,
+  url: `${SITE_URL}/logo.png`,
+  width: 512,
+  height: 512,
+  caption: `${COMPANY_NAME} logo`,
+};
+
+const servicesSchema = {
+  '@type': 'OfferCatalog',
+  '@id': `${SITE_URL}/#services`,
+  name: 'Windek Oil and Gas Services',
+  provider: { '@id': `${SITE_URL}/#organization` },
+  itemListElement: SERVICES.map((s) => ({
+    '@type': 'Offer',
+    itemOffered: { '@id': `${SITE_URL}/services/${s.slug}/#service` },
+  })),
+};
+
+const breadcrumbSchema = breadcrumbs
+  ? {
+      '@type': 'BreadcrumbList',
+      '@id': `${SITE_URL}${path}#breadcrumb`,
+      itemListElement: breadcrumbs.map((b, i) => ({
+        '@type': 'ListItem',
+        position: i + 1,
+        name: b.name,
+        item: new URL(b.href, site).href,
+      })),
+    }
+  : null;
+
+const webpageSchema = {
+  '@type': 'WebPage',
+  '@id': `${canonical}#webpage`,
+  url: canonical,
+  name: fullTitle,
+  description,
+  isPartOf: { '@id': `${SITE_URL}/#website` },
+  about: { '@id': `${SITE_URL}/#organization` },
+  inLanguage: 'en-NG',
+  ...(article
+    ? { datePublished: article.date, dateModified: article.updated ?? article.date, author: { '@id': `${SITE_URL}/about/leadership/#emmanuel-uwandu` } }
+    : {}),
+  ...(breadcrumbSchema ? { breadcrumb: { '@id': breadcrumbSchema['@id'] } } : {}),
+};
+
+// Accept either a single node, an array of nodes, or objects containing @graph,
+// and flatten everything into one @graph so output is never nested @graph-in-@graph.
+function collectNodes(input: unknown): Record<string, unknown>[] {
+  if (Array.isArray(input)) return input.flatMap(collectNodes);
+  if (input && typeof input === 'object') {
+    const obj = input as Record<string, unknown>;
+    if (Array.isArray(obj['@graph'])) return obj['@graph'] as Record<string, unknown>[];
+    return [obj];
+  }
+  return [];
+}
+
+const extra = jsonLd ? collectNodes(jsonLd) : [];
+
+// Google Analytics 4 measurement ID (public by design)
+const gaId = import.meta.env.PUBLIC_GA_MEASUREMENT_ID || 'G-XW9RT6HBT2';
+const siteVerification = import.meta.env.PUBLIC_GOOGLE_SITE_VERIFICATION;
+
+const graph = [
+  logoSchema,
+  organizationSchema,
+  websiteSchema,
+  webpageSchema,
+  servicesSchema,
+  ...(breadcrumbSchema ? [breadcrumbSchema] : []),
+  ...extra,
+];
+---
+
+<!doctype html>
+<html lang="en-NG" class="no-js">
+  <head>
+    <meta charset="utf-8" />
+    <script is:inline>
+      /* Runs before first paint so motion states are ready immediately and the
+         page never flashes from revealed to hidden. With scripting off the
+         `.no-js` class stays and all content renders in its final state. */
+      document.documentElement.classList.replace('no-js', 'js');
+    </script>
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>{fullTitle}</title>
+    <meta name="description" content={description} />
+    <meta name="author" content={COMPANY_NAME} />
+    <meta name="robots" content={robots} />
+    <link rel="canonical" href={canonical} />
+    <link rel="alternate" hreflang="en-NG" href={canonical} />
+    <link rel="alternate" hreflang="x-default" href={canonical} />
+
+    <meta name="geo.region" content="NG-RI" />
+    <meta name="geo.placename" content="Port Harcourt, Rivers State" />
+    <meta name="geo.position" content={`${CONTACT.geo.latitude};${CONTACT.geo.longitude}`} />
+    <meta name="ICBM" content="RI, Port Harcourt, Nigeria" />
+
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="apple-touch-icon" href="/logo.png" />
+    <link rel="manifest" href="/manifest.webmanifest" />
+    <meta name="theme-color" content="#0B1120" />
+    {siteVerification && <meta name="google-site-verification" content={siteVerification} />}
+
+    <meta property="og:type" content={ogType} />
+    <meta property="og:site_name" content={COMPANY_NAME} />
+    <meta property="og:title" content={fullTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:image:secure_url" content={ogImage} />
+    <meta property="og:image:type" content="image/png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content={imageAlt} />
+    <meta property="og:locale" content="en_NG" />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={fullTitle} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImage} />
+    <meta name="twitter:image:alt" content={imageAlt} />
+
+    {
+      article && (
+        <meta property="article:published_time" content={article.date} />
+      )
+    }
+
+    <script type="application/ld+json" set:html={JSON.stringify({ '@context': 'https://schema.org', '@graph': graph })} />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap"
+    />
+
+    <script is:inline async src={`https://www.googletagmanager.com/gtag/js?id=${gaId}`}></script>
+    <script is:inline define:vars={{ gaId }}>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', gaId, { anonymize_ip: true });
+      document.addEventListener('click', function (e) {
+        var t = e.target;
+        if (!(t instanceof Element)) return;
+        var a = t.closest('a');
+        if (!a) return;
+        var h = a.getAttribute('href') || '';
+        var label = (a.textContent || '').trim().slice(0, 40);
+        if (h.startsWith('tel:')) gtag('event', 'contact_click', { event_category: 'contact', event_label: 'phone:' + label });
+        else if (h.startsWith('mailto:')) gtag('event', 'contact_click', { event_category: 'contact', event_label: 'email' });
+        else if (h.startsWith('https://wa.me')) gtag('event', 'contact_click', { event_category: 'contact', event_label: 'whatsapp' });
+      });
+      document.addEventListener('submit', function (e) {
+        var f = e.target;
+        if (f && f.id === 'contact-form') gtag('event', 'generate_lead', { event_category: 'contact', event_label: 'contact_form' });
+      });
+    </script>
+  </head>
+
+  <body class="font-sans text-slate-900 bg-white antialiased">
+    <a
+      href="#main"
+      class="sr-only focus:not-sr-only focus:absolute focus:z-[100] focus:top-2 focus:left-2 focus:bg-windek-blue focus:px-4 focus:py-2 focus:text-white focus:rounded"
+    >
+      Skip to content
+    </a>
+    <Header />
+    <main id="main">
+      <slot />
+    </main>
+    <Footer />
+    <ScrollToTopButton />
+
+    <script>
+      (() => {
+        const root = document.getElementById('main');
+        if (!root) return;
+
+        /* Top-level sections are revealed automatically, so every page gets the
+           effect without opting in. The first child is skipped: it holds the
+           LCP element, which must paint immediately rather than wait on JS. */
+        const targets = [
+          ...root.querySelectorAll<HTMLElement>('[data-reveal]'),
+          ...Array.from(root.children).filter(
+            (el): el is HTMLElement =>
+              el instanceof HTMLElement &&
+              !(el instanceof SVGElement) &&
+              !el.hasAttribute('data-reveal-skip') &&
+              !el.hasAttribute('data-intro'),
+          ),
+        ];
+
+        const revealAll = () => targets.forEach((el) => el.classList.add('is-revealed'));
+
+        /* Content must never be left invisible. The hidden state is CSS-only and
+           gated on `.js`, so bail out to the final state on any failure. */
+        try {
+          const reduced = window.matchMedia('(prefers-reduced-motion: reduce)');
+
+          if (reduced.matches || !('IntersectionObserver' in window)) {
+            revealAll();
+            return;
+          }
+
+          /* Stagger siblings within one section so grids cascade instead of
+             popping in as a single block. */
+          const grids = new Set<Element>();
+          targets.forEach((el) => {
+            if (el.parentElement) grids.add(el.parentElement);
+          });
+          grids.forEach((parent) => {
+            Array.from(parent.children).forEach((child, i) => {
+              if (child instanceof HTMLElement && child.hasAttribute('data-reveal')) {
+                child.style.setProperty('--reveal-delay', String(Math.min(i, 6)));
+              }
+            });
+          });
+
+          const observer = new IntersectionObserver(
+            (entries) => {
+              for (const entry of entries) {
+                if (!entry.isIntersecting) continue;
+                entry.target.classList.add('is-revealed');
+                observer.unobserve(entry.target);
+              }
+            },
+            { rootMargin: '0px 0px -12% 0px', threshold: 0.08 },
+          );
+
+          targets.forEach((el) => observer.observe(el));
+
+          /* If the visitor turns reduced motion on mid-session, settle everything. */
+          reduced.addEventListener('change', (e) => {
+            if (!e.matches) return;
+            revealAll();
+            targets.forEach((el) => observer.unobserve(el));
+          });
+
+          /* Backstop: if the observer never fires (odd viewports, restored scroll
+             positions, print), don't leave sections stranded at opacity 0. */
+          window.setTimeout(revealAll, 2500);
+        } catch {
+          revealAll();
+        }
+      })();
+    </script>
+  </body>
+</html>

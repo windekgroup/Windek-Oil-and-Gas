@@ -1,0 +1,486 @@
+@import "tailwindcss";
+
+/* ==========================================================================
+   Design tokens
+   ========================================================================== */
+@theme {
+  --font-sans: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto,
+    "Helvetica Neue", Arial, sans-serif;
+  --font-serif: "Playfair Display", ui-serif, Georgia, Cambria, "Times New Roman", serif;
+
+  /* Brand blue ramp. Use -700/-800 for hover/active so state colours stay
+     on-brand instead of drifting to Tailwind's sky palette. */
+  --color-windek-blue-50: #e6f7fe;
+  --color-windek-blue-100: #c4ecfd;
+  --color-windek-blue: #00aeef;
+  --color-windek-blue-600: #009bd6;
+  --color-windek-blue-700: #0086b8;
+  --color-windek-blue-800: #00719a;
+
+  --color-windek-dark: #0b1120;
+  --color-windek-dark-800: #101a2e;
+  --color-windek-dark-700: #1b2942;
+  --color-windek-gray: #f3f4f6;
+
+  --shadow-card: 0 1px 2px rgb(15 23 42 / 0.04), 0 8px 24px -8px rgb(15 23 42 / 0.12);
+  --shadow-card-lg: 0 2px 4px rgb(15 23 42 / 0.05), 0 20px 48px -12px rgb(15 23 42 / 0.18);
+
+  --radius-card: 0.5rem;
+}
+
+/* ==========================================================================
+   Base
+   ========================================================================== */
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    /* clears the fixed header when jumping to an in-page anchor */
+    scroll-padding-top: 6rem;
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+    scrollbar-gutter: stable;
+  }
+
+  body {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+    /* `clip` (not `hidden`) prevents horizontal scroll from decorative
+       elements without creating a scroll container, so sticky keeps working */
+    overflow-x: clip;
+  }
+
+  /* Never let a media element force the page wider than the viewport */
+  img,
+  svg,
+  video,
+  iframe {
+    max-width: 100%;
+  }
+
+  img,
+  video {
+    height: auto;
+  }
+
+  /* Fluid-friendly wrapping for long-form copy */
+  h1,
+  h2,
+  h3,
+  h4 {
+    text-wrap: balance;
+    overflow-wrap: break-word;
+  }
+
+  p,
+  li {
+    text-wrap: pretty;
+  }
+
+  /* Long service names and addresses must not overflow narrow columns */
+  address {
+    overflow-wrap: anywhere;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-windek-blue);
+    outline-offset: 2px;
+    border-radius: 2px;
+  }
+
+  ::selection {
+    background: var(--color-windek-blue);
+    color: #fff;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+}
+
+/* ==========================================================================
+   Layout + typography utilities
+   ========================================================================== */
+
+/* Single source of truth for horizontal page padding */
+@utility gutter {
+  padding-inline: 1rem;
+  @media (width >= 40rem) {
+    padding-inline: 1.5rem;
+  }
+  @media (width >= 64rem) {
+    padding-inline: 2rem;
+  }
+}
+
+/* Fluid type scale. Scales smoothly between 320px and 1280px, so headings
+   never overflow and there are no awkward breakpoint jumps. */
+@utility text-display-1 {
+  font-size: clamp(1.875rem, 1.15rem + 3.3vw, 4.5rem);
+  line-height: 1.08;
+  letter-spacing: -0.02em;
+}
+
+@utility text-display-2 {
+  font-size: clamp(1.5rem, 1.12rem + 1.75vw, 2.5rem);
+  line-height: 1.18;
+  letter-spacing: -0.017em;
+}
+
+@utility text-display-3 {
+  font-size: clamp(1.25rem, 1.1rem + 0.7vw, 1.75rem);
+  line-height: 1.3;
+  letter-spacing: -0.012em;
+}
+
+/* Consistent vertical rhythm for full-page sections */
+@utility section-y {
+  padding-block: 3.5rem;
+  @media (width >= 40rem) {
+    padding-block: 5rem;
+  }
+  @media (width >= 48rem) {
+    padding-block: 6rem;
+  }
+}
+
+/* Small all-caps label used above section headings */
+@utility eyebrow {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--color-windek-blue);
+}
+
+/* Translucent dark surface for the mobile drawer and other overlays */
+@utility glass-dark {
+  background-color: rgb(11 17 32 / 0.9);
+  -webkit-backdrop-filter: blur(14px) saturate(140%);
+  backdrop-filter: blur(14px) saturate(140%);
+  border: 1px solid rgb(255 255 255 / 0.1);
+}
+
+/* Vertical padding for the fixed header. The safe-area inset lives here
+   (not on <body>) because the header is position:fixed and would otherwise
+   sit under the notch while body content starts below it. */
+@utility header-shell {
+  padding-block: 0.875rem;
+  padding-top: calc(0.875rem + env(safe-area-inset-top, 0px));
+  @media (width >= 40rem) {
+    padding-block: 1.25rem;
+    padding-top: calc(1.25rem + env(safe-area-inset-top, 0px));
+  }
+}
+
+/* Dark image card: title + copy pinned to the bottom of a fixed-height frame */
+@utility media-card {
+  position: relative;
+  display: block;
+  overflow: hidden;
+  background-color: var(--color-windek-dark-800);
+}
+
+@utility media-card-body {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 1.25rem;
+  @media (width >= 40rem) {
+    padding: 1.75rem;
+  }
+}
+
+/* Fades a hero/background image so overlaid text always meets contrast */
+@utility scrim-bottom {
+  background-image: linear-gradient(
+    to top,
+    var(--color-windek-dark) 0%,
+    rgb(11 17 32 / 0.55) 45%,
+    rgb(11 17 32 / 0.15) 100%
+  );
+}
+
+@utility scrim-left {
+  background-image: linear-gradient(
+    to right,
+    rgb(11 17 32 / 0.96) 0%,
+    rgb(11 17 32 / 0.85) 45%,
+    rgb(11 17 32 / 0.5) 100%
+  );
+}
+
+/* ==========================================================================
+   Components
+   ========================================================================== */
+@layer components {
+  /* Fixed header surface. Driven by a data attribute rather than utility
+     toggles so the transparent/scrolled states can never fight over the
+     background property the way `bg-transparent` + `glass-dark` did. */
+  .site-header {
+    background-color: transparent;
+    transition:
+      background-color 0.3s ease,
+      border-color 0.3s ease,
+      box-shadow 0.3s ease;
+  }
+  .site-header[data-state='scrolled'] {
+    background-color: rgb(11 17 32 / 0.88);
+    -webkit-backdrop-filter: blur(14px) saturate(140%);
+    backdrop-filter: blur(14px) saturate(140%);
+    border-bottom: 1px solid rgb(255 255 255 / 0.08);
+    box-shadow: 0 12px 32px -16px rgb(11 17 32 / 0.7);
+  }
+
+  /* Long-form copy (articles, legal, case studies) */
+  .prose-windek {
+    color: #475569;
+    line-height: 1.75;
+    font-size: 1rem;
+    max-width: 48rem;
+  }
+  @media (width >= 40rem) {
+    .prose-windek {
+      font-size: 1.0625rem;
+    }
+  }
+  .prose-windek > * + * {
+    margin-top: 1.25rem;
+  }
+  .prose-windek h2 {
+    font-size: clamp(1.25rem, 1.08rem + 0.8vw, 1.625rem);
+    font-weight: 700;
+    color: var(--color-windek-dark);
+    letter-spacing: -0.015em;
+    margin-top: 2.75rem;
+    margin-bottom: 0.75rem;
+    line-height: 1.3;
+  }
+  .prose-windek h3 {
+    font-size: clamp(1.0625rem, 1rem + 0.35vw, 1.1875rem);
+    font-weight: 700;
+    color: var(--color-windek-dark);
+    margin-top: 2rem;
+    margin-bottom: 0.5rem;
+    line-height: 1.4;
+  }
+  .prose-windek ul,
+  .prose-windek ol {
+    padding-left: 1.25rem;
+  }
+  .prose-windek ul {
+    list-style: disc;
+  }
+  .prose-windek ol {
+    list-style: decimal;
+  }
+  .prose-windek li + li {
+    margin-top: 0.5rem;
+  }
+  .prose-windek li::marker {
+    color: var(--color-windek-blue);
+  }
+  .prose-windek a {
+    color: var(--color-windek-blue-700);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    text-decoration-thickness: 1px;
+  }
+  .prose-windek a:hover {
+    color: var(--color-windek-dark);
+  }
+  .prose-windek strong {
+    color: var(--color-windek-dark);
+    font-weight: 600;
+  }
+  .prose-windek blockquote {
+    border-left: 3px solid var(--color-windek-blue);
+    padding-left: 1.25rem;
+    font-style: italic;
+    color: #475569;
+  }
+  /* FAQ answers sit inside a details panel; they should not be capped at 48rem
+     and must not add top margin after the summary */
+  .prose-windek > p:only-child {
+    margin-top: 0;
+  }
+}
+
+/* ==========================================================================
+   Motion
+   --------------------------------------------------------------------------
+   Everything here is progressive enhancement and compositor-only: reveal and
+   intro states move `opacity`/`transform` and nothing else, so they cannot
+   shift layout or degrade CLS/LCP. Each block is gated behind the `.js` class
+   that BaseLayout sets inline in <head>, so if scripting is unavailable or
+   fails, content renders in its final state instead of staying invisible.
+
+   The existing `prefers-reduced-motion` block above forces
+   `animation-duration`/`transition-duration` to ~0 with `!important`, so it
+   neutralises every rule in this section without needing per-rule opt-outs.
+   ========================================================================== */
+
+/* --- Page-load intro ------------------------------------------------- */
+
+@keyframes intro-rise {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 1.25rem, 0);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@keyframes intro-fade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* Drives the hero and page-hero text on first paint. Runs once, no JS. */
+.js [data-intro] {
+  animation: intro-rise 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation-delay: calc(var(--intro-step, 0) * 90ms);
+}
+
+/* --- Scroll reveal --------------------------------------------------- */
+
+@keyframes reveal-rise {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 2rem, 0);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@keyframes reveal-fade-left {
+  from {
+    opacity: 0;
+    transform: translate3d(-1.75rem, 0, 0);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+.js [data-reveal] {
+  opacity: 0;
+  will-change: opacity, transform;
+}
+
+.js [data-reveal="up"] {
+  transform: translate3d(0, 2rem, 0);
+}
+
+.js [data-reveal="left"] {
+  transform: translate3d(-1.75rem, 0, 0);
+}
+
+.js [data-reveal].is-revealed {
+  animation: reveal-rise 0.75s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  animation-delay: calc(var(--reveal-delay, 0) * 90ms);
+  will-change: auto;
+}
+
+.js [data-reveal="left"].is-revealed {
+  animation-name: reveal-fade-left;
+}
+
+/* Short viewport heights (landscape phones) get a shorter travel distance so
+   revealed content is never sitting below the fold after the transition. */
+@media (max-height: 520px) {
+  .js [data-reveal="up"] {
+    transform: translate3d(0, 1rem, 0);
+  }
+}
+
+/* --- Micro-interactions ---------------------------------------------- */
+
+@keyframes ken-burns {
+  from {
+    transform: scale(1) translate3d(0, 0, 0);
+  }
+  to {
+    transform: scale(1.08) translate3d(-0.75%, -0.5%, 0);
+  }
+}
+
+/* Slow drift on the active hero slide. Scale stays under 1.1 so the image
+   never exposes its edges, and `will-change` is scoped to the active slide. */
+.js [data-slide].is-active [data-slide-img] {
+  animation: ken-burns 7s ease-out both;
+  will-change: transform;
+}
+
+/* Underline that wipes in from the left on hover/focus. The one piece of
+   motion that has no existing Tailwind equivalent in the codebase. */
+@utility link-underline {
+  position: relative;
+
+  &::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: -0.125rem;
+    height: 1px;
+    width: 100%;
+    background-color: currentColor;
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  &:hover::after,
+  &:focus-visible::after {
+    transform: scaleX(1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  /* The reduced-motion block above collapses durations; this additionally
+     guarantees no end-state is left mid-transform by a killed animation. */
+  .js [data-reveal],
+  .js [data-intro] {
+    opacity: 1 !important;
+    transform: none !important;
+    animation: none !important;
+  }
+  [data-slide] [data-slide-img] {
+    animation: none !important;
+  }
+}
+
+@media print {
+  header,
+  footer,
+  .glass-dark,
+  [data-print-hidden] {
+    display: none !important;
+  }
+  body {
+    color: #000;
+  }
+}

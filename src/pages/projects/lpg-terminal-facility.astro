@@ -1,0 +1,155 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHero from '../../components/PageHero.astro';
+import CTABand from '../../components/CTABand.astro';
+import FAQ from '../../components/FAQ.astro';
+import { PROJECT, SITE_URL } from '../../data/site';
+
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'Project',
+  '@id': `${SITE_URL}/projects/${PROJECT.slug}/#project`,
+  name: `${PROJECT.name} — ${PROJECT.subtitle}`,
+  alternateName: PROJECT.name,
+  description: PROJECT.summary,
+  url: `${SITE_URL}/projects/${PROJECT.slug}/`,
+  image: `${SITE_URL}${PROJECT.image}`,
+  location: {
+    '@type': 'Place',
+    name: `${PROJECT.location}, Nigeria`,
+    address: {
+      '@type': 'PostalAddress',
+      addressLocality: PROJECT.location,
+      addressCountry: 'NG',
+    },
+  },
+  dateCreated: PROJECT.completion,
+  creator: { '@id': `${SITE_URL}/#organization` },
+  partner: { '@type': 'Organization', name: PROJECT.partner },
+};
+
+const faqs = [
+  {
+    question: 'What is the capacity of the Windek LPG Terminal Facility?',
+    answer:
+      'The facility provides bulk LPG storage capacity of 20,000 metric tonnes at a single site, with associated loading and distribution capability.',
+  },
+  {
+    question: 'Where is the LPG Terminal Facility located?',
+    answer:
+      `The facility is at Atabrikang, Akwa Ibom, positioned on the Southern Nigerian gas corridor between production and the South East and South South consumption markets.`,
+  },
+  {
+    question: 'Who is delivering the project?',
+    answer:
+      `${'Windek'} Oil and Gas Limited is delivering the facility as an integrated EPCI project in partnership with ${PROJECT.partner}, with design, procurement, construction and installation under single-point responsibility.`,
+  },
+  {
+    question: 'Why is a bulk LPG terminal needed in Southern Nigeria?',
+    answer:
+      'Nigeria produces LPG in large volumes but has lacked the bulk storage and terminal capacity to hold it close to demand. Without sufficient storage, gas must move by road in small quantities, which keeps delivered cost high and causes frequent supply interruptions for retailers and industrial consumers.',
+  },
+];
+---
+
+<BaseLayout
+  title="LPG Terminal Facility Case Study | Windek"
+  description={`Our ${PROJECT.capacity} LPG storage and distribution hub at ${PROJECT.location}, valued at ${PROJECT.valuation}, delivered as an integrated EPCI project with ${PROJECT.partner}.`}
+  path={`/projects/${PROJECT.slug}/`}
+  image={PROJECT.image}
+  imageAlt={PROJECT.imageAlt}
+  breadcrumbs={[
+    { name: 'Home', href: '/' },
+    { name: 'Projects', href: '/projects/' },
+    { name: PROJECT.name, href: `/projects/${PROJECT.slug}/` },
+  ]}
+  jsonLd={schema}
+>
+  <PageHero
+    eyebrow="Case Study"
+    title={PROJECT.name}
+    intro={PROJECT.summary}
+    image={PROJECT.image}
+    imageAlt={PROJECT.imageAlt}
+    imageWidth={PROJECT.imageWidth}
+    imageHeight={PROJECT.imageHeight}
+  />
+
+  <section class="section-y bg-white">
+    <div class="max-w-7xl mx-auto gutter">
+      <dl class="grid grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8 pb-12 sm:pb-16 mb-12 sm:mb-16 border-b border-gray-200">
+        {
+          PROJECT.stats.map((stat) => (
+            <div class="border-l-2 border-windek-blue pl-4">
+              <dt class="text-xs uppercase tracking-widest text-gray-500 mb-1">{stat.label}</dt>
+              <dd class="text-xl sm:text-2xl font-bold text-windek-dark">{stat.value}</dd>
+            </div>
+          ))
+        }
+      </dl>
+
+      <div class="grid lg:grid-cols-3 gap-10 lg:gap-14">
+        <article class="lg:col-span-2 prose-windek text-slate-600">
+          <h2>The Challenge</h2>
+          {PROJECT.challenge.split('\n\n').map((para) => <p>{para}</p>)}
+
+          <h2>Our Approach</h2>
+          {PROJECT.approach.split('\n\n').map((para) => <p>{para}</p>)}
+
+          <h2>Project Outcomes</h2>
+          <ul>
+            {PROJECT.outcomes.map((outcome) => <li>{outcome}</li>)}
+          </ul>
+        </article>
+
+        <aside class="lg:col-span-1">
+          <div class="bg-windek-gray p-6 rounded-lg lg:sticky lg:top-28">
+            <h2 class="text-lg font-bold text-windek-dark mb-4">Project details</h2>
+            <dl class="space-y-4 text-sm">
+              <div>
+                <dt class="text-xs uppercase tracking-widest text-gray-500 mb-1">Location</dt>
+                <dd class="text-gray-700">{PROJECT.location}, Nigeria</dd>
+              </div>
+              <div>
+                <dt class="text-xs uppercase tracking-widest text-gray-500 mb-1">Delivery model</dt>
+                <dd class="text-gray-700">Integrated EPCI</dd>
+              </div>
+              <div>
+                <dt class="text-xs uppercase tracking-widest text-gray-500 mb-1">Delivery partner</dt>
+                <dd class="text-gray-700">{PROJECT.partner}</dd>
+              </div>
+              <div>
+                <dt class="text-xs uppercase tracking-widest text-gray-500 mb-1">Target completion</dt>
+                <dd class="text-gray-700">{PROJECT.completion}</dd>
+              </div>
+            </dl>
+            <a
+              href="/contact/"
+              class="flex items-center justify-center w-full mt-6 px-5 py-3.5 bg-windek-blue text-white text-xs font-bold uppercase tracking-widest rounded hover:bg-windek-blue-700 transition-colors"
+            >
+              Enquire About Storage
+            </a>
+          </div>
+        </aside>
+      </div>
+    </div>
+  </section>
+
+  <section class="py-16 sm:py-20 bg-windek-gray">
+    <div class="max-w-7xl mx-auto gutter">
+      <FAQ
+        items={faqs}
+        heading={`${PROJECT.name} questions`}
+        intro="Key facts about Windek's flagship LPG storage and distribution project."
+        idPrefix="project-faq"
+        schemaId={`${SITE_URL}/projects/${PROJECT.slug}/#faq`}
+      />
+    </div>
+  </section>
+
+  <CTABand
+    heading="Planning LPG storage or terminal capacity?"
+    secondaryLabel="LPG Services"
+    secondaryHref="/services/lpg-infrastructure/"
+  />
+</BaseLayout>

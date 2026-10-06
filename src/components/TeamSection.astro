@@ -1,0 +1,83 @@
+---
+import { Linkedin, ArrowRight } from 'lucide-astro';
+import { TEAM_MEMBERS } from '../data/site';
+
+export interface Props {
+  /**
+   * Compact mode shows names, roles and photos only. Used on the home page so the
+   * full bios stay unique to /about/ and /about/leadership/ instead of being
+   * published three times across the site.
+   */
+  compact?: boolean;
+  /** Section intro. Passed in per page so the two placements don't repeat. */
+  intro: string;
+}
+
+const { compact = false, intro } = Astro.props;
+
+// No Person JSON-LD here on purpose: /about/leadership/ is the single canonical
+// definition for these entities. Emitting the same @id from a second page makes
+// the descriptions conflict instead of reinforce each other.
+---
+
+<section id="team" class="section-y bg-windek-gray">
+  <div class="max-w-7xl mx-auto gutter">
+    <div class="max-w-3xl mb-14 sm:mb-20">
+      <span class="eyebrow">Leadership</span>
+      <h2 class="text-display-2 font-bold text-windek-dark mb-4 sm:mb-6">
+        The Team Driving<br class="hidden sm:block" /> the Vision
+      </h2>
+      <p class="text-sm sm:text-base text-slate-600 font-light">{intro}</p>
+    </div>
+
+    <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8">
+      {
+        TEAM_MEMBERS.map((member) => (
+          <article class="group relative bg-white overflow-hidden shadow-sm hover:shadow-xl hover:-translate-y-1 motion-reduce:hover:translate-y-0 transition-[transform,box-shadow] duration-300 ease-out">
+            <div class="relative aspect-square overflow-hidden">
+              <img
+                src={member.image}
+                alt={`${member.name}, ${member.role} at Windek Oil and Gas Limited`}
+                width={745}
+                height={745}
+                loading="lazy"
+                decoding="async"
+                class="w-full h-full object-cover grayscale group-hover:grayscale-0 group-hover:scale-[1.04] motion-reduce:group-hover:scale-100 transition-[transform,filter] duration-700 ease-out"
+              />
+            </div>
+            <div class="p-6">
+              <h3 class="text-lg font-bold text-windek-dark mb-1">{member.name}</h3>
+              <p class="text-xs font-bold text-windek-blue uppercase tracking-widest mb-3">{member.role}</p>
+              {!compact && <p class="text-sm text-slate-500 leading-relaxed">{member.bio}</p>}
+              <a
+                href={`/about/leadership/#${member.slug}`}
+                class="inline-flex items-center gap-2 mt-4 text-xs font-bold uppercase tracking-widest text-windek-blue hover:text-windek-dark transition-colors"
+              >
+                {compact ? 'Read Profile' : 'Profile'}
+                {compact ? (
+                  <ArrowRight class="w-3.5 h-3.5" aria-hidden="true" />
+                ) : (
+                  <Linkedin class="w-3.5 h-3.5" aria-hidden="true" />
+                )}
+              </a>
+            </div>
+          </article>
+        ))
+      }
+    </div>
+
+    {
+      compact && (
+        <div class="mt-10 sm:mt-12">
+          <a
+            href="/about/leadership/"
+            class="group inline-flex items-center gap-2 px-6 py-3.5 bg-windek-dark text-white text-xs font-bold uppercase tracking-widest rounded hover:bg-windek-blue transition-colors"
+          >
+            Meet the full leadership team
+            <ArrowRight class="w-4 h-4 group-hover:translate-x-1 transition-transform" aria-hidden="true" />
+          </a>
+        </div>
+      )
+    }
+  </div>
+</section>

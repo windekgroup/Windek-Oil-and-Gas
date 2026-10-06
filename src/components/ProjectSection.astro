@@ -1,0 +1,87 @@
+---
+import { ArrowRight, MapPin } from 'lucide-astro';
+import { PROJECT } from '../data/site';
+
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'Project',
+  name: `${PROJECT.name} — ${PROJECT.subtitle}`,
+  description: PROJECT.summary,
+  url: 'https://windekoilandgasltd.com/projects/lpg-terminal-facility/',
+  image: `https://windekoilandgasltd.com${PROJECT.image}`,
+  location: {
+    '@type': 'Place',
+    name: `${PROJECT.location}, Nigeria`,
+    address: { '@type': 'PostalAddress', addressLocality: PROJECT.location, addressCountry: 'NG' },
+  },
+  dateCreated: PROJECT.completion,
+  creator: { '@id': 'https://windekoilandgasltd.com/#organization' },
+};
+---
+
+<section id="project" class="section-y bg-windek-gray">
+  <div class="max-w-7xl mx-auto gutter">
+    <div class="grid lg:grid-cols-2 gap-10 lg:gap-14 items-center">
+      <div class="group relative">
+        <div class="rounded-lg overflow-hidden shadow-xl">
+          <img
+            src={PROJECT.image}
+            alt={PROJECT.imageAlt}
+            width={PROJECT.imageWidth}
+            height={PROJECT.imageHeight}
+            loading="lazy"
+            decoding="async"
+            class="w-full h-auto object-cover aspect-[4/3] group-hover:scale-[1.04] motion-reduce:group-hover:scale-100 transition-transform duration-700 ease-out"
+          />
+        </div>
+        {/* Stacked inline on phones so it cannot hang outside the viewport,
+            then tucked into the photo corner from sm upwards. */}
+        <div
+          class="mt-4 sm:absolute sm:bottom-0 sm:right-0 sm:mt-0 sm:-translate-y-1/2 sm:translate-x-6 z-10 bg-windek-blue text-white p-5 rounded shadow-xl text-center"
+        >
+          <p class="text-3xl sm:text-4xl font-bold leading-none">{PROJECT.capacity}</p>
+          <p class="text-xs uppercase tracking-widest mt-2 font-medium">Storage Capacity</p>
+        </div>
+      </div>
+
+      <div>
+        <span class="eyebrow">Flagship Project</span>
+        <h2 class="text-display-2 font-bold text-windek-dark mb-3">
+          {PROJECT.name}
+        </h2>
+        <p class="text-windek-blue font-semibold mb-4">{PROJECT.subtitle}</p>
+        <p class="text-slate-600 leading-relaxed mb-6">
+          Nigeria has the production but not the storage. {PROJECT.capacity} of bulk capacity at{' '}
+          {PROJECT.location} is built to take product off long-haul road transport and put it within
+          economical reach of the retailers and industrial consumers who buy it.
+        </p>
+
+        <div class="flex items-center gap-2 text-sm text-gray-500 mb-6">
+          <MapPin class="w-4 h-4 text-windek-blue flex-shrink-0" aria-hidden="true" />
+          <span>{PROJECT.location}, Nigeria</span>
+        </div>
+
+        <dl class="grid grid-cols-2 gap-4 mb-8">
+          {
+            PROJECT.stats.map((stat) => (
+              <div class="border-l-2 border-windek-blue/30 pl-4">
+                <dt class="text-xs uppercase tracking-widest text-gray-500 mb-1">{stat.label}</dt>
+                <dd class="text-lg font-bold text-windek-dark">{stat.value}</dd>
+              </div>
+            ))
+          }
+        </dl>
+
+        <a
+          href={`/projects/${PROJECT.slug}/`}
+          class="group inline-flex items-center gap-2 px-6 py-3.5 bg-windek-dark text-white text-xs font-bold uppercase tracking-widest rounded hover:bg-windek-blue transition-colors"
+        >
+          View Case Study
+          <ArrowRight class="w-4 h-4 group-hover:translate-x-1 transition-transform" aria-hidden="true" />
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script type="application/ld+json" set:html={JSON.stringify(schema)} />

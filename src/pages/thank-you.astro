@@ -1,0 +1,54 @@
+---
+import { CheckCircle2, ArrowRight, Phone, Mail } from 'lucide-astro';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { CONTACT } from '../data/site';
+---
+
+<BaseLayout
+  title="Thank You | Windek Oil and Gas Limited"
+  description="Your enquiry has been sent to Windek Oil and Gas Limited. Our commercial team will respond during Nigerian business hours."
+  path="/thank-you/"
+  noindex
+  breadcrumbs={[
+    { name: 'Home', href: '/' },
+    { name: 'Thank you', href: '/thank-you/' },
+  ]}
+>
+  <section class="bg-windek-dark min-h-[70svh] flex items-center pt-28 sm:pt-36 pb-16">
+    <div class="max-w-2xl mx-auto gutter text-center">
+      <CheckCircle2 class="w-16 h-16 text-windek-blue mx-auto mb-8" stroke-width={1.5} aria-hidden="true" />
+      <h1 class="text-display-2 font-bold text-white mb-5">
+        Enquiry received
+      </h1>
+      <p class="text-gray-300 font-light leading-relaxed mb-10">
+        Thank you for contacting {CONTACT.address.locality ? 'Windek Oil and Gas Limited' : ''}. Your message
+        has been delivered to our info inbox and our commercial team will respond during Nigerian business hours.
+      </p>
+
+      <div class="flex flex-col sm:flex-row gap-3 justify-center">
+        <a
+          href={`tel:${CONTACT.phoneHref}`}
+          class="inline-flex items-center justify-center gap-2 px-6 py-3.5 bg-windek-blue text-white text-xs font-bold uppercase tracking-widest rounded hover:bg-windek-blue-700 transition-colors"
+        >
+          <Phone class="w-4 h-4" aria-hidden="true" />
+          Call Instead
+        </a>
+        <a
+          href={CONTACT.emailHref}
+          class="inline-flex items-center justify-center gap-2 px-6 py-3.5 border border-white/25 text-white text-xs font-bold uppercase tracking-widest rounded hover:bg-white hover:text-windek-dark transition-colors"
+        >
+          <Mail class="w-4 h-4" aria-hidden="true" />
+          Email Us
+        </a>
+      </div>
+
+      <a
+        href="/"
+        class="group inline-flex items-center gap-2 mt-12 text-xs font-bold uppercase tracking-widest text-windek-blue hover:text-white transition-colors"
+      >
+        Back to home
+        <ArrowRight class="w-4 h-4 group-hover:translate-x-1 transition-transform" aria-hidden="true" />
+      </a>
+    </div>
+  </section>
+</BaseLayout>

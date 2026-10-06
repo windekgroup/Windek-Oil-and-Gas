@@ -1,0 +1,60 @@
+---
+import { ArrowRight } from 'lucide-astro';
+import { SERVICES } from '../data/site';
+---
+
+<section id="services" class="section-y bg-white">
+  <div class="max-w-7xl mx-auto gutter">
+    <div class="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12 sm:mb-16">
+      <div class="max-w-2xl">
+        <span class="eyebrow">What We Do</span>
+        <h2 class="text-display-2 font-bold text-windek-dark mb-4">
+          Integrated Energy Solutions
+        </h2>
+        <p class="text-sm sm:text-base text-slate-600 font-light">
+          Capability pillars covering the oil and gas value chain, delivered by one accountable
+          indigenous team.
+        </p>
+      </div>
+      <a
+        href="/services/"
+        class="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-windek-blue hover:text-windek-dark transition-colors shrink-0"
+      >
+        All Services <ArrowRight class="w-4 h-4" aria-hidden="true" />
+      </a>
+    </div>
+
+    <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6 lg:gap-8">
+      {
+        SERVICES.map((service, i) => (
+          <a
+            href={`/services/${service.slug}/`}
+            class="group relative block h-72 sm:h-80 lg:h-[21rem] overflow-hidden rounded bg-windek-dark-800 hover:shadow-card-lg hover:-translate-y-1 motion-reduce:hover:translate-y-0 transition-[transform,box-shadow] duration-300 ease-out"
+          >
+            <img
+              src={service.image}
+              alt=""
+              width={service.imageWidth}
+              height={service.imageHeight}
+              loading="lazy"
+              decoding="async"
+              class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+            />
+            <span class="absolute inset-0 scrim-bottom" aria-hidden="true"></span>
+            <div class="media-card-body">
+              <span class="text-xs font-black text-white/30 mb-1 tracking-tighter">0{i + 1}</span>
+              <h3 class="text-white font-bold text-display-3 mb-1.5">{service.title}</h3>
+              <p class="text-gray-300 text-xs sm:text-sm font-light leading-relaxed mb-3 line-clamp-3">
+                {service.summary}
+              </p>
+              <span class="inline-flex items-center gap-2 text-windek-blue text-xs font-bold uppercase tracking-widest">
+                Learn More
+                <ArrowRight class="w-4 h-4 group-hover:translate-x-1 transition-transform" aria-hidden="true" />
+              </span>
+            </div>
+          </a>
+        ))
+      }
+    </div>
+  </div>
+</section>

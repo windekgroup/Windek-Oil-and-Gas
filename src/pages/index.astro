@@ -1,0 +1,80 @@
+---
+import { ArrowRight } from 'lucide-astro';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Hero from '../components/Hero.astro';
+import AboutSection from '../components/AboutSection.astro';
+import TeamSection from '../components/TeamSection.astro';
+import ServicesSection from '../components/ServicesSection.astro';
+import ProjectSection from '../components/ProjectSection.astro';
+import GrowthSection from '../components/GrowthSection.astro';
+import ContactSection from '../components/ContactSection.astro';
+import FAQ from '../components/FAQ.astro';
+import { FAQ_ITEMS, TAGLINE, SLOGAN, SITE_URL } from '../data/site';
+
+const homeFaqs = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  '@id': `${SITE_URL}/#faq`,
+  mainEntity: FAQ_ITEMS.map((f) => ({
+    '@type': 'Question',
+    name: f.question,
+    acceptedAnswer: { '@type': 'Answer', text: f.answer },
+  })),
+};
+
+const allServicesFaqs = [
+  ...FAQ_ITEMS,
+  {
+    question: 'Does Windek provide engineering, procurement, construction and installation services?',
+    answer:
+      'Yes. Engineering, Procurement, Construction and Installation (EPCI) is part of Windek\'s Engineering and Logistics capability, backed by fabrication, modular construction, marine and land logistics, dredging and civil works.',
+  },
+];
+---
+
+<BaseLayout
+  title="Windek Oil and Gas | Upstream, LPG & EPCI Nigeria"
+  description="100% indigenous Nigerian energy company in Port Harcourt delivering upstream operations, LPG storage and terminal infrastructure, and EPCI engineering services."
+  path="/"
+  jsonLd={homeFaqs}
+>
+  <Hero />
+  <AboutSection variant="home" />
+  <ServicesSection />
+  <ProjectSection />
+  <GrowthSection />
+  <TeamSection
+    compact
+    intro="The four leads accountable for operations, commercial growth, people and finance across every service line."
+  />
+
+  <section class="section-y bg-white" id="faq">
+    <div class="max-w-7xl mx-auto gutter">
+      <FAQ
+        items={allServicesFaqs}
+        heading="Questions Clients Ask Us"
+        intro="What Windek does, where we operate, and how the flagship LPG terminal fits into the Nigerian market."
+      />
+    </div>
+  </section>
+
+  <ContactSection />
+
+  <section class="py-14 sm:py-16 bg-windek-blue">
+    <div class="max-w-7xl mx-auto gutter flex flex-col md:flex-row items-center justify-between gap-6 text-center md:text-left">
+      <div>
+        <p class="text-white/80 text-xs font-bold uppercase tracking-widest mb-2">{SLOGAN}</p>
+        <h2 class="text-display-3 font-bold text-white">
+          {TAGLINE}
+        </h2>
+      </div>
+      <a
+        href="/contact/"
+        class="group inline-flex items-center gap-2 px-7 py-4 bg-white text-windek-blue text-xs font-bold uppercase tracking-widest rounded hover:bg-windek-dark hover:text-white transition-colors shrink-0"
+      >
+        Speak With Our Team
+        <ArrowRight class="w-4 h-4 group-hover:translate-x-1 transition-transform" aria-hidden="true" />
+      </a>
+    </div>
+  </section>
+</BaseLayout>

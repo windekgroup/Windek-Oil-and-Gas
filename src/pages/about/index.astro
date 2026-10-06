@@ -1,0 +1,143 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHero from '../../components/PageHero.astro';
+import CTABand from '../../components/CTABand.astro';
+import TeamSection from '../../components/TeamSection.astro';
+import AboutSection from '../../components/AboutSection.astro';
+import {
+  COMPANY_NAME,
+  TAGLINE,
+  RC_NUMBER,
+  CORE_VALUES,
+  SITE_URL,
+} from '../../data/site';
+
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'AboutPage',
+  '@id': `${SITE_URL}/about/#aboutpage`,
+  url: `${SITE_URL}/about/`,
+  name: `About ${COMPANY_NAME}`,
+  mainEntity: { '@id': `${SITE_URL}/#organization` },
+};
+
+const milestones = [
+  {
+    year: 'Founding',
+    title: 'Established in Rivers State',
+    body: `${COMPANY_NAME} was registered in Nigeria (RC ${RC_NUMBER.replace('RC', '')}) and began operations from Port Harcourt, building capability across the oil and gas value chain.`,
+  },
+  {
+    year: 'Capability',
+    title: 'Three service lines built out',
+    body: 'Upstream operations, midstream and LPG infrastructure, and engineering and logistics were developed into integrated, accountable service lines rather than separate trade offerings.',
+  },
+  {
+    year: 'Flagship',
+    title: 'LPG Terminal Facility committed',
+    body: 'A 20,000 metric tonne LPG storage and distribution hub at Atabrikang, Akwa Ibom, valued at $100M and delivered as an integrated EPCI project with Cakasa Nigeria Limited.',
+  },
+  {
+    year: 'Next',
+    title: 'Regional expansion',
+    body: 'Expanding LPG infrastructure into additional states while pursuing new exploration and production blocks and developing solar and LPG hybrid solutions.',
+  },
+];
+---
+
+<BaseLayout
+  title="About Windek Oil and Gas | Indigenous Energy Nigeria"
+  description="About Windek Oil and Gas Limited: a 100% indigenous Nigerian energy company in Port Harcourt, working across upstream operations, LPG infrastructure and EPCI delivery."
+  path="/about/"
+  breadcrumbs={[
+    { name: 'Home', href: '/' },
+    { name: 'About', href: '/about/' },
+  ]}
+  jsonLd={schema}
+>
+  <PageHero
+    eyebrow="About Windek"
+    title="Indigenous Excellence in Nigerian Energy"
+    intro={TAGLINE}
+    image="/images/about-operations.jpg"
+    imageAlt="Windek Oil and Gas operations and engineering team at work"
+  />
+
+  <section class="section-y bg-white">
+    <div class="max-w-7xl mx-auto gutter">
+      <div class="max-w-3xl">
+        <span class="eyebrow">Our Story</span>
+        <h2 class="text-display-2 font-bold text-windek-dark mb-6">
+          Building Nigerian capability, not importing it
+        </h2>
+        <div class="prose-windek text-slate-600">
+          <p>
+            {COMPANY_NAME} is a fully indigenous Nigerian energy company headquartered in Port Harcourt,
+            Rivers State. We deliver services across upstream operations, midstream and LPG
+            infrastructure, and engineering and logistics.
+          </p>
+          <p>
+            Our position as an indigenous operator is deliberate. Nigeria has substantial energy
+            resources and a growing base of local engineering capability, but significant project
+            value has historically left the country through imported expertise. We are building
+            that capability here: developing local project management, engineering and workforce
+            capability on projects measured in years rather than single assets.
+          </p>
+          <p>
+            That commitment shows up concretely in the way we deliver. We take integrated
+            responsibility as an EPCI contractor rather than bidding only for the packages we can
+            execute, which means more of the project scope, spend and knowledge stays inside the
+            local economy.
+          </p>
+        </div>
+      </div>
+
+      <ol class="grid sm:grid-cols-2 lg:grid-cols-4 gap-6 mt-14 sm:mt-20">
+        {
+          milestones.map((m) => (
+            <li class="relative border-t-2 border-windek-blue pt-5">
+              <p class="text-xs font-bold uppercase tracking-widest text-windek-blue mb-2">{m.year}</p>
+              <h3 class="font-bold text-windek-dark mb-2 text-base">{m.title}</h3>
+              <p class="text-sm text-gray-500 leading-relaxed">{m.body}</p>
+            </li>
+          ))
+        }
+      </ol>
+    </div>
+  </section>
+
+  <AboutSection variant="about" />
+
+  <section class="section-y bg-white">
+    <div class="max-w-7xl mx-auto gutter">
+      <div class="max-w-2xl mb-12">
+        <span class="eyebrow">What Drives Us</span>
+        <h2 class="text-display-2 font-bold text-windek-dark mb-4">Core Values</h2>
+        <p class="text-slate-600 font-light">
+          The standards we hold ourselves to on every well, terminal and construction site.
+        </p>
+      </div>
+
+      <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        {
+          CORE_VALUES.map((value) => (
+            <div class="bg-windek-gray border-l-4 border-windek-blue p-6 rounded-r-lg">
+              <h3 class="font-bold text-windek-dark mb-2">{value.title}</h3>
+              <p class="text-sm text-gray-500 leading-relaxed">{value.description}</p>
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <TeamSection
+    compact
+    intro="Windek's leadership team spans operations, commercial growth, people and finance, with day-to-day accountability for delivery across all three service lines."
+  />
+  <CTABand
+    heading="Work with an indigenous energy partner"
+    secondaryLabel="Meet the Team"
+    secondaryHref="/about/leadership/"
+  />
+</BaseLayout>

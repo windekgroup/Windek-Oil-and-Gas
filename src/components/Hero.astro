@@ -1,0 +1,126 @@
+---
+import { ArrowRight, ChevronDown } from 'lucide-astro';
+import { TAGLINE, SERVICES } from '../data/site';
+
+const slides = SERVICES.map((s) => ({
+  src: s.image,
+  alt: s.imageAlt,
+  width: s.imageWidth,
+  height: s.imageHeight,
+}));
+---
+
+<section id="home" data-reveal-skip class="relative min-h-[560px] h-[100svh] flex items-center bg-windek-dark overflow-hidden">
+  <div class="absolute inset-0 z-0">
+    {
+      slides.map((slide, index) => (
+        <div
+          class:list={[
+            'absolute inset-0 transition-opacity duration-1000 ease-in-out',
+            index === 0 ? 'opacity-100 is-active' : 'opacity-0',
+          ]}
+          data-slide={index}
+          aria-hidden={index === 0 ? 'false' : 'true'}
+        >
+          <img
+            src={slide.src}
+            alt={slide.alt}
+            width={slide.width}
+            height={slide.height}
+            loading={index === 0 ? 'eager' : 'lazy'}
+            fetchpriority={index === 0 ? 'high' : 'low'}
+            decoding="async"
+            data-slide-img
+            class="w-full h-full object-cover will-change-transform"
+          />
+        </div>
+      ))
+    }
+    <div class="absolute inset-0 bg-gradient-to-r from-windek-dark/95 via-windek-dark/80 to-windek-dark/40"></div>
+    <div class="absolute inset-0 bg-gradient-to-t from-windek-dark via-transparent to-transparent"></div>
+  </div>
+
+  <div class="relative z-10 max-w-7xl mx-auto gutter w-full">
+    <div class="max-w-3xl">
+      <div class="inline-flex flex-wrap items-center gap-x-2 gap-y-1 px-3 py-1.5 mb-5 sm:mb-6 border border-windek-blue/30 rounded-full bg-windek-blue/10 max-w-full" data-intro style="--intro-step: 0">
+        <span class="w-1.5 h-1.5 rounded-full bg-windek-blue flex-shrink-0"></span>
+        <span class="text-windek-blue text-xs font-bold tracking-widest uppercase">Premium Indigenous Energy</span>
+      </div>
+
+      <h1 class="text-display-1 text-white mb-6 sm:mb-8" data-intro style="--intro-step: 1">
+        Fueling Growth.<br />
+        <span class="text-transparent bg-clip-text bg-gradient-to-r from-windek-blue to-white">Powering Nigeria.</span>
+      </h1>
+
+      <p class="text-base sm:text-lg md:text-xl text-gray-300 mb-8 sm:mb-10 font-light leading-relaxed max-w-2xl border-l-2 border-windek-blue/50 pl-4 sm:pl-6" data-intro style="--intro-step: 2">
+        {TAGLINE}
+      </p>
+
+      <div class="flex flex-col sm:flex-row gap-3 sm:gap-5" data-intro style="--intro-step: 3">
+        <a
+          href="/projects/lpg-terminal-facility/"
+          class="group inline-flex items-center justify-center px-6 sm:px-8 py-3.5 sm:py-4 bg-windek-blue text-white text-xs sm:text-sm font-bold tracking-wide rounded hover:bg-windek-blue-700 transition-colors"
+        >
+          Explore Projects
+          <ArrowRight class="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform" aria-hidden="true" />
+        </a>
+        <a
+          href="/contact/"
+          class="inline-flex items-center justify-center px-6 sm:px-8 py-3.5 sm:py-4 border border-white/20 bg-white/5 text-white text-xs sm:text-sm font-bold tracking-wide rounded hover:bg-white hover:text-windek-dark transition-colors"
+        >
+          Contact Us
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <div class="absolute bottom-0 w-full z-20 border-t border-white/10 bg-windek-dark/50 hidden md:block">
+    <div class="max-w-7xl mx-auto gutter">
+      <div class="grid grid-cols-3 divide-x divide-white/10">
+        {
+          [
+            { label: 'Founded', value: 'Indigenous Excellence' },
+            { label: 'Focus', value: 'Upstream & Midstream' },
+            { label: 'Location', value: 'Port Harcourt, NG' },
+          ].map((stat) => (
+            <div class="py-5 sm:py-6 px-3 sm:px-6 first:pl-0 last:pr-0 min-w-0">
+              <p class="text-gray-500 text-[10px] sm:text-xs uppercase tracking-widest mb-1">{stat.label}</p>
+              <p class="text-white font-medium text-sm sm:text-base">{stat.value}</p>
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </div>
+
+  <a
+    href="#about"
+    class="absolute bottom-24 right-10 hidden lg:flex items-center text-white/30 hover:text-white transition-colors"
+    aria-label="Scroll to About section"
+  >
+    <ChevronDown class="w-8 h-8 animate-bounce" aria-hidden="true" />
+  </a>
+</section>
+
+<script>
+  const root = document.getElementById('home');
+  const slides = Array.from(document.querySelectorAll<HTMLElement>('[data-slide]'));
+  if (root && slides.length > 1) {
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (!reduced) {
+      let current = 0;
+      const show = (i: number) => {
+        slides[current].classList.replace('opacity-100', 'opacity-0');
+        slides[current].classList.remove('is-active');
+        slides[current].setAttribute('aria-hidden', 'true');
+        current = (i + 1) % slides.length;
+        slides[current].classList.replace('opacity-0', 'opacity-100');
+        slides[current].classList.add('is-active');
+        slides[current].setAttribute('aria-hidden', 'false');
+      };
+      /* 7s Ken Burns drift finishes before the 5.5s cut, so each slide enters
+         fully settled rather than being caught mid-zoom. */
+      window.setInterval(() => show(current), 5500);
+    }
+  }
+</script>

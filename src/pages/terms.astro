@@ -1,0 +1,114 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHero from '../components/PageHero.astro';
+import { COMPANY_NAME, CONTACT, RC_NUMBER } from '../data/site';
+---
+
+<BaseLayout
+  title="Terms of Use | Windek Oil and Gas Limited"
+  description="Terms governing use of the Windek Oil and Gas Limited website, including the information provided, intellectual property and limitation of liability."
+  path="/terms/"
+  breadcrumbs={[
+    { name: 'Home', href: '/' },
+    { name: 'Terms of Use', href: '/terms/' },
+  ]}
+>
+  <PageHero
+    eyebrow="Legal"
+    title="Terms of Use"
+    intro="The terms that govern your use of this website."
+    image="/images/about-operations.jpg"
+    imageAlt="Windek Oil and Gas operations team reviewing field engineering work"
+  />
+
+  <section class="section-y bg-white">
+    <div class="max-w-4xl mx-auto gutter">
+      <article class="prose-windek text-slate-600">
+        <p class="text-sm text-gray-400">
+          Last updated: 1 October 2026. Applies to {COMPANY_NAME} (RC {RC_NUMBER.replace('RC', '')}).
+        </p>
+
+        <h2>1. Acceptance</h2>
+        <p>
+          By using this website you agree to these terms. If you do not agree, please stop using the
+          website.
+        </p>
+
+        <h2>2. About this website</h2>
+        <p>
+          This website is provided by {COMPANY_NAME} to describe our company, services, locations
+          and projects. It is an information website. Anything you submit through it, including an
+          enquiry or career application, does not create a contract, an engagement, or a commitment
+          to supply services.
+        </p>
+
+        <h2>3. Information and accuracy</h2>
+        <p>
+          We take care to keep information accurate and up to date, but project descriptions,
+          capacities, timelines and valuations reflect our current understanding and may change as
+          projects progress. Project figures, including stated capacity, valuation and target
+          completion dates, are indicative and are not a contractual commitment. Any commercial
+          commitment is set out in a signed agreement, not on this website.
+        </p>
+
+        <h2>4. Intellectual property</h2>
+        <p>
+          The content, layout, design, text, graphics, logos and images on this website belong to
+          {COMPANY_NAME} or are used with permission. You may view the site and quote short extracts
+          with clear attribution and a link back. You may not reproduce substantial content,
+          republish it, or use our branding commercially without written permission.
+        </p>
+
+        <h2>5. Acceptable use</h2>
+        <p>You must not:</p>
+        <ul>
+          <li>Attempt to gain unauthorised access to the website or its underlying systems.</li>
+          <li>Use automated tools, scrapers or bots to extract content at scale.</li>
+          <li>Transmit malware, or submit unlawful, abusive or misleading content.</li>
+          <li>Misrepresent your identity or affiliation with {COMPANY_NAME} in an enquiry.</li>
+        </ul>
+
+        <h2>6. Third-party links</h2>
+        <p>
+          This website may link to third-party websites, including mapping services and social
+          platforms. We do not control them and are not responsible for their content, accuracy or
+          privacy practices. Following an external link is at your own discretion.
+        </p>
+
+        <h2>7. Limitation of liability</h2>
+        <p>
+          To the extent permitted by law, {COMPANY_NAME} excludes liability for loss arising from
+          your use of, or reliance on, this website, including reliance on indicative project
+          information. Nothing in these terms limits liability for death or personal injury caused by
+          negligence, fraud, or any liability that cannot lawfully be excluded.
+        </p>
+
+        <h2>8. Indemnity</h2>
+        <p>
+          You agree to indemnify {COMPANY_NAME} against claims arising from your misuse of this
+          website or breach of these terms.
+        </p>
+
+        <h2>9. Governing law</h2>
+        <p>
+          These terms are governed by the laws of the Federal Republic of Nigeria, and the courts of
+          Nigeria have jurisdiction over any dispute arising from them, subject to any mandatory
+          provisions of Nigerian law.
+        </p>
+
+        <h2>10. Changes</h2>
+        <p>
+          We may update these terms from time to time. The revision date at the top of this page shows
+          the current version.
+        </p>
+
+        <h2>11. Contact</h2>
+        <p>
+          Questions about these terms: <a href={CONTACT.emailHref}>{CONTACT.email}</a> or
+          <a href={`tel:${CONTACT.phoneHref}`}>{CONTACT.phone}</a>.<br />
+          {COMPANY_NAME}, {CONTACT.address.full}.
+        </p>
+      </article>
+    </div>
+  </section>
+</BaseLayout>

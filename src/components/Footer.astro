@@ -1,0 +1,129 @@
+---
+import { MapPin, Phone, Mail, Droplet } from 'lucide-astro';
+import { COMPANY_NAME, CONTACT, RC_NUMBER, NAV_ITEMS, SERVICES } from '../data/site';
+
+const year = new Date().getFullYear();
+---
+
+<footer class="bg-windek-dark text-white pt-16 sm:pt-20 pb-8">
+  <div class="max-w-7xl mx-auto gutter">
+    <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-10 lg:gap-8 pb-12 border-b border-white/10">
+      <div>
+        <div class="flex items-center gap-3 mb-4">
+          <span class="w-10 h-10 bg-windek-blue rounded-xl flex items-center justify-center">
+            <Droplet class="w-6 h-6 text-white" stroke-width={2.5} aria-hidden="true" />
+          </span>
+          <span class="flex flex-col leading-none">
+            <span class="text-lg font-extrabold tracking-tight">WINDEK</span>
+            <span class="text-windek-blue text-[9px] font-bold tracking-[0.2em] mt-0.5"
+              >OIL &amp; GAS</span
+            >
+          </span>
+        </div>
+        <p class="text-sm text-gray-400 leading-relaxed font-light">
+          A 100% indigenous Nigerian energy company delivering sustainable upstream, midstream, LPG
+          infrastructure and EPCI solutions.
+        </p>
+        <p class="text-xs text-gray-500 mt-4">RC {RC_NUMBER.replace('RC', '')}</p>
+      </div>
+
+      <div>
+        <h2 class="text-white font-bold uppercase tracking-widest text-xs mb-4">Company</h2>
+        {/* py-2 keeps every link at/above the 44px touch-target guidance on phones */}
+        <ul class="space-y-1 text-sm">
+          {
+            NAV_ITEMS.slice(0, 5).map((item) => (
+              <li>
+                <a
+                  href={item.href}
+                  class="inline-block py-2 text-gray-400 hover:text-windek-blue transition-colors"
+                  >{item.label}</a
+                >
+              </li>
+            ))
+          }
+          <li>
+            <a
+              href="/privacy-policy/"
+              class="inline-block py-2 text-gray-400 hover:text-windek-blue transition-colors"
+              >Privacy Policy</a
+            >
+          </li>
+          <li>
+            <a
+              href="/terms/"
+              class="inline-block py-2 text-gray-400 hover:text-windek-blue transition-colors"
+              >Terms of Use</a
+            >
+          </li>
+        </ul>
+      </div>
+
+      <div>
+        <h2 class="text-white font-bold uppercase tracking-widest text-xs mb-4">Services</h2>
+        <ul class="space-y-1 text-sm">
+          {
+            SERVICES.map((s) => (
+              <li>
+                <a
+                  href={`/services/${s.slug}/`}
+                  class="inline-block py-2 text-gray-400 hover:text-windek-blue transition-colors"
+                >
+                  {s.title}
+                </a>
+              </li>
+            ))
+          }
+          <li>
+            <a
+              href="/glossary/"
+              class="inline-block py-2 text-gray-400 hover:text-windek-blue transition-colors"
+              >Industry Glossary</a
+            >
+          </li>
+        </ul>
+      </div>
+
+      <div>
+        <h2 class="text-white font-bold uppercase tracking-widest text-xs mb-4">Contact</h2>
+        <address class="space-y-3 text-sm not-italic">
+          <p class="flex items-start gap-3 text-gray-400">
+            <MapPin class="w-4 h-4 mt-1.5 flex-shrink-0 text-windek-blue" aria-hidden="true" />
+            <span class="py-1">{CONTACT.address.full}</span>
+          </p>
+          <p class="flex items-center gap-3">
+            <Phone class="w-4 h-4 flex-shrink-0 text-windek-blue" aria-hidden="true" />
+            <a
+              href={`tel:${CONTACT.phoneHref}`}
+              class="py-2 text-gray-400 hover:text-windek-blue transition-colors"
+              >{CONTACT.phone}</a
+            >
+          </p>
+          <p class="flex items-start gap-3">
+            <Mail class="w-4 h-4 mt-1.5 flex-shrink-0 text-windek-blue" aria-hidden="true" />
+            <a
+              href={CONTACT.emailHref}
+              class="py-2 text-gray-400 hover:text-windek-blue transition-colors break-all"
+              >{CONTACT.email}</a
+            >
+          </p>
+        </address>
+        <a
+          href={CONTACT.mapUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          class="inline-flex items-center gap-2 mt-4 py-2 text-xs font-bold uppercase tracking-widest text-windek-blue hover:text-white transition-colors"
+        >
+          View on Google Maps
+        </a>
+      </div>
+    </div>
+
+    <div
+      class="pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-gray-500"
+    >
+      <p>&copy; {year} {COMPANY_NAME}. All rights reserved.</p>
+      <p>CAC Registration No. {RC_NUMBER} &middot; Port Harcourt, Rivers State, Nigeria</p>
+    </div>
+  </div>
+</footer>

@@ -1,0 +1,123 @@
+---
+import { ShieldCheck, Award, Leaf, Lightbulb, Users, ArrowRight } from 'lucide-astro';
+import { CORE_VALUES } from '../data/site';
+
+export interface Props {
+  /**
+   * The same band runs on the home page and on /about/. Copy is selected per
+   * placement so the two pages never publish identical paragraphs, and the value
+   * descriptions are left to the dedicated Core Values section on /about/.
+   */
+  variant?: 'home' | 'about';
+}
+
+const { variant = 'home' } = Astro.props;
+
+const icons = {
+  shield: ShieldCheck,
+  award: Award,
+  leaf: Leaf,
+  bulb: Lightbulb,
+  users: Users,
+};
+
+const COPY = {
+  home: {
+    eyebrow: 'Why Windek',
+    heading: 'Indigenous Capability,',
+    headingAccent: 'Full-Chain Delivery',
+    lead:
+      'Windek Oil and Gas Limited is a 100% indigenous Nigerian energy company operating out of Port Harcourt, Rivers State.',
+    body:
+      'We hold upstream operations, midstream and LPG infrastructure, and engineering and logistics in one company rather than across a network of subcontractors. Keeping those lines in-house means one team carries a project from subsurface planning through to the terminal that moves the product, and clients deal with a single accountable contractor instead of reconciling several.',
+    statNote: 'Fully compliant with Nigerian Content Development standards.',
+    cta: { label: 'Read our full story', href: '/about/' },
+  },
+  about: {
+    eyebrow: 'Who We Are',
+    heading: 'Operational Excellence',
+    headingAccent: 'in Energy',
+    lead:
+      'Windek delivers energy services from a single indigenous base, with in-house capability across the value chain rather than a network of partner contractors.',
+    body:
+      'That structure decides how a project runs. Engineering, construction, marine logistics and field operations sit under the same management, so scheduling, procurement and site execution are planned by the people who will be accountable for the result. Nigerian content compliance is treated as a delivery requirement on the contract rather than a reporting exercise afterwards.',
+    statNote: 'Founded in Rivers State, headquartered in Port Harcourt.',
+    cta: null,
+  },
+} as const;
+
+const copy = COPY[variant];
+---
+
+<section id="about" class="section-y bg-white relative overflow-hidden">
+  <div class="max-w-7xl mx-auto gutter relative z-10">
+    <div class="grid lg:grid-cols-2 gap-12 sm:gap-16 items-center">
+      <div class="order-2 lg:order-1">
+        <span class="eyebrow">{copy.eyebrow}</span>
+        <h2 class="text-display-2 font-bold text-windek-dark mb-6 sm:mb-8">
+          {copy.heading}<br />
+          <span class="text-gray-400 font-serif italic">{copy.headingAccent}</span>
+        </h2>
+
+        <div class="text-slate-600 mb-10 max-w-xl">
+          <p class="leading-relaxed">{copy.lead}</p>
+          <p class="leading-relaxed mt-4">{copy.body}</p>
+        </div>
+
+        {
+          variant === 'home' && (
+            <div class="grid sm:grid-cols-2 gap-6 pt-8 border-t border-gray-100">
+              {CORE_VALUES.slice(0, 4).map((value) => {
+                const Icon = icons[value.icon as keyof typeof icons];
+                return (
+                  <div class="flex items-center gap-3">
+                    <Icon class="w-5 h-5 text-windek-blue" stroke-width={1.5} aria-hidden="true" />
+                    <h3 class="font-bold text-windek-dark text-sm uppercase tracking-wide">{value.title}</h3>
+                  </div>
+                );
+              })}
+            </div>
+          )
+        }
+
+        {
+          copy.cta && (
+            <a
+              href={copy.cta.href}
+              class="group mt-8 inline-flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-windek-blue hover:text-windek-dark link-underline transition-colors"
+            >
+              {copy.cta.label}
+              <ArrowRight class="w-4 h-4 group-hover:translate-x-1 transition-transform" aria-hidden="true" />
+            </a>
+          )
+        }
+      </div>
+
+      <div class="order-1 lg:order-2 relative">
+        <div class="group relative z-10 rounded-lg overflow-hidden shadow-2xl shadow-slate-200">
+          <img
+            src="/images/about-operations.jpg"
+            alt="Windek oil and gas operations team reviewing field engineering work"
+            width={1600}
+            height={916}
+            loading="lazy"
+            decoding="async"
+            class="w-full h-auto object-cover group-hover:scale-[1.04] motion-reduce:group-hover:scale-100 transition-transform duration-700 ease-out"
+          />
+          <div class="absolute inset-0 bg-gradient-to-tr from-windek-dark/40 to-transparent"></div>
+        </div>
+        {/* Flows below the image on phones (negative offsets clipped at 320px),
+            then overlaps the photo corner once there is room to spare. */}
+        <div
+          class="mt-6 sm:-mt-10 sm:ml-8 lg:-ml-10 relative z-20 lg:absolute lg:inset-y-auto lg:left-0 lg:bottom-[-2.5rem] lg:mt-0 bg-white p-6 sm:p-7 rounded shadow-xl w-full sm:w-auto max-w-xs border-l-4 border-windek-blue"
+        >
+          <p class="text-4xl font-bold text-windek-dark mb-1">100%</p>
+          <p class="text-sm font-medium text-gray-500 uppercase tracking-wide">Indigenous Compliance</p>
+          <p class="text-xs text-gray-400 mt-2 leading-relaxed">
+            {copy.statNote}
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
