@@ -15,19 +15,12 @@ const schema = {
   name: 'Windek Insights',
   description:
     'Analysis on Nigerian LPG infrastructure, local content on EPCI projects, gas flaring and commercial energy decisions.',
+  image: `${SITE_URL}/og-image.png`,
+  inLanguage: 'en-NG',
   publisher: { '@id': `${SITE_URL}/#organization` },
-  blogPost: ARTICLES.map((a) => ({
-    '@type': 'BlogPosting',
-    headline: a.title,
-    description: a.description,
-    datePublished: a.date,
-    dateModified: a.updated ?? a.date,
-    url: `${SITE_URL}/insights/${a.slug}/`,
-    author: {
-      '@type': 'Person',
-      name: getTeamMember(a.author)?.name ?? 'Windek Oil and Gas Limited',
-    },
-  })),
+  // Reference the canonical BlogPosting entities defined on each article page
+  // instead of publishing a second, conflicting description of each post.
+  blogPost: ARTICLES.map((a) => ({ '@id': `${SITE_URL}/insights/${a.slug}/#article` })),
 };
 
 const formatDate = (iso: string) =>
@@ -95,7 +88,7 @@ const formatDate = (iso: string) =>
                   href={`/insights/${article.slug}/`}
                   class="group/link inline-flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-windek-blue hover:text-windek-dark transition-colors"
                 >
-                  Read Article
+                  Read Article<span class="sr-only">: {article.title}</span>
                   <ArrowRight class="w-4 h-4 group-hover/link:translate-x-1 transition-transform" aria-hidden="true" />
                 </a>
               </div>

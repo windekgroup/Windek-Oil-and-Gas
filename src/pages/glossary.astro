@@ -12,10 +12,12 @@ const schema = {
   url: `${SITE_URL}/glossary/`,
   description:
     'Plain-English definitions of the oil, gas, LPG and infrastructure terms used across Nigerian energy projects.',
+  inLanguage: 'en-NG',
   hasDefinedTerm: GLOSSARY.map((t) => ({
     '@type': 'DefinedTerm',
     name: t.term,
     description: t.definition,
+    url: `${SITE_URL}/glossary/#${t.term.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`,
     inDefinedTermSet: `${SITE_URL}/glossary/#termset`,
   })),
 };
@@ -83,7 +85,10 @@ const initial = Astro.url.searchParams.get('q')?.trim() ?? '';
               </h2>
               <dl class="space-y-5">
                 {GLOSSARY.filter((t) => t.category === cat).map((term) => (
-                  <div>
+                  <div
+                    id={term.term.toLowerCase().replace(/[^a-z0-9]+/g, '-')}
+                    class="scroll-mt-28"
+                  >
                     <dt class="font-bold text-windek-dark mb-1">{term.term}</dt>
                     <dd class="text-sm text-gray-600 leading-relaxed">{term.definition}</dd>
                   </div>

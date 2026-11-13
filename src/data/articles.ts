@@ -5,7 +5,7 @@ export const ARTICLES: Article[] = [
     slug: 'nigeria-lpg-storage-deficit',
     title: "Solving Nigeria's LPG Storage Deficit",
     description:
-      'Nigeria produces LPG in abundance yet consumers still face frequent shortages. The bottleneck is bulk storage capacity, and closing it changes the economics of delivered gas.',
+      'Nigeria produces LPG in abundance yet consumers still face shortages. The bottleneck is bulk storage capacity, and closing it changes delivered gas economics.',
     date: '2026-02-18',
     updated: '2026-02-18',
     category: 'Infrastructure',
@@ -40,7 +40,7 @@ export const ARTICLES: Article[] = [
     slug: 'indigenous-content-in-epci',
     title: 'Why Local Content Matters on EPCI Projects',
     description:
-      'EPCI collapses four phases into one contract, which makes local capability a delivery advantage rather than a compliance checkbox. Here is how that works out in practice.',
+      'EPCI combines four phases into one contract, making local capability a delivery advantage rather than a compliance checkbox. Here is how that works.',
     date: '2026-01-22',
     updated: '2026-02-10',
     category: 'Delivery',

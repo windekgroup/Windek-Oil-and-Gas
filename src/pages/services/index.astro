@@ -23,6 +23,8 @@ const schema = {
   '@id': `${SITE_URL}/services/#collection`,
   url: `${SITE_URL}/services/`,
   name: 'Windek Oil and Gas Services',
+  inLanguage: 'en-NG',
+  isAccessibleForFree: true,
   mainEntity: {
     '@type': 'ItemList',
     itemListElement: SERVICES.map((s, i) => ({
@@ -43,7 +45,7 @@ const schema = {
 
 <BaseLayout
   title="Oil and Gas Services | Windek Oil and Gas Nigeria"
-  description="Windek provides upstream well delivery, midstream and LPG storage infrastructure, and EPCI engineering, fabrication and marine logistics services across Nigeria."
+  description="Windek delivers upstream well services, midstream and LPG storage infrastructure, plus EPCI engineering, fabrication and marine logistics across Nigeria."
   path="/services/"
   breadcrumbs={[
     { name: 'Home', href: '/' },
@@ -122,7 +124,7 @@ const schema = {
                   href={`/services/${service.slug}/`}
                   class="group inline-flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-windek-blue hover:text-windek-dark transition-colors"
                 >
-                  Service Details
+                  Service Details<span class="sr-only">: {service.title}</span>
                   <ArrowRight class="w-4 h-4 group-hover:translate-x-1 transition-transform" aria-hidden="true" />
                 </a>
               </div>

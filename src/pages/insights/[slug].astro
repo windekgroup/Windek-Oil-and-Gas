@@ -4,7 +4,7 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 import CTABand from '../../components/CTABand.astro';
 import FAQ from '../../components/FAQ.astro';
 import { ARTICLES } from '../../data/articles';
-import { getTeamMember, SITE_URL } from '../../data/site';
+import { getService, getTeamMember, SITE_URL } from '../../data/site';
 import type { Article } from '../../data/types';
 
 export function getStaticPaths() {
@@ -57,22 +57,20 @@ const schema = {
   },
   publisher: { '@id': `${SITE_URL}/#organization` },
   isPartOf: { '@id': `${SITE_URL}/insights/#blog` },
+  inLanguage: 'en-NG',
+  isAccessibleForFree: true,
+  articleBody: article.content.join('\n\n'),
 };
 
-const breadcrumbSchema = {
-  '@context': 'https://schema.org',
-  '@type': 'BreadcrumbList',
-  itemListElement: [
-    { '@type': 'ListItem', position: 1, name: 'Home', item: `${SITE_URL}/` },
-    { '@type': 'ListItem', position: 2, name: 'Insights', item: `${SITE_URL}/insights/` },
-    {
-      '@type': 'ListItem',
-      position: 3,
-      name: article.title,
-      item: `${SITE_URL}/insights/${article.slug}/`,
-    },
-  ],
+// Point each article at the capability it explains, so the blog builds
+// contextual internal links to the commercial service pages.
+const relatedServiceSlug: Record<string, string> = {
+  Infrastructure: 'lpg-infrastructure',
+  Commercial: 'lpg-infrastructure',
+  Delivery: 'engineering-logistics',
+  Environment: 'upstream-operations',
 };
+const relatedService = getService(relatedServiceSlug[article.category] ?? 'engineering-logistics');
 ---
 
 <BaseLayout
@@ -85,7 +83,7 @@ const breadcrumbSchema = {
     { name: 'Insights', href: '/insights/' },
     { name: article.title, href: `/insights/${article.slug}/` },
   ]}
-  jsonLd={[schema, breadcrumbSchema]}
+  jsonLd={schema}
 >
   <article>
     <header class="bg-windek-dark pt-28 sm:pt-36 pb-14 sm:pb-16">
@@ -113,6 +111,13 @@ const breadcrumbSchema = {
             <Calendar class="w-3.5 h-3.5" aria-hidden="true" />
             <time datetime={article.date}>{formatDate(article.date)}</time>
           </span>
+          {
+            article.updated && article.updated !== article.date && (
+              <span class="flex items-center gap-1.5">
+                Updated <time datetime={article.updated}>{formatDate(article.updated)}</time>
+              </span>
+            )
+          }
           <span class="flex items-center gap-1.5">
             <Clock class="w-3.5 h-3.5" aria-hidden="true" />
             {article.readingTime}
@@ -158,6 +163,34 @@ const breadcrumbSchema = {
                   </li>
                 ))}
               </ul>
+            </aside>
+          )
+        }
+
+        {
+          relatedService && (
+            <aside class="mt-10 rounded-r-lg border-l-4 border-windek-blue bg-windek-blue/5 p-6 sm:p-8">
+              <p class="text-xs font-bold uppercase tracking-widest text-windek-blue mb-2">
+                Related capability
+              </p>
+              <h2 class="text-lg font-bold text-windek-dark mb-2">{relatedService.title}</h2>
+              <p class="text-sm text-gray-600 leading-relaxed mb-5">{relatedService.summary}</p>
+              <div class="flex flex-wrap gap-x-6 gap-y-3">
+                <a
+                  href={`/services/${relatedService.slug}/`}
+                  class="group inline-flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-windek-blue hover:text-windek-dark transition-colors"
+                >
+                  Explore {relatedService.title}
+                  <ArrowRight class="w-4 h-4 group-hover:translate-x-1 transition-transform" aria-hidden="true" />
+                </a>
+                <a
+                  href="/projects/lpg-terminal-facility/"
+                  class="group inline-flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-windek-blue hover:text-windek-dark transition-colors"
+                >
+                  LPG Terminal case study
+                  <ArrowRight class="w-4 h-4 group-hover:translate-x-1 transition-transform" aria-hidden="true" />
+                </a>
+              </div>
             </aside>
           )
         }
@@ -224,7 +257,7 @@ const breadcrumbSchema = {
                   </h3>
                   <p class="text-sm text-gray-500 line-clamp-2">{item.description}</p>
                   <span class="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-windek-blue mt-4">
-                    Read
+                    Read<span class="sr-only">: {item.title}</span>
                     <ArrowRight class="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" aria-hidden="true" />
                   </span>
                 </a>

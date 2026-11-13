@@ -2,6 +2,7 @@
   "name": "Windek Oil and Gas Limited",
   "short_name": "Windek",
   "description": "Indigenous Nigerian energy company delivering upstream operations, midstream and LPG infrastructure, EPCI engineering, and logistics.",
+  "id": "/",
   "start_url": "/",
   "scope": "/",
   "display": "standalone",

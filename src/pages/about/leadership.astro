@@ -11,6 +11,7 @@ const schema = {
   '@type': 'ItemList',
   '@id': `${SITE_URL}/about/leadership/#leadership`,
   name: 'Windek Oil and Gas Limited Leadership Team',
+  itemListOrder: 'https://schema.org/ItemListOrderAscending',
   itemListElement: TEAM_MEMBERS.map((m, i) => ({
     '@type': 'ListItem',
     position: i + 1,

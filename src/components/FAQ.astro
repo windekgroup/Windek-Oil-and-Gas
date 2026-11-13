@@ -33,6 +33,8 @@ const schema = schemaId
       '@context': 'https://schema.org',
       '@type': 'FAQPage',
       '@id': schemaId,
+      url: schemaId.split('#')[0],
+      inLanguage: 'en-NG',
       mainEntity: items.map((item) => ({
         '@type': 'Question',
         name: item.question,

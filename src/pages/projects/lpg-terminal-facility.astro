@@ -14,6 +14,13 @@ const schema = {
   description: PROJECT.summary,
   url: `${SITE_URL}/projects/${PROJECT.slug}/`,
   image: `${SITE_URL}${PROJECT.image}`,
+  keywords: [
+    'LPG terminal Nigeria',
+    'bulk LPG storage',
+    'Atabrikang Akwa Ibom',
+    'midstream infrastructure',
+    'EPCI project Nigeria',
+  ],
   location: {
     '@type': 'Place',
     name: `${PROJECT.location}, Nigeria`,
@@ -23,9 +30,8 @@ const schema = {
       addressCountry: 'NG',
     },
   },
-  dateCreated: PROJECT.completion,
-  creator: { '@id': `${SITE_URL}/#organization` },
-  partner: { '@type': 'Organization', name: PROJECT.partner },
+  parentOrganization: { '@id': `${SITE_URL}/#organization` },
+  member: { '@type': 'Organization', name: PROJECT.partner },
 };
 
 const faqs = [

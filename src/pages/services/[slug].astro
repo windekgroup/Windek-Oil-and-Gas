@@ -31,7 +31,12 @@ const serviceSchema = {
   url: `${SITE_URL}/services/${service.slug}/`,
   image: `${SITE_URL}${service.image}`,
   provider: { '@id': `${SITE_URL}/#organization` },
-  areaServed: { '@type': 'Country', name: 'Nigeria' },
+  mainEntityOfPage: `${SITE_URL}/services/${service.slug}/`,
+  areaServed: [
+    { '@type': 'Country', name: 'Nigeria' },
+    { '@type': 'AdministrativeArea', name: 'Rivers State, Nigeria' },
+    { '@type': 'AdministrativeArea', name: 'Akwa Ibom, Nigeria' },
+  ],
   availableChannel: {
     '@type': 'ServiceChannel',
     serviceUrl: `${SITE_URL}/contact/`,

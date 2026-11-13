@@ -44,6 +44,7 @@ const schema = {
     latitude: location.coordinates.latitude,
     longitude: location.coordinates.longitude,
   },
+  containedInPlace: { '@type': 'Country', name: 'Nigeria' },
   ...(location.slug === 'port-harcourt'
     ? {
         telephone: CONTACT.phone,

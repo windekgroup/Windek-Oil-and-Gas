@@ -28,8 +28,10 @@ export default defineConfig({
           meta = { priority: 1.0, changefreq: 'weekly' };
         } else if (['/about/', '/services/', '/projects/', '/locations/', '/insights/'].includes(path)) {
           meta = { priority: 0.8, changefreq: 'monthly' };
-        } else if (/^\/(services|insights|locations|projects|about)\/[^/]+\/$/.test(path)) {
+        } else if (['/contact/', '/careers/', '/glossary/', '/about/leadership/'].includes(path)) {
           meta = { priority: 0.6, changefreq: 'monthly' };
+        } else if (/^\/(services|insights|locations|projects|about)\/[^/]+\/$/.test(path)) {
+          meta = { priority: 0.7, changefreq: 'monthly' };
         } else {
           meta = { priority: 0.3, changefreq: 'yearly' };
         }

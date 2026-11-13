@@ -2,21 +2,8 @@
 import { ArrowRight, MapPin } from 'lucide-astro';
 import { PROJECT } from '../data/site';
 
-const schema = {
-  '@context': 'https://schema.org',
-  '@type': 'Project',
-  name: `${PROJECT.name} — ${PROJECT.subtitle}`,
-  description: PROJECT.summary,
-  url: 'https://windekoilandgasltd.com/projects/lpg-terminal-facility/',
-  image: `https://windekoilandgasltd.com${PROJECT.image}`,
-  location: {
-    '@type': 'Place',
-    name: `${PROJECT.location}, Nigeria`,
-    address: { '@type': 'PostalAddress', addressLocality: PROJECT.location, addressCountry: 'NG' },
-  },
-  dateCreated: PROJECT.completion,
-  creator: { '@id': 'https://windekoilandgasltd.com/#organization' },
-};
+// The Project entity is defined once on /projects/lpg-terminal-facility/.
+// Repeating it here would publish a second description of the same @id.
 ---
 
 <section id="project" class="section-y bg-windek-gray">
@@ -83,5 +70,3 @@ const schema = {
     </div>
   </div>
 </section>
-
-<script type="application/ld+json" set:html={JSON.stringify(schema)} />

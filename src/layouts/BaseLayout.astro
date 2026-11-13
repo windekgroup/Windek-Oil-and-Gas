@@ -9,6 +9,7 @@ import {
   CONTACT,
   RC_NUMBER,
   SERVICES,
+  getTeamMember,
 } from '../data/site';
 import { getArticle } from '../data/articles';
 
@@ -39,9 +40,19 @@ const {
 const site = Astro.site ?? new URL(SITE_URL);
 const canonical = new URL(path, site).href;
 const ogImage = new URL(image, site).href;
+const isDefaultOgImage = image === '/og-image.png';
+const ogImageType = /\.jpe?g$/i.test(image)
+  ? 'image/jpeg'
+  : /\.webp$/i.test(image)
+    ? 'image/webp'
+    : /\.svg$/i.test(image)
+      ? 'image/svg+xml'
+      : 'image/png';
 
-// Titles are authored per page (already brand-suffixed and length-checked)
-const fullTitle = title;
+// Keep titles within a useful length and guarantee a brand suffix. Pages that
+// already name Windek are left untouched so the brand never appears twice.
+const BRAND_NAME = 'Windek';
+const fullTitle = /\bWindek\b/i.test(title) ? title : `${title} | ${BRAND_NAME}`;
 
 const robots = noindex
   ? 'noindex, nofollow'
@@ -52,7 +63,7 @@ const article = path.startsWith('/insights/') && path !== '/insights/'
   : undefined;
 
 const organizationSchema = {
-  '@type': ['Organization', 'LocalBusiness', 'EnergyCompany'],
+  '@type': ['Organization', 'LocalBusiness'],
   '@id': `${SITE_URL}/#organization`,
   name: COMPANY_NAME,
   legalName: COMPANY_NAME,
@@ -64,12 +75,31 @@ const organizationSchema = {
   description,
   email: CONTACT.email,
   telephone: CONTACT.phone,
-  vatID: RC_NUMBER,
   identifier: {
     '@type': 'PropertyValue',
     name: 'CAC Registration Number',
     value: RC_NUMBER,
   },
+  companyRegistration: {
+    '@type': 'Certification',
+    name: 'CAC Registration',
+    certificationIdentification: RC_NUMBER,
+    issuedBy: {
+      '@type': 'Organization',
+      name: 'Corporate Affairs Commission (CAC), Nigeria',
+    },
+  },
+  foundingLocation: {
+    '@type': 'Place',
+    name: 'Port Harcourt, Rivers State, Nigeria',
+  },
+  keywords: [
+    'oil and gas company Nigeria',
+    'LPG infrastructure',
+    'upstream operations',
+    'EPCI contractor',
+    'Port Harcourt energy company',
+  ],
   address: {
     '@type': 'PostalAddress',
     streetAddress: CONTACT.address.street,
@@ -83,6 +113,12 @@ const organizationSchema = {
     longitude: CONTACT.geo.longitude,
   },
   hasMap: CONTACT.mapUrl,
+  openingHoursSpecification: {
+    '@type': 'OpeningHoursSpecification',
+    dayOfWeek: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'],
+    opens: '08:00',
+    closes: '17:00',
+  },
   areaServed: [
     { '@type': 'Country', name: 'Nigeria' },
     { '@type': 'AdministrativeArea', name: 'Rivers State, Nigeria' },
@@ -94,6 +130,7 @@ const organizationSchema = {
       telephone: CONTACT.phone,
       contactType: 'sales',
       email: CONTACT.email,
+      url: `${SITE_URL}/contact/`,
       areaServed: 'NG',
       availableLanguage: ['English'],
     },
@@ -167,8 +204,14 @@ const webpageSchema = {
   isPartOf: { '@id': `${SITE_URL}/#website` },
   about: { '@id': `${SITE_URL}/#organization` },
   inLanguage: 'en-NG',
+  isAccessibleForFree: true,
   ...(article
-    ? { datePublished: article.date, dateModified: article.updated ?? article.date, author: { '@id': `${SITE_URL}/about/leadership/#emmanuel-uwandu` } }
+    ? {
+        datePublished: article.date,
+        dateModified: article.updated ?? article.date,
+        author: { '@id': `${SITE_URL}/about/leadership/#${article.author}` },
+        mainEntity: { '@id': `${SITE_URL}/insights/${article.slug}/#article` },
+      }
     : {}),
   ...(breadcrumbSchema ? { breadcrumb: { '@id': breadcrumbSchema['@id'] } } : {}),
 };
@@ -179,8 +222,12 @@ function collectNodes(input: unknown): Record<string, unknown>[] {
   if (Array.isArray(input)) return input.flatMap(collectNodes);
   if (input && typeof input === 'object') {
     const obj = input as Record<string, unknown>;
-    if (Array.isArray(obj['@graph'])) return obj['@graph'] as Record<string, unknown>[];
-    return [obj];
+    if (Array.isArray(obj['@graph'])) return (obj['@graph'] as unknown[]).flatMap(collectNodes);
+    // A nested @context inside a @graph node is redundant and can confuse
+    // parsers, so strip it before merging everything into the page graph.
+    const node: Record<string, unknown> = { ...obj };
+    delete node['@context'];
+    return [node];
   }
   return [];
 }
@@ -217,14 +264,20 @@ const graph = [
     <meta name="description" content={description} />
     <meta name="author" content={COMPANY_NAME} />
     <meta name="robots" content={robots} />
-    <link rel="canonical" href={canonical} />
-    <link rel="alternate" hreflang="en-NG" href={canonical} />
-    <link rel="alternate" hreflang="x-default" href={canonical} />
+    {!noindex && <link rel="canonical" href={canonical} />}
+    {!noindex && <link rel="alternate" hreflang="en-NG" href={canonical} />}
+    {!noindex && <link rel="alternate" hreflang="x-default" href={canonical} />}
+    <link
+      rel="alternate"
+      type="application/rss+xml"
+      title="Windek Insights RSS"
+      href={new URL('/insights/rss.xml', site).href}
+    />
 
     <meta name="geo.region" content="NG-RI" />
     <meta name="geo.placename" content="Port Harcourt, Rivers State" />
     <meta name="geo.position" content={`${CONTACT.geo.latitude};${CONTACT.geo.longitude}`} />
-    <meta name="ICBM" content="RI, Port Harcourt, Nigeria" />
+    <meta name="ICBM" content={`${CONTACT.geo.latitude}, ${CONTACT.geo.longitude}`} />
 
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="apple-touch-icon" href="/logo.png" />
@@ -239,9 +292,9 @@ const graph = [
     <meta property="og:url" content={canonical} />
     <meta property="og:image" content={ogImage} />
     <meta property="og:image:secure_url" content={ogImage} />
-    <meta property="og:image:type" content="image/png" />
-    <meta property="og:image:width" content="1200" />
-    <meta property="og:image:height" content="630" />
+    <meta property="og:image:type" content={ogImageType} />
+    {isDefaultOgImage && <meta property="og:image:width" content="1200" />}
+    {isDefaultOgImage && <meta property="og:image:height" content="630" />}
     <meta property="og:image:alt" content={imageAlt} />
     <meta property="og:locale" content="en_NG" />
 
@@ -253,7 +306,16 @@ const graph = [
 
     {
       article && (
-        <meta property="article:published_time" content={article.date} />
+        <>
+          <meta property="article:published_time" content={article.date} />
+          <meta property="article:modified_time" content={article.updated ?? article.date} />
+          <meta property="article:section" content={article.category} />
+          <meta property="article:tag" content={article.category} />
+          <meta
+            property="article:author"
+            content={getTeamMember(article.author)?.name ?? COMPANY_NAME}
+          />
+        </>
       )
     }
 
@@ -261,6 +323,7 @@ const graph = [
 
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="preconnect" href="https://www.googletagmanager.com" />
     <link
       rel="stylesheet"
       href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap"

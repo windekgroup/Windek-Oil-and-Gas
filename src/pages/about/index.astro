@@ -18,7 +18,9 @@ const schema = {
   '@id': `${SITE_URL}/about/#aboutpage`,
   url: `${SITE_URL}/about/`,
   name: `About ${COMPANY_NAME}`,
+  inLanguage: 'en-NG',
   mainEntity: { '@id': `${SITE_URL}/#organization` },
+  breadcrumb: { '@id': `${SITE_URL}/about/#breadcrumb` },
 };
 
 const milestones = [
@@ -47,7 +49,7 @@ const milestones = [
 
 <BaseLayout
   title="About Windek Oil and Gas | Indigenous Energy Nigeria"
-  description="About Windek Oil and Gas Limited: a 100% indigenous Nigerian energy company in Port Harcourt, working across upstream operations, LPG infrastructure and EPCI delivery."
+  description="About Windek Oil and Gas Limited, a 100% indigenous Nigerian energy company in Port Harcourt working across upstream, LPG infrastructure and EPCI delivery."
   path="/about/"
   breadcrumbs={[
     { name: 'Home', href: '/' },

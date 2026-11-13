@@ -22,6 +22,7 @@ const schema = {
   '@type': 'ItemList',
   '@id': `${SITE_URL}/locations/#locations`,
   name: 'Windek Oil and Gas operating locations in Nigeria',
+  itemListOrder: 'https://schema.org/ItemListOrderAscending',
   itemListElement: LOCATIONS.map((loc, i) => ({
     '@type': 'ListItem',
     position: i + 1,
@@ -29,6 +30,7 @@ const schema = {
       '@type': 'Place',
       '@id': `${SITE_URL}/locations/${loc.slug}/#place`,
       name: `${loc.name}, ${loc.region}`,
+      url: `${SITE_URL}/locations/${loc.slug}/`,
       description: CARD_COPY[loc.slug] ?? loc.description,
       address: { '@type': 'PostalAddress', addressLocality: loc.name, addressRegion: loc.region, addressCountry: 'NG' },
       geo: {
@@ -43,7 +45,7 @@ const schema = {
 
 <BaseLayout
   title="Locations in Nigeria | Windek Oil and Gas"
-  description="Windek operates from its Port Harcourt headquarters in Rivers State and delivers projects nationwide, including the LPG Terminal Facility at Atabrikang, Akwa Ibom."
+  description="Windek operates from Port Harcourt, Rivers State, and delivers projects across Nigeria, including the LPG Terminal Facility at Atabrikang, Akwa Ibom."
   path="/locations/"
   breadcrumbs={[
     { name: 'Home', href: '/' },
@@ -101,7 +103,7 @@ const schema = {
                   href={`/locations/${loc.slug}/`}
                   class="group inline-flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-windek-blue hover:text-windek-dark transition-colors"
                 >
-                  Location Details
+                  Location Details<span class="sr-only">: {loc.name}</span>
                   <ArrowRight class="w-4 h-4 group-hover:translate-x-1 transition-transform" aria-hidden="true" />
                 </a>
               </div>

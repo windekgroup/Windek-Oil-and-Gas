@@ -11,7 +11,11 @@ const contactSchema = {
   '@id': `${SITE_URL}/contact/#contactpage`,
   url: `${SITE_URL}/contact/`,
   name: 'Contact Windek Oil and Gas Limited',
+  description:
+    'Contact Windek Oil and Gas Limited in Port Harcourt for upstream operations, LPG storage and terminal infrastructure, and EPCI engineering enquiries.',
+  inLanguage: 'en-NG',
   mainEntity: { '@id': `${SITE_URL}/#organization` },
+  breadcrumb: { '@id': `${SITE_URL}/contact/#breadcrumb` },
 };
 
 const faqs = [
@@ -39,7 +43,7 @@ const faqs = [
 
 <BaseLayout
   title="Contact Windek Oil and Gas | Port Harcourt"
-  description={`Contact Windek Oil and Gas Limited in Port Harcourt: call ${CONTACT.phone}, email ${CONTACT.email}, or enquire about LPG storage, upstream or EPCI projects.`}
+  description={`Contact Windek Oil and Gas in Port Harcourt: call ${CONTACT.phone}, email ${CONTACT.email}, or enquire about LPG, upstream or EPCI work.`}
   path="/contact/"
   breadcrumbs={[
     { name: 'Home', href: '/' },

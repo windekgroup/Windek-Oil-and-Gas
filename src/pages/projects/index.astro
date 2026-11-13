@@ -10,6 +10,7 @@ const schema = {
   '@id': `${SITE_URL}/projects/#collection`,
   url: `${SITE_URL}/projects/`,
   name: 'Windek Oil and Gas Projects',
+  inLanguage: 'en-NG',
   mainEntity: {
     '@type': 'ItemList',
     itemListElement: [
@@ -21,6 +22,8 @@ const schema = {
           '@id': `${SITE_URL}/projects/${PROJECT.slug}/#project`,
           name: PROJECT.name,
           url: `${SITE_URL}/projects/${PROJECT.slug}/`,
+          description: PROJECT.summary,
+          image: `${SITE_URL}${PROJECT.image}`,
         },
       },
     ],
@@ -93,7 +96,7 @@ const schema = {
               href={`/projects/${PROJECT.slug}/`}
               class="group/link inline-flex items-center gap-2 mt-8 px-7 py-3.5 bg-windek-dark text-white text-xs font-bold uppercase tracking-widest rounded hover:bg-windek-blue transition-colors"
             >
-              Read the Case Study
+              Read the Case Study<span class="sr-only">: {PROJECT.name}</span>
             </a>
           </div>
 
