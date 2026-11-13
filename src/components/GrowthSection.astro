@@ -10,6 +10,13 @@ const icons = {
 ---
 
 <section id="growth" class="section-y bg-windek-dark text-white relative overflow-hidden">
+  <span
+    class="pointer-events-none absolute -left-24 top-16 h-72 w-72 rounded-full bg-windek-blue/10 blur-3xl orb-drift"
+    aria-hidden="true"></span>
+  <span
+    class="pointer-events-none absolute -right-20 bottom-0 h-80 w-80 rounded-full bg-windek-blue/10 blur-3xl orb-drift"
+    style="animation-delay: -6s"
+    aria-hidden="true"></span>
   <div class="max-w-7xl mx-auto gutter relative z-10">
     <div class="max-w-2xl mb-12 sm:mb-16">
       <span class="eyebrow">Our Trajectory</span>
@@ -22,7 +29,7 @@ const icons = {
       </p>
     </div>
 
-    <div class="grid md:grid-cols-3 gap-6 sm:gap-8">
+    <div class="grid md:grid-cols-3 gap-6 sm:gap-8" data-reveal-group>
       {
         GROWTH_GOALS.map((goal, i) => {
           const Icon = icons[goal.icon as keyof typeof icons];
@@ -30,7 +37,7 @@ const icons = {
             <div class="relative group">
               <div class:list={['rounded-lg border border-white/10 p-6 sm:p-8 h-full transition-[transform,border-color,background-color] duration-300 ease-out hover:-translate-y-1 motion-reduce:hover:translate-y-0 hover:border-windek-blue/50', i === 1 ? 'bg-windek-blue/5' : 'bg-white/[0.02]']}>
                 <div class="flex items-center justify-between mb-6">
-                  <div class="w-12 h-12 rounded-lg bg-windek-blue/10 border border-windek-blue/30 flex items-center justify-center">
+                  <div class="w-12 h-12 rounded-lg bg-windek-blue/10 border border-windek-blue/30 flex items-center justify-center transition-transform duration-500 ease-out group-hover:-rotate-6 group-hover:scale-110 motion-reduce:transition-none motion-reduce:group-hover:rotate-0 motion-reduce:group-hover:scale-100">
                     <Icon class="w-6 h-6 text-windek-blue" stroke-width={1.5} aria-hidden="true" />
                   </div>
                   {i < GROWTH_GOALS.length - 1 && (

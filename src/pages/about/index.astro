@@ -94,7 +94,7 @@ const milestones = [
         </div>
       </div>
 
-      <ol class="grid sm:grid-cols-2 lg:grid-cols-4 gap-6 mt-14 sm:mt-20">
+      <ol class="grid sm:grid-cols-2 lg:grid-cols-4 gap-6 mt-14 sm:mt-20" data-reveal-group>
         {
           milestones.map((m) => (
             <li class="relative border-t-2 border-windek-blue pt-5">
@@ -120,10 +120,10 @@ const milestones = [
         </p>
       </div>
 
-      <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6" data-reveal-group>
         {
           CORE_VALUES.map((value) => (
-            <div class="bg-windek-gray border-l-4 border-windek-blue p-6 rounded-r-lg">
+            <div class="motion-lift bg-windek-gray border-l-4 border-windek-blue p-6 rounded-r-lg">
               <h3 class="font-bold text-windek-dark mb-2">{value.title}</h3>
               <p class="text-sm text-gray-500 leading-relaxed">{value.description}</p>
             </div>

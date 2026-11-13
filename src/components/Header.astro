@@ -16,7 +16,7 @@ const isActive = (href: string) =>
     <div class="flex items-center justify-between gap-4">
       <a href="/" class="flex items-center gap-3 group" aria-label={`${COMPANY_NAME} home`}>
         <span
-          class="w-10 h-10 sm:w-11 sm:h-11 bg-windek-blue rounded-xl flex items-center justify-center flex-shrink-0"
+          class="w-10 h-10 sm:w-11 sm:h-11 bg-windek-blue rounded-xl flex items-center justify-center flex-shrink-0 transition-transform duration-500 ease-out group-hover:-rotate-6 group-hover:scale-105 motion-reduce:transition-none motion-reduce:group-hover:rotate-0 motion-reduce:group-hover:scale-100"
         >
           <Droplet class="w-6 h-6 text-white" stroke-width={2.5} aria-hidden="true" />
         </span>
@@ -35,7 +35,7 @@ const isActive = (href: string) =>
               href={item.href}
               aria-current={isActive(item.href) ? 'page' : undefined}
               class:list={[
-                'text-sm font-medium transition-colors hover:text-windek-blue',
+                'link-underline text-sm font-medium transition-colors hover:text-windek-blue',
                 isActive(item.href) ? 'text-windek-blue' : 'text-white/90',
               ]}
             >
@@ -91,6 +91,7 @@ const isActive = (href: string) =>
       </a>
     </nav>
   </div>
+  <span class="scroll-progress" aria-hidden="true"></span>
 </header>
 
 <script>
@@ -108,8 +109,29 @@ const isActive = (href: string) =>
     header.dataset.state = window.scrollY > 10 ? 'scrolled' : 'top';
   }
 
-  setScrolled();
-  window.addEventListener('scroll', setScrolled, { passive: true });
+  // Progress is written to the header so the absolutely positioned bar can
+  // read it via `--scroll-progress`, and both updates share one rAF frame.
+  function setProgress() {
+    if (!header) return;
+    const max = document.documentElement.scrollHeight - window.innerHeight;
+    const value = max > 0 ? Math.min(Math.max(window.scrollY / max, 0), 1) : 0;
+    header.style.setProperty('--scroll-progress', String(value));
+  }
+
+  let ticking = false;
+  function requestScrollUpdate() {
+    if (ticking) return;
+    ticking = true;
+    requestAnimationFrame(() => {
+      setScrolled();
+      setProgress();
+      ticking = false;
+    });
+  }
+
+  requestScrollUpdate();
+  window.addEventListener('scroll', requestScrollUpdate, { passive: true });
+  window.addEventListener('resize', requestScrollUpdate);
 
   function setMenu(open: boolean) {
     if (!toggle || !menu) return;

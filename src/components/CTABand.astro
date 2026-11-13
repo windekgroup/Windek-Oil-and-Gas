@@ -21,8 +21,15 @@ const {
 } = Astro.props;
 ---
 
-<section class="py-14 sm:py-16 bg-windek-blue">
-  <div class="max-w-7xl mx-auto gutter flex flex-col md:flex-row items-center justify-between gap-6 text-center md:text-left">
+<section class="relative overflow-hidden py-14 sm:py-16 bg-windek-blue">
+  <span
+    class="pointer-events-none absolute -left-16 -top-24 h-64 w-64 rounded-full bg-white/15 blur-3xl orb-drift"
+    aria-hidden="true"></span>
+  <span
+    class="pointer-events-none absolute -right-20 -bottom-28 h-72 w-72 rounded-full bg-white/10 blur-3xl orb-drift"
+    style="animation-delay: -7s"
+    aria-hidden="true"></span>
+  <div class="relative z-10 max-w-7xl mx-auto gutter flex flex-col md:flex-row items-center justify-between gap-6 text-center md:text-left">
     <div>
       <p class="text-white/80 text-xs font-bold uppercase tracking-widest mb-2">{sub}</p>
       <h2 class="text-display-3 font-bold text-white">{heading}</h2>
@@ -30,7 +37,7 @@ const {
     <div class="flex flex-col sm:flex-row gap-3 shrink-0 w-full sm:w-auto">
       <a
         href={primaryHref}
-        class="group inline-flex items-center justify-center gap-2 px-6 py-3.5 bg-white text-windek-blue text-xs font-bold uppercase tracking-widest rounded hover:bg-windek-dark hover:text-white transition-[color,background-color,transform] duration-300 ease-out hover:-translate-y-0.5 motion-reduce:hover:translate-y-0"
+        class="motion-sheen group inline-flex items-center justify-center gap-2 px-6 py-3.5 bg-white text-windek-blue text-xs font-bold uppercase tracking-widest rounded hover:bg-windek-dark hover:text-white transition-[color,background-color,transform] duration-300 ease-out hover:-translate-y-0.5 motion-reduce:hover:translate-y-0"
       >
         {primaryLabel}
         <ArrowRight class="w-4 h-4 group-hover:translate-x-1 transition-transform" aria-hidden="true" />

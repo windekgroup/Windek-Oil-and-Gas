@@ -83,19 +83,27 @@ const faqs = [
 
   <section class="section-y bg-white">
     <div class="max-w-7xl mx-auto gutter">
-      <dl class="grid grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8 pb-12 sm:pb-16 mb-12 sm:mb-16 border-b border-gray-200">
+      <dl
+        class="grid grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8 pb-12 sm:pb-16 mb-12 sm:mb-16 border-b border-gray-200"
+        data-reveal-group
+      >
         {
           PROJECT.stats.map((stat) => (
             <div class="border-l-2 border-windek-blue pl-4">
               <dt class="text-xs uppercase tracking-widest text-gray-500 mb-1">{stat.label}</dt>
-              <dd class="text-xl sm:text-2xl font-bold text-windek-dark">{stat.value}</dd>
+              <dd
+                class="text-xl sm:text-2xl font-bold text-windek-dark"
+                data-count-to={/^\$?[\d,]/.test(stat.value) ? '' : undefined}
+              >
+                {stat.value}
+              </dd>
             </div>
           ))
         }
       </dl>
 
       <div class="grid lg:grid-cols-3 gap-10 lg:gap-14">
-        <article class="lg:col-span-2 prose-windek text-slate-600">
+        <article class="lg:col-span-2 prose-windek text-slate-600" data-reveal="left">
           <h2>The Challenge</h2>
           {PROJECT.challenge.split('\n\n').map((para) => <p>{para}</p>)}
 
@@ -108,7 +116,7 @@ const faqs = [
           </ul>
         </article>
 
-        <aside class="lg:col-span-1">
+        <aside class="lg:col-span-1" data-reveal="right">
           <div class="bg-windek-gray p-6 rounded-lg lg:sticky lg:top-28">
             <h2 class="text-lg font-bold text-windek-dark mb-4">Project details</h2>
             <dl class="space-y-4 text-sm">

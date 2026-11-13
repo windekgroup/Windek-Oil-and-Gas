@@ -24,12 +24,12 @@ import { SERVICES } from '../data/site';
       </a>
     </div>
 
-    <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6 lg:gap-8">
+    <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6 lg:gap-8" data-reveal-group>
       {
         SERVICES.map((service, i) => (
           <a
             href={`/services/${service.slug}/`}
-            class="group relative block h-72 sm:h-80 lg:h-[21rem] overflow-hidden rounded bg-windek-dark-800 hover:shadow-card-lg hover:-translate-y-1 motion-reduce:hover:translate-y-0 transition-[transform,box-shadow] duration-300 ease-out"
+            class="motion-sheen group relative block h-72 sm:h-80 lg:h-[21rem] overflow-hidden rounded bg-windek-dark-800 hover:shadow-card-lg hover:-translate-y-1 motion-reduce:hover:translate-y-0 transition-[transform,box-shadow] duration-300 ease-out"
           >
             <img
               src={service.image}

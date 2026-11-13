@@ -6,7 +6,7 @@ import { CONTACT } from '../data/site';
 <section id="contact" class="section-y bg-white">
   <div class="max-w-7xl mx-auto gutter">
     <div class="grid lg:grid-cols-2 gap-12 lg:gap-16">
-      <div>
+      <div data-reveal="left">
         <span class="eyebrow">Get in Touch</span>
         <h2 class="text-display-2 font-bold text-windek-dark mb-5">
           Start a Conversation
@@ -16,7 +16,7 @@ import { CONTACT } from '../data/site';
           responds to enquiries during Nigerian business hours.
         </p>
 
-        <div class="space-y-6">
+        <div class="space-y-6" data-reveal-group>
           <div class="flex items-start gap-4">
             <span class="w-11 h-11 rounded-lg bg-windek-blue/10 flex items-center justify-center flex-shrink-0">
               <MapPin class="w-5 h-5 text-windek-blue" aria-hidden="true" />
@@ -66,7 +66,7 @@ import { CONTACT } from '../data/site';
         </div>
       </div>
 
-      <div class="bg-windek-gray rounded-lg p-6 sm:p-8 lg:p-10">
+      <div class="bg-windek-gray rounded-lg p-6 sm:p-8 lg:p-10" data-reveal="right">
         <form
           id="contact-form"
           action="https://formsubmit.co/info@windekoilandgasltd.com"
@@ -167,7 +167,7 @@ import { CONTACT } from '../data/site';
 
           <button
             type="submit"
-            class="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-7 py-3.5 bg-windek-blue text-white text-xs font-bold uppercase tracking-widest rounded hover:bg-windek-blue-700 transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
+            class="motion-sheen w-full sm:w-auto inline-flex items-center justify-center gap-2 px-7 py-3.5 bg-windek-blue text-white text-xs font-bold uppercase tracking-widest rounded hover:bg-windek-blue-700 transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
           >
             <span data-label="Send enquiry">
               <Send class="w-4 h-4 mr-2 inline" aria-hidden="true" />Send enquiry

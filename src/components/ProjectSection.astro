@@ -9,7 +9,7 @@ import { PROJECT } from '../data/site';
 <section id="project" class="section-y bg-windek-gray">
   <div class="max-w-7xl mx-auto gutter">
     <div class="grid lg:grid-cols-2 gap-10 lg:gap-14 items-center">
-      <div class="group relative">
+      <div class="group relative" data-reveal="left">
         <div class="rounded-lg overflow-hidden shadow-xl">
           <img
             src={PROJECT.image}
@@ -26,12 +26,12 @@ import { PROJECT } from '../data/site';
         <div
           class="mt-4 sm:absolute sm:bottom-0 sm:right-0 sm:mt-0 sm:-translate-y-1/2 sm:translate-x-6 z-10 bg-windek-blue text-white p-5 rounded shadow-xl text-center"
         >
-          <p class="text-3xl sm:text-4xl font-bold leading-none">{PROJECT.capacity}</p>
+          <p class="text-3xl sm:text-4xl font-bold leading-none" data-count-to>{PROJECT.capacity}</p>
           <p class="text-xs uppercase tracking-widest mt-2 font-medium">Storage Capacity</p>
         </div>
       </div>
 
-      <div>
+      <div data-reveal="right">
         <span class="eyebrow">Flagship Project</span>
         <h2 class="text-display-2 font-bold text-windek-dark mb-3">
           {PROJECT.name}
@@ -48,12 +48,17 @@ import { PROJECT } from '../data/site';
           <span>{PROJECT.location}, Nigeria</span>
         </div>
 
-        <dl class="grid grid-cols-2 gap-4 mb-8">
+        <dl class="grid grid-cols-2 gap-4 mb-8" data-reveal-group>
           {
             PROJECT.stats.map((stat) => (
               <div class="border-l-2 border-windek-blue/30 pl-4">
                 <dt class="text-xs uppercase tracking-widest text-gray-500 mb-1">{stat.label}</dt>
-                <dd class="text-lg font-bold text-windek-dark">{stat.value}</dd>
+                <dd
+                  class="text-lg font-bold text-windek-dark"
+                  data-count-to={/^\$?[\d,]/.test(stat.value) ? '' : undefined}
+                >
+                  {stat.value}
+                </dd>
               </div>
             ))
           }

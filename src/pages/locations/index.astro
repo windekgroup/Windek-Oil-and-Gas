@@ -65,10 +65,10 @@ const schema = {
 
   <section class="section-y bg-white">
     <div class="max-w-7xl mx-auto gutter">
-      <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
+      <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8" data-reveal-group>
         {
           LOCATIONS.map((loc) => (
-            <article class="bg-windek-gray rounded-lg overflow-hidden flex flex-col">
+            <article class="motion-lift bg-windek-gray rounded-lg overflow-hidden flex flex-col">
               <div class="h-44 overflow-hidden">
                 <img
                   src={loc.image}
@@ -117,7 +117,7 @@ const schema = {
   <section class="py-16 sm:py-20 bg-windek-gray">
     <div class="max-w-7xl mx-auto gutter">
       <div class="grid lg:grid-cols-2 gap-10 lg:gap-14 items-center">
-        <div>
+        <div data-reveal="left">
           <span class="eyebrow">
             Head Office
           </span>
@@ -152,7 +152,7 @@ const schema = {
           </a>
         </div>
 
-        <div class="rounded-lg overflow-hidden shadow-lg border border-gray-200">
+        <div class="rounded-lg overflow-hidden shadow-lg border border-gray-200" data-reveal="right">
           <iframe
             title="Map showing Windek Oil and Gas Limited head office at 19 Redemption Road, Trans-Amadi, Port Harcourt, Rivers State"
             src="https://www.google.com/maps?q=19%20Redemption%20Road%20Trans-Amadi%20Port%20Harcourt%20Rivers%20State%20Nigeria&output=embed"

@@ -68,12 +68,12 @@ const icons = { hardhat: HardHat, users: Users, graduation: GraduationCap };
         </div>
       </div>
 
-      <div class="grid md:grid-cols-3 gap-6 sm:gap-8">
+      <div class="grid md:grid-cols-3 gap-6 sm:gap-8" data-reveal-group>
         {
           disciplines.map((d) => {
             const Icon = icons[d.icon as keyof typeof icons];
             return (
-              <div class="bg-windek-gray p-6 sm:p-7 rounded-lg">
+              <div class="motion-lift bg-windek-gray p-6 sm:p-7 rounded-lg">
                 <span class="w-12 h-12 rounded-lg bg-windek-blue/10 border border-windek-blue/30 flex items-center justify-center mb-5">
                   <Icon class="w-6 h-6 text-windek-blue" stroke-width={1.5} aria-hidden="true" />
                 </span>
@@ -97,7 +97,7 @@ const icons = { hardhat: HardHat, users: Users, graduation: GraduationCap };
         advertise generic listings, we keep a live talent pipeline and contact people when a role
         matching their profile becomes available.
       </p>
-      <div class="bg-white border border-gray-200 rounded-lg p-6 sm:p-8 text-left max-w-2xl mx-auto">
+      <div class="bg-white border border-gray-200 rounded-lg p-6 sm:p-8 text-left max-w-2xl mx-auto" data-reveal="zoom">
         <h3 class="font-bold text-windek-dark mb-4">Register your interest</h3>
         <p class="text-sm text-gray-600 leading-relaxed mb-5">
           Send us your CV and a short note covering the disciplines you want to work in, your
@@ -139,7 +139,7 @@ const icons = { hardhat: HardHat, users: Users, graduation: GraduationCap };
           responsibilities.
         </p>
       </div>
-      <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-6" data-reveal-group>
         {
           TEAM_MEMBERS.map((m) => (
             <div class="text-center">

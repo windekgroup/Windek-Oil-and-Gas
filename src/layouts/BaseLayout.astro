@@ -375,16 +375,23 @@ const graph = [
         /* Top-level sections are revealed automatically, so every page gets the
            effect without opting in. The first child is skipped: it holds the
            LCP element, which must paint immediately rather than wait on JS. */
-        const targets = [
+        const firstChild = root.firstElementChild;
+        const sections = [
           ...root.querySelectorAll<HTMLElement>('[data-reveal]'),
           ...Array.from(root.children).filter(
             (el): el is HTMLElement =>
               el instanceof HTMLElement &&
+              el !== firstChild &&
               !(el instanceof SVGElement) &&
               !el.hasAttribute('data-reveal-skip') &&
               !el.hasAttribute('data-intro'),
           ),
         ];
+
+        /* Groups can live anywhere, including the footer, so they are collected
+           from the whole document rather than the main landmark only. */
+        const groups = Array.from(document.querySelectorAll<HTMLElement>('[data-reveal-group]'));
+        const targets = [...sections, ...groups];
 
         const revealAll = () => targets.forEach((el) => el.classList.add('is-revealed'));
 
@@ -400,14 +407,23 @@ const graph = [
 
           /* Stagger siblings within one section so grids cascade instead of
              popping in as a single block. */
-          const grids = new Set<Element>();
-          targets.forEach((el) => {
-            if (el.parentElement) grids.add(el.parentElement);
+          const parents = new Set<Element>();
+          sections.forEach((el) => {
+            if (el.parentElement) parents.add(el.parentElement);
           });
-          grids.forEach((parent) => {
+          parents.forEach((parent) => {
             Array.from(parent.children).forEach((child, i) => {
               if (child instanceof HTMLElement && child.hasAttribute('data-reveal')) {
                 child.style.setProperty('--reveal-delay', String(Math.min(i, 6)));
+              }
+            });
+          });
+
+          /* Group children translate in sequence rather than as one block. */
+          groups.forEach((group) => {
+            Array.from(group.children).forEach((child, i) => {
+              if (child instanceof HTMLElement) {
+                child.style.setProperty('--reveal-delay', String(Math.min(i, 8)));
               }
             });
           });
@@ -432,12 +448,83 @@ const graph = [
             targets.forEach((el) => observer.unobserve(el));
           });
 
-          /* Backstop: if the observer never fires (odd viewports, restored scroll
-             positions, print), don't leave sections stranded at opacity 0. */
-          window.setTimeout(revealAll, 2500);
+          /* Backstop for odd viewports and restored scroll positions. Only
+             elements already inside the viewport are settled, so content below
+             the fold keeps its scroll-triggered reveal. */
+          const settleInView = () => {
+            targets.forEach((el) => {
+              if (el.classList.contains('is-revealed')) return;
+              const rect = el.getBoundingClientRect();
+              if (rect.top < window.innerHeight && rect.bottom > 0) {
+                el.classList.add('is-revealed');
+              }
+            });
+          };
+          window.setTimeout(settleInView, 2200);
+
+          /* Printing a long page must not hide content that was never scrolled. */
+          window.addEventListener('beforeprint', revealAll);
         } catch {
           revealAll();
         }
+      })();
+
+      /* Count-up numbers. The final value stays in the markup, so the page is
+         complete without JavaScript; the script only replaces it while the
+         number scrolls into view. */
+      (() => {
+        const counters = Array.from(document.querySelectorAll<HTMLElement>('[data-count-to]'));
+        if (!counters.length) return;
+
+        const reduced = window.matchMedia('(prefers-reduced-motion: reduce)');
+        if (reduced.matches || !('IntersectionObserver' in window)) return;
+
+        const animate = (el: HTMLElement) => {
+          const final = (el.textContent ?? '').trim();
+          const match = final.match(/[\d,]+(?:\.\d+)?/);
+          if (!match) return;
+
+          const raw = match[0];
+          const end = match.index ?? 0;
+          const target = parseFloat(raw.replace(/,/g, ''));
+          if (!Number.isFinite(target)) return;
+
+          const decimals = (raw.split('.')[1] ?? '').length;
+          const prefix = final.slice(0, end);
+          const suffix = final.slice(end + raw.length);
+          const grouping = raw.includes(',');
+          const duration = 1400;
+          const start = performance.now();
+
+          const frame = (now: number) => {
+            const progress = Math.min((now - start) / duration, 1);
+            /* easeOutCubic keeps the last digits from crawling */
+            const value = target * (1 - Math.pow(1 - progress, 3));
+            const formatted = grouping
+              ? value.toLocaleString('en-US', {
+                  minimumFractionDigits: decimals,
+                  maximumFractionDigits: decimals,
+                })
+              : value.toFixed(decimals);
+            el.textContent = progress < 1 ? prefix + formatted + suffix : final;
+            if (progress < 1) requestAnimationFrame(frame);
+          };
+
+          requestAnimationFrame(frame);
+        };
+
+        const observer = new IntersectionObserver(
+          (entries) => {
+            for (const entry of entries) {
+              if (!entry.isIntersecting) continue;
+              animate(entry.target as HTMLElement);
+              observer.unobserve(entry.target);
+            }
+          },
+          { threshold: 0.4 },
+        );
+
+        counters.forEach((el) => observer.observe(el));
       })();
     </script>
   </body>

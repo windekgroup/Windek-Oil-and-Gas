@@ -55,7 +55,7 @@ const schema = {
     <div class="max-w-7xl mx-auto gutter">
       <article class="group">
         <a href={`/projects/${PROJECT.slug}/`} class="block">
-          <div class="relative rounded-lg overflow-hidden shadow-xl mb-8">
+          <div class="motion-zoom relative rounded-lg overflow-hidden shadow-xl mb-8">
             <img
               src={PROJECT.image}
               alt={PROJECT.imageAlt}
@@ -79,7 +79,7 @@ const schema = {
         <div class="grid lg:grid-cols-3 gap-8 lg:gap-12">
           <div class="lg:col-span-2">
             <p class="text-slate-600 leading-relaxed mb-6">{PROJECT.summary}</p>
-            <ul class="space-y-2.5">
+            <ul class="space-y-2.5" data-reveal-group>
               {
                 PROJECT.outcomes.map((outcome) => (
                   <li class="flex items-start gap-3 text-sm text-gray-600">
@@ -100,12 +100,17 @@ const schema = {
             </a>
           </div>
 
-          <dl class="bg-windek-gray p-6 rounded-lg h-max">
+          <dl class="bg-windek-gray p-6 rounded-lg h-max" data-reveal-group>
             {
               PROJECT.stats.map((stat) => (
                 <div class="border-b border-gray-200 py-3 first:pt-0 last:border-0 last:pb-0">
                   <dt class="text-xs uppercase tracking-widest text-gray-500">{stat.label}</dt>
-                  <dd class="text-lg font-bold text-windek-dark">{stat.value}</dd>
+                  <dd
+                    class="text-lg font-bold text-windek-dark"
+                    data-count-to={/^\$?[\d,]/.test(stat.value) ? '' : undefined}
+                  >
+                    {stat.value}
+                  </dd>
                 </div>
               ))
             }

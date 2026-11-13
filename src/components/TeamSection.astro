@@ -30,7 +30,7 @@ const { compact = false, intro } = Astro.props;
       <p class="text-sm sm:text-base text-slate-600 font-light">{intro}</p>
     </div>
 
-    <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8">
+    <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8" data-reveal-group>
       {
         TEAM_MEMBERS.map((member) => (
           <article class="group relative bg-white overflow-hidden shadow-sm hover:shadow-xl hover:-translate-y-1 motion-reduce:hover:translate-y-0 transition-[transform,box-shadow] duration-300 ease-out">

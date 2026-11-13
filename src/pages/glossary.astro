@@ -76,7 +76,7 @@ const initial = Astro.url.searchParams.get('q')?.trim() ?? '';
         }
       </nav>
 
-      <div class="grid md:grid-cols-2 gap-x-10 gap-y-10">
+      <div class="grid md:grid-cols-2 gap-x-10 gap-y-10" data-reveal-group>
         {
           categories.map((cat) => (
             <section id={cat.toLowerCase().replace(/\s+/g, '-')} class="scroll-mt-28">
