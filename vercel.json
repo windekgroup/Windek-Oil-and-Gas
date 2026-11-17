@@ -1,0 +1,16 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "redirects": [
+    {
+      "source": "/(.*)",
+      "has": [
+        {
+          "type": "host",
+          "value": "www.windekoilandgasltd.com"
+        }
+      ],
+      "destination": "https://windekoilandgasltd.com/$1",
+      "permanent": true
+    }
+  ]
+}
