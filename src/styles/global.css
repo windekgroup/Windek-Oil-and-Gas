@@ -1,6 +1,56 @@
 @import "tailwindcss";
 
 /* ==========================================================================
+   Self-hosted Inter
+   --------------------------------------------------------------------------
+   Served from /assets/fonts so the site does not depend on Google Fonts for
+   its primary typeface. Files are preloaded in BaseLayout for the weights
+   used above the fold (400/600/700/800).
+   ========================================================================== */
+@font-face {
+  font-family: "Inter";
+  font-style: normal;
+  font-weight: 300;
+  font-display: swap;
+  src: url("/assets/fonts/Inter-Light.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Inter";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("/assets/fonts/Inter-Regular.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Inter";
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url("/assets/fonts/Inter-Medium.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Inter";
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url("/assets/fonts/Inter-SemiBold.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Inter";
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url("/assets/fonts/Inter-Bold.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Inter";
+  font-style: normal;
+  font-weight: 800;
+  font-display: swap;
+  src: url("/assets/fonts/Inter-ExtraBold.woff2") format("woff2");
+}
+
+/* ==========================================================================
    Design tokens
    ========================================================================== */
 @theme {
