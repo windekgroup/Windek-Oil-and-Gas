@@ -1,0 +1,17 @@
+# Windek Oil and Gas Limited - https://windekoilandgasltd.com
+# All content is public. Nothing is restricted.
+
+User-agent: *
+Allow: /
+Disallow: /api/
+
+# Explicitly welcome major engines with full preview/snippet control
+User-agent: Googlebot
+Allow: /
+Disallow: /api/
+
+User-agent: Bingbot
+Allow: /
+Disallow: /api/
+
+Sitemap: https://windekoilandgasltd.com/sitemap-index.xml

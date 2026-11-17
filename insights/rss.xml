@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Windek Oil and Gas Limited Insights</title>
+    <link>https://windekoilandgasltd.com/insights/</link>
+    <atom:link href="https://windekoilandgasltd.com/insights/rss.xml" rel="self" type="application/rss+xml" />
+    <description>Analysis on Nigerian LPG infrastructure, local content on EPCI projects, gas flaring and commercial energy decisions.</description>
+    <language>en-NG</language>
+    <lastBuildDate>Tue, 17 Nov 2026 10:55:53 GMT</lastBuildDate>
+    <item>
+      <title>Solving Nigeria&apos;s LPG Storage Deficit</title>
+      <link>https://windekoilandgasltd.com/insights/nigeria-lpg-storage-deficit/</link>
+      <guid isPermaLink="true">https://windekoilandgasltd.com/insights/nigeria-lpg-storage-deficit/</guid>
+      <description>Nigeria produces LPG in abundance yet consumers still face shortages. The bottleneck is bulk storage capacity, and closing it changes delivered gas economics.</description>
+      <pubDate>Wed, 18 Feb 2026 00:00:00 GMT</pubDate>
+      <category>Infrastructure</category>
+    </item>
+    <item>
+      <title>Why Local Content Matters on EPCI Projects</title>
+      <link>https://windekoilandgasltd.com/insights/indigenous-content-in-epci/</link>
+      <guid isPermaLink="true">https://windekoilandgasltd.com/insights/indigenous-content-in-epci/</guid>
+      <description>EPCI combines four phases into one contract, making local capability a delivery advantage rather than a compliance checkbox. Here is how that works.</description>
+      <pubDate>Thu, 22 Jan 2026 00:00:00 GMT</pubDate>
+      <category>Delivery</category>
+    </item>
+    <item>
+      <title>Understanding Gas Flaring in Nigeria</title>
+      <link>https://windekoilandgasltd.com/insights/understanding-gas-flaring-nigeria/</link>
+      <guid isPermaLink="true">https://windekoilandgasltd.com/insights/understanding-gas-flaring-nigeria/</guid>
+      <description>Associated gas is burned at the wellhead because there is nowhere to put it. That single infrastructure gap explains most of Nigeria&apos;s flaring problem.</description>
+      <pubDate>Thu, 06 Nov 2025 00:00:00 GMT</pubDate>
+      <category>Environment</category>
+    </item>
+    <item>
+      <title>Choosing an LPG Storage Partner</title>
+      <link>https://windekoilandgasltd.com/insights/choosing-an-lpg-storage-partner/</link>
+      <guid isPermaLink="true">https://windekoilandgasltd.com/insights/choosing-an-lpg-storage-partner/</guid>
+      <description>Capacity, location and delivery record matter more than headline tonnage. A checklist for operators and distributors evaluating storage providers.</description>
+      <pubDate>Mon, 15 Sep 2025 00:00:00 GMT</pubDate>
+      <category>Commercial</category>
+    </item>
+  </channel>
+</rss>
