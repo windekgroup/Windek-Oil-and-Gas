@@ -75,8 +75,10 @@ import { CONTACT } from '../data/site';
         >
           <input type="hidden" name="_subject" value="New enquiry — Windek Oil and Gas Limited" />
           <input type="hidden" name="_template" value="table" />
-          <input type="hidden" name="_captcha" value="false" />
           <input type="hidden" name="_next" value="https://windekoilandgasltd.com/thank-you/" />
+          {/* Honeypot: real visitors never see or fill this; bots do, and FormSubmit
+              silently discards those submissions. reCAPTCHA is left enabled. */}
+          <input type="text" name="_honey" tabindex="-1" autocomplete="off" class="hidden" aria-hidden="true" />
 
           <div class="grid sm:grid-cols-2 gap-5">
             <div>
@@ -183,3 +185,23 @@ import { CONTACT } from '../data/site';
     </div>
   </div>
 </section>
+
+<script>
+  const form = document.getElementById('contact-form') as HTMLFormElement | null;
+  const button = form?.querySelector<HTMLButtonElement>('button[type="submit"]');
+  const label = button?.querySelector<HTMLElement>('[data-label]');
+  const originalLabel = label?.innerHTML;
+
+  form?.addEventListener('submit', () => {
+    if (!button || !label) return;
+    button.disabled = true;
+    label.textContent = 'Sending…';
+  });
+
+  // Restore the button if the visitor navigates back to the form.
+  window.addEventListener('pageshow', (event) => {
+    if (!event.persisted || !button || !label) return;
+    button.disabled = false;
+    if (originalLabel !== undefined) label.innerHTML = originalLabel;
+  });
+</script>

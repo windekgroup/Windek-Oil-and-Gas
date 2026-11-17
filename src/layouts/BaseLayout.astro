@@ -2,6 +2,8 @@
 import '../styles/global.css';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
+import Breadcrumbs from '../components/Breadcrumbs.astro';
+import CookieConsent from '../components/CookieConsent.astro';
 import ScrollToTopButton from '../components/ScrollToTopButton.astro';
 import {
   COMPANY_NAME,
@@ -280,7 +282,7 @@ const graph = [
     <meta name="ICBM" content={`${CONTACT.geo.latitude}, ${CONTACT.geo.longitude}`} />
 
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <link rel="apple-touch-icon" href="/logo.png" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <link rel="manifest" href="/manifest.webmanifest" />
     <meta name="theme-color" content="#0B1120" />
     {siteVerification && <meta name="google-site-verification" content={siteVerification} />}
@@ -352,32 +354,51 @@ const graph = [
     />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link rel="preconnect" href="https://www.googletagmanager.com" />
     <link
       rel="stylesheet"
       href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap"
     />
 
-    <script is:inline async src={`https://www.googletagmanager.com/gtag/js?id=${gaId}`}></script>
     <script is:inline define:vars={{ gaId }}>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-      gtag('config', gaId, { anonymize_ip: true });
+      /* Google Analytics is loaded only after analytics cookies are accepted.
+         CookieConsent.astro stores the choice and calls windekLoadAnalytics. */
+      window.windekLoadAnalytics = function () {
+        if (window.windekAnalyticsLoaded) return;
+        window.windekAnalyticsLoaded = true;
+
+        var script = document.createElement('script');
+        script.async = true;
+        script.src = 'https://www.googletagmanager.com/gtag/js?id=' + gaId;
+        document.head.appendChild(script);
+
+        window.dataLayer = window.dataLayer || [];
+        window.gtag = function () { window.dataLayer.push(arguments); };
+        window.gtag('js', new Date());
+        window.gtag('config', gaId);
+      };
+
+      try {
+        if (localStorage.getItem('windek-cookie-consent') === 'accepted') {
+          window.windekLoadAnalytics();
+        }
+      } catch (e) {}
+
       document.addEventListener('click', function (e) {
+        if (!window.windekAnalyticsLoaded) return;
         var t = e.target;
         if (!(t instanceof Element)) return;
         var a = t.closest('a');
         if (!a) return;
         var h = a.getAttribute('href') || '';
         var label = (a.textContent || '').trim().slice(0, 40);
-        if (h.startsWith('tel:')) gtag('event', 'contact_click', { event_category: 'contact', event_label: 'phone:' + label });
-        else if (h.startsWith('mailto:')) gtag('event', 'contact_click', { event_category: 'contact', event_label: 'email' });
-        else if (h.startsWith('https://wa.me')) gtag('event', 'contact_click', { event_category: 'contact', event_label: 'whatsapp' });
+        if (h.startsWith('tel:')) window.gtag('event', 'contact_click', { event_category: 'contact', event_label: 'phone:' + label });
+        else if (h.startsWith('mailto:')) window.gtag('event', 'contact_click', { event_category: 'contact', event_label: 'email' });
+        else if (h.startsWith('https://wa.me')) window.gtag('event', 'contact_click', { event_category: 'contact', event_label: 'whatsapp' });
       });
       document.addEventListener('submit', function (e) {
+        if (!window.windekAnalyticsLoaded) return;
         var f = e.target;
-        if (f && f.id === 'contact-form') gtag('event', 'generate_lead', { event_category: 'contact', event_label: 'contact_form' });
+        if (f && f.id === 'contact-form') window.gtag('event', 'generate_lead', { event_category: 'contact', event_label: 'contact_form' });
       });
     </script>
   </head>
@@ -390,11 +411,13 @@ const graph = [
       Skip to content
     </a>
     <Header />
+    {breadcrumbs && <Breadcrumbs items={breadcrumbs} />}
     <main id="main">
       <slot />
     </main>
     <Footer />
     <ScrollToTopButton />
+    <CookieConsent />
 
     <script>
       (() => {

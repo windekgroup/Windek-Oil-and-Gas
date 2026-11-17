@@ -3,7 +3,7 @@
 **Prepared for:** Supervisor
 **Project:** Windek Oil & Gas Limited Corporate Website (windekgroup/Windek-Oil-and-Gas)
 **Date:** 13 November 2026
-**Commit:** `cb41dcd` — "Improve SEO metadata, structured data and internal linking" (committed locally to `main`; not yet pushed)
+**Commit:** `cb41dcd` — "Improve SEO metadata, structured data and internal linking" (pushed to `main`)
 
 ---
 
@@ -175,6 +175,5 @@ links or asset references are broken.
 
 ## 8. Status
 
-Complete and committed locally as `cb41dcd` on `main`. Not yet pushed to
-`origin/main`; pushing will trigger the existing GitHub Actions build and GitHub Pages
-deployment.
+Complete and pushed to `origin/main` as part of the `252fe07..53ec8f3` push. The push
+triggers the existing GitHub Actions build and GitHub Pages deployment.

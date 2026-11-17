@@ -1,7 +1,30 @@
 // @ts-check
+import { execFileSync } from 'node:child_process';
+import { readFileSync } from 'node:fs';
 import { defineConfig } from 'astro/config';
 import tailwindcss from '@tailwindcss/vite';
 import sitemap from '@astrojs/sitemap';
+
+// Article pages use their own editorial update date. Everything else falls
+// back to the date of the last repository commit, which is a stable signal
+// that does not churn on every build.
+const articlesSource = readFileSync(new URL('./src/data/articles.ts', import.meta.url), 'utf8');
+const articleDates = new Map(
+  [...articlesSource.matchAll(/slug:\s*'([^']+)'[\s\S]*?updated:\s*'([^']+)'/g)].map((m) => [
+    m[1],
+    m[2],
+  ]),
+);
+
+let lastCommitDate;
+try {
+  lastCommitDate = execFileSync('git', ['log', '-1', '--format=%cs'], {
+    encoding: 'utf8',
+    stdio: ['ignore', 'pipe', 'ignore'],
+  }).trim();
+} catch {
+  lastCommitDate = new Date().toISOString().slice(0, 10);
+}
 
 // https://astro.build/config
 export default defineConfig({
@@ -35,7 +58,14 @@ export default defineConfig({
         } else {
           meta = { priority: 0.3, changefreq: 'yearly' };
         }
-        return /** @type {import('@astrojs/sitemap').SitemapItem} */ ({ ...item, ...meta });
+        const articleMatch = path.match(/^\/insights\/([^/]+)\/$/);
+        const lastmod =
+          (articleMatch && articleDates.get(articleMatch[1])) || lastCommitDate;
+        return /** @type {import('@astrojs/sitemap').SitemapItem} */ ({
+          ...item,
+          ...meta,
+          lastmod,
+        });
       },
     }),
   ],

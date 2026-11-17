@@ -23,7 +23,6 @@ const schema = {
 };
 
 const categories = [...new Set(GLOSSARY.map((t) => t.category))];
-const initial = Astro.url.searchParams.get('q')?.trim() ?? '';
 ---
 
 <BaseLayout
@@ -54,16 +53,20 @@ const initial = Astro.url.searchParams.get('q')?.trim() ?? '';
           type="search"
           id="glossary-search"
           name="q"
-          value={initial}
           placeholder="Search terms, e.g. LPG, EPCI, flaring"
           class="w-full px-5 py-3.5 bg-windek-gray border border-gray-200 rounded-lg text-sm focus:border-windek-blue focus:ring-2 focus:ring-windek-blue/20 outline-none"
         />
       </form>
 
       <nav class="flex flex-wrap gap-2 mb-10" aria-label="Glossary categories">
-        <span class="px-3 py-1.5 text-xs font-bold uppercase tracking-widest bg-windek-blue text-white rounded">
+        <a
+          id="glossary-all"
+          href="/glossary/"
+          aria-current="page"
+          class="px-3 py-1.5 text-xs font-bold uppercase tracking-widest rounded transition-colors bg-windek-blue text-white"
+        >
           All terms
-        </span>
+        </a>
         {
           categories.map((cat) => (
             <a
@@ -79,7 +82,7 @@ const initial = Astro.url.searchParams.get('q')?.trim() ?? '';
       <div class="grid md:grid-cols-2 gap-x-10 gap-y-10" data-reveal-group>
         {
           categories.map((cat) => (
-            <section id={cat.toLowerCase().replace(/\s+/g, '-')} class="scroll-mt-28">
+            <section id={cat.toLowerCase().replace(/\s+/g, '-')} data-glossary-category class="scroll-mt-28">
               <h2 class="text-xs font-bold uppercase tracking-widest text-windek-blue mb-5 pb-2 border-b border-gray-200">
                 {cat}
               </h2>
@@ -117,6 +120,9 @@ const initial = Astro.url.searchParams.get('q')?.trim() ?? '';
   const input = document.getElementById('glossary-search') as HTMLInputElement | null;
   const noResults = document.getElementById('no-results');
   const terms = Array.from(document.querySelectorAll<HTMLElement>('dl > div'));
+  const sections = Array.from(
+    document.querySelectorAll<HTMLElement>('[data-glossary-category]'),
+  );
 
   function filter() {
     const q = (input?.value ?? '').trim().toLowerCase();
@@ -126,7 +132,38 @@ const initial = Astro.url.searchParams.get('q')?.trim() ?? '';
       el.style.display = match ? '' : 'none';
       if (match) visible++;
     });
+    sections.forEach((section) => {
+      const hasVisibleTerm = Array.from(section.querySelectorAll<HTMLElement>('dl > div')).some(
+        (el) => el.style.display !== 'none',
+      );
+      section.hidden = !hasVisibleTerm;
+    });
     if (noResults) noResults.hidden = visible > 0;
+  }
+
+  // Static output cannot read the query string at build time, so restore the
+  // search state on the client and keep it when a visitor jumps to a category.
+  const params = new URLSearchParams(window.location.search);
+  const initial = (params.get('q') ?? '').trim();
+  const allLink = document.getElementById('glossary-all');
+
+  if (initial && input) {
+    input.value = initial;
+    allLink?.classList.remove('bg-windek-blue', 'text-white');
+    allLink?.classList.add(
+      'bg-windek-gray',
+      'text-gray-600',
+      'hover:bg-windek-blue',
+      'hover:text-white',
+    );
+    allLink?.removeAttribute('aria-current');
+    document
+      .querySelectorAll<HTMLAnchorElement>('nav[aria-label="Glossary categories"] a[href*="#"]')
+      .forEach((link) => {
+        const url = new URL(link.href);
+        url.searchParams.set('q', initial);
+        link.href = `${url.pathname}${url.search}${url.hash}`;
+      });
   }
 
   input?.addEventListener('input', filter);
